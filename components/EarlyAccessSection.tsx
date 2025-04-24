@@ -1,154 +1,112 @@
-import Link from 'next/link';
+'use client'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { ArrowRightIcon, BeakerIcon, UserGroupIcon, LightBulbIcon } from '@heroicons/react/24/outline'
 
 export default function EarlyAccessSection() {
+  const benefits = [
+    {
+      icon: <BeakerIcon className="h-6 w-6" />,
+      title: "Test Prototypes",
+      description: "Get early access to our AI-powered tools and provide feedback that shapes the product."
+    },
+    {
+      icon: <UserGroupIcon className="h-6 w-6" />,
+      title: "Join Our Community",
+      description: "Connect with other forward-thinking federal contractors in our early access community."
+    },
+    {
+      icon: <LightBulbIcon className="h-6 w-6" />,
+      title: "Influence Development",
+      description: "Your feedback directly influences our product roadmap and feature prioritization."
+    }
+  ];
+
   return (
-    <section className="py-20 bg-white" id="early-access">
-      <div className="container mx-auto px-6">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-block px-4 py-1 rounded-full bg-blue-50 text-blue-600 font-medium text-sm mb-3">
-            Early Access Program
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Shape the Future of GovWin AI
-          </h2>
-          <p className="text-xl text-gray-600">
-            Join our early access program to influence our product roadmap and get exclusive benefits when we launch
-          </p>
-        </div>
-        
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {/* Feedback Partner */}
-          <div className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
-            <div className="p-8">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Feedback Partner</h3>
-              <div className="text-gray-500 mb-4">
-                <span className="text-blue-600 font-bold text-lg">Free</span>
-                <span> during beta</span>
-              </div>
-              <p className="text-gray-600 mb-6">
-                For contractors interested in providing feedback and testing our early prototypes.
-              </p>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-start">
-                  <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">Early prototype access</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">Influence product roadmap</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">10% discount when we launch</span>
-                </li>
-              </ul>
-              <a href="/waitlist?tier=feedback" className="block w-full py-3 px-6 text-center bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium rounded-lg transition-colors">
-                Join Waitlist
-              </a>
+    <section id="early-access" className="relative py-20 bg-gradient-to-b from-white to-blue-50 overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-gray-50 to-white"></div>
+      <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-100 rounded-full opacity-30"></div>
+      <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-100 rounded-full opacity-30"></div>
+      
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="max-w-4xl mx-auto">
+          <motion.div 
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <div className="inline-block px-4 py-1 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-medium text-sm mb-3">
+              Limited Spots Available
             </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Join Our Early Access Program
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              We're looking for federal contractors who want to help shape the future of AI-powered opportunity discovery and response.
+            </p>
+          </motion.div>
+          
+          <div className="grid md:grid-cols-3 gap-8 mb-16">
+            {benefits.map((benefit, index) => (
+              <motion.div 
+                key={index}
+                className="bg-white rounded-xl p-6 shadow-sm border border-gray-100"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
+              >
+                <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-100 text-blue-600 rounded-full mb-4">
+                  {benefit.icon}
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">{benefit.title}</h3>
+                <p className="text-gray-600">{benefit.description}</p>
+              </motion.div>
+            ))}
           </div>
           
-          {/* Founding Member */}
-          <div className="bg-white border-2 border-blue-500 rounded-xl overflow-hidden shadow-lg transform md:scale-105 z-10">
-            <div className="bg-blue-500 py-2 text-white text-center text-sm font-medium">
-              RECOMMENDED
-            </div>
-            <div className="p-8">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Founding Member</h3>
-              <div className="text-gray-500 mb-4">
-                <span className="text-blue-600 font-bold text-lg">$99</span>
-                <span> one-time fee</span>
+          <motion.div 
+            className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl overflow-hidden shadow-xl"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            viewport={{ once: true }}
+          >
+            <div className="p-8 md:p-12 relative">
+              {/* Decorative elements */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -translate-y-1/2 translate-x-1/3"></div>
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-white opacity-5 rounded-full translate-y-1/2 -translate-x-1/3"></div>
+              
+              <div className="md:flex items-center justify-between relative z-10">
+                <div className="md:w-2/3 mb-8 md:mb-0">
+                  <h3 className="text-2xl font-bold text-white mb-4">
+                    Apply for the Early Access Program
+                  </h3>
+                  <p className="text-indigo-100">
+                    We're selecting a limited number of federal contractors to join our early access program. Apply now to be considered for this exclusive opportunity.
+                  </p>
+                </div>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Link 
+                    href="/waitlist?ref=early-access" 
+                    className="inline-flex items-center px-6 py-3 bg-white text-indigo-700 font-medium rounded-full shadow-md hover:bg-gray-100 transition-colors"
+                  >
+                    Apply Now
+                    <ArrowRightIcon className="ml-2 w-5 h-5" />
+                  </Link>
+                </motion.div>
               </div>
-              <p className="text-gray-600 mb-6">
-                For contractors who want to lock in early adopter benefits and help steer product development.
-              </p>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-start">
-                  <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">Priority beta access</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">Direct access to founding team</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">3 months free at launch</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">25% lifetime discount</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">Founding member status</span>
-                </li>
-              </ul>
-              <a href="/waitlist?tier=founding" className="block w-full py-3 px-6 text-center bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
-                Become a Founding Member
-              </a>
             </div>
-          </div>
-          
-          {/* Enterprise Partner */}
-          <div className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
-            <div className="p-8">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Enterprise Partner</h3>
-              <div className="text-gray-500 mb-4">
-                <span className="text-blue-600 font-bold text-lg">Contact Us</span>
-              </div>
-              <p className="text-gray-600 mb-6">
-                For larger contracting firms with specialized needs and custom integration requirements.
-              </p>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-start">
-                  <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">Custom pilot program</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">Strategic input on feature development</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">Potential co-development opportunities</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">Custom integrations with existing systems</span>
-                </li>
-              </ul>
-              <a href="/contact" className="block w-full py-3 px-6 text-center border border-gray-300 hover:border-gray-400 text-gray-800 font-medium rounded-lg transition-colors">
-                Contact Us
-              </a>
-            </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
-  );
+  )
 } 

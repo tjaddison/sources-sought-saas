@@ -1,14 +1,14 @@
 'use client'
-
-// import { useState } from 'react' // Removed unused import
-// import Image from 'next/image' // Removed unused import
-// import ImageFallback from './ImageFallback' // Removed unused import
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { CheckIcon } from '@heroicons/react/24/solid'
+import { DocumentTextIcon, ChartBarIcon, BoltIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 
 interface TabContentProps {
   title: string;
   description: string;
   featureList: string[];
-  imageSrc: string;
+  image: string;
 }
 
 // Commented out unused variable. Remove if definitely not needed.
@@ -23,7 +23,7 @@ const tabContents: Record<string, TabContentProps> = {
       'Set-aside optimization for your business status',
       'Historical performance matching for high probability wins'
     ],
-    imageSrc: '/images/opportunity-matching.png'
+    image: '/images/opportunity-matching.png'
   },
   'requirements-analysis': {
     title: 'Automated Requirements Analysis',
@@ -34,7 +34,7 @@ const tabContents: Record<string, TabContentProps> = {
       'Capability alignment assessment',
       'Risk and complexity evaluation'
     ],
-    imageSrc: '/images/requirements-analysis.png'
+    image: '/images/requirements-analysis.png'
   },
   'pipeline-management': {
     title: 'Strategic Pipeline Management',
@@ -45,7 +45,7 @@ const tabContents: Record<string, TabContentProps> = {
       'Timeline visualization and forecasting',
       'Resource allocation recommendations'
     ],
-    imageSrc: '/images/pipeline-management.png'
+    image: '/images/pipeline-management.png'
   },
   'response-generation': {
     title: 'Response Generation Engine',
@@ -56,7 +56,7 @@ const tabContents: Record<string, TabContentProps> = {
       'Strategic requirement influence suggestions',
       'Compliance verification'
     ],
-    imageSrc: '/images/response-generation.png'
+    image: '/images/response-generation.png'
   },
   'followup-system': {
     title: 'Smart Follow-up System',
@@ -67,148 +67,180 @@ const tabContents: Record<string, TabContentProps> = {
       'Solicitation monitoring alerts',
       'Relationship building cadence management'
     ],
-    imageSrc: '/images/followup-system.png'
+    image: '/images/followup-system.png'
   }
 };
 */
 
 export default function FeatureSpotlightSection() {
-  const features = [
+  const [activeTab, setActiveTab] = useState(0);
+  
+  const tabs = [
     {
-      title: "Opportunity Matching",
-      description: "Our AI will connect you with Sources Sought notices perfectly aligned to your capabilities and experience.",
-      icon: (
-        <svg className="w-10 h-10" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="40" height="40" rx="8" fill="#EFF6FF"/>
-          <path d="M14 20H26M20 14V26" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          <circle cx="20" cy="20" r="10" stroke="#2563EB" strokeWidth="2"/>
-        </svg>
-      )
+      icon: <MagnifyingGlassIcon className="w-6 h-6" />,
+      name: "Discover",
+      content: {
+        title: "AI-Powered Opportunity Discovery",
+        description: "Our AI scans SAM.gov for Sources Sought notices that match your capabilities, ensuring you never miss a relevant opportunity.",
+        featureList: [
+          "Personalized opportunity matching",
+          "Real-time notifications",
+          "Automated relevance scoring",
+          "Keyword and NAICS code filtering"
+        ],
+        image: "/images/feature-discover.png" // Replace with actual image path
+      }
     },
     {
-      title: "Requirements Analysis",
-      description: "We're building systems to analyze RFIs and Sources Sought notices to extract critical requirements automatically.",
-      icon: (
-        <svg className="w-10 h-10" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="40" height="40" rx="8" fill="#EFF6FF"/>
-          <path d="M15 20L18 23L25 16" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          <rect x="12" y="12" width="16" height="16" rx="2" stroke="#2563EB" strokeWidth="2"/>
-        </svg>
-      )
+      icon: <DocumentTextIcon className="w-6 h-6" />,
+      name: "Analyze",
+      content: {
+        title: "Deep Document Analysis",
+        description: "Our AI analyzes each Sources Sought notice to extract key requirements, deadlines, and evaluation criteria.",
+        featureList: [
+          "Requirement extraction and summarization",
+          "Competitive landscape analysis",
+          "Win probability assessment",
+          "Historical contract data integration"
+        ],
+        image: "/images/feature-analyze.png" // Replace with actual image path
+      }
     },
     {
-      title: "Response Generation",
-      description: "Planned feature to generate professional, tailored responses to Sources Sought notices in minutes, not days.",
-      icon: (
-        <svg className="w-10 h-10" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="40" height="40" rx="8" fill="#EFF6FF"/>
-          <path d="M13 15H27M13 20H23M13 25H19" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          <rect x="10" y="10" width="20" height="20" rx="2" stroke="#2563EB" strokeWidth="2"/>
-        </svg>
-      )
+      icon: <BoltIcon className="w-6 h-6" />,
+      name: "Respond",
+      content: {
+        title: "AI-Assisted Response Generation",
+        description: "Generate compelling responses to Sources Sought notices with our AI assistant, saving hours of writing time.",
+        featureList: [
+          "Response template generation",
+          "Capability statement customization",
+          "Past performance highlighting",
+          "Compliance checking"
+        ],
+        image: "/images/feature-respond.png" // Replace with actual image path
+      }
     },
     {
-      title: "Pipeline Management",
-      description: "We plan to help you track and manage your opportunity pipeline with win probability analysis and recommendations.",
-      icon: (
-        <svg className="w-10 h-10" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="40" height="40" rx="8" fill="#EFF6FF"/>
-          <path d="M12 28V18M20 28V12M28 28V22" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          <circle cx="12" cy="14" r="2" stroke="#2563EB" strokeWidth="2"/>
-          <circle cx="20" cy="10" r="2" stroke="#2563EB" strokeWidth="2"/>
-          <circle cx="28" cy="20" r="2" stroke="#2563EB" strokeWidth="2"/>
-        </svg>
-      )
-    },
+      icon: <ChartBarIcon className="w-6 h-6" />,
+      name: "Track",
+      content: {
+        title: "Pipeline Management",
+        description: "Track your entire pre-solicitation pipeline from discovery to submission with our intuitive dashboard.",
+        featureList: [
+          "Opportunity status tracking",
+          "Deadline reminders",
+          "Team collaboration tools",
+          "Analytics and insights"
+        ],
+        image: "/images/feature-track.png" // Replace with actual image path
+      }
+    }
   ];
 
   return (
-    <section className="py-20 bg-gray-50">
-      <div className="container mx-auto px-6">
-        <div className="text-center max-w-3xl mx-auto mb-16">
+    <section className="py-20 bg-white relative overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-blue-50 to-white"></div>
+      <div className="absolute -top-20 -right-20 w-80 h-80 bg-blue-100 rounded-full opacity-20"></div>
+      <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-indigo-100 rounded-full opacity-20"></div>
+      
+      <div className="container mx-auto px-6 relative z-10">
+        <motion.div 
+          className="text-center max-w-3xl mx-auto mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          <div className="inline-block px-4 py-1 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-medium text-sm mb-3">
+            Powerful Features
+          </div>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Planned Features
+            Everything You Need to Win More Contracts
           </h2>
           <p className="text-xl text-gray-600">
-            Here&apos;s what we&apos;re building to streamline the federal contracting process.
+            Our platform streamlines the entire pre-solicitation process, from opportunity discovery to response submission.
           </p>
-        </div>
+        </motion.div>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {features.map((feature, index) => (
-            <div key={index} className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all">
-              <div className="mb-5">
-                {feature.icon}
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
-                {feature.title}
-              </h3>
-              <p className="text-gray-600">
-                {feature.description}
-              </p>
-            </div>
-          ))}
-        </div>
-        
-        {/* Large SVG Dashboard Illustration */}
-        <div className="mt-20 mx-auto max-w-5xl bg-white rounded-xl shadow-lg p-4 relative overflow-hidden">
-          <div className="absolute top-0 right-0 -mr-16 -mt-16">
-            <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M100 0C155.228 0 200 44.7715 200 100C200 155.228 155.228 200 100 200C44.7715 200 0 155.228 0 100C0 44.7715 44.7715 0 100 0Z" fill="#EFF6FF" fillOpacity="0.5"/>
-            </svg>
+        {/* Tabs */}
+        <div className="max-w-6xl mx-auto">
+          {/* Tab Navigation */}
+          <div className="flex flex-wrap justify-center mb-12 border-b border-gray-200">
+            {tabs.map((tab, index) => (
+              <motion.button
+                key={index}
+                className={`flex items-center px-6 py-4 text-lg font-medium border-b-2 transition-colors ${
+                  activeTab === index 
+                    ? 'text-blue-600 border-blue-600' 
+                    : 'text-gray-500 border-transparent hover:text-gray-700'
+                }`}
+                onClick={() => setActiveTab(index)}
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <span className="mr-2">{tab.icon}</span>
+                {tab.name}
+              </motion.button>
+            ))}
           </div>
           
-          <svg className="w-full" viewBox="0 0 800 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="800" height="400" rx="8" fill="#F9FAFB"/>
-            
-            {/* Dashboard Header */}
-            <rect x="40" y="30" width="720" height="60" rx="4" fill="#F3F4F6"/>
-            <rect x="60" y="55" width="140" height="10" rx="2" fill="#E5E7EB"/>
-            <circle cx="740" cy="60" r="15" fill="#3B82F6"/>
-            <circle cx="700" cy="60" r="15" fill="#E5E7EB"/>
-            
-            {/* Sidebar */}
-            <rect x="40" y="110" width="200" height="260" rx="4" fill="#F3F4F6"/>
-            <rect x="60" y="135" width="160" height="10" rx="2" fill="#E5E7EB"/>
-            <rect x="60" y="165" width="160" height="10" rx="2" fill="#E5E7EB"/>
-            <rect x="60" y="195" width="160" height="10" rx="2" fill="#E5E7EB"/>
-            <rect x="60" y="225" width="160" height="10" rx="2" fill="#E5E7EB"/>
-            <rect x="60" y="255" width="160" height="10" rx="2" fill="#E5E7EB"/>
-            <rect x="60" y="285" width="160" height="10" rx="2" fill="#E5E7EB"/>
-            <rect x="60" y="315" width="160" height="10" rx="2" fill="#E5E7EB"/>
-            <rect x="60" y="345" width="160" height="10" rx="2" fill="#E5E7EB"/>
-            
-            {/* Main Content */}
-            <rect x="260" y="110" width="500" height="120" rx="4" fill="#DBEAFE"/>
-            <rect x="280" y="130" width="200" height="15" rx="2" fill="#3B82F6"/>
-            <rect x="280" y="155" width="300" height="10" rx="2" fill="#93C5FD"/>
-            <rect x="280" y="175" width="250" height="10" rx="2" fill="#93C5FD"/>
-            <rect x="280" y="195" width="150" height="10" rx="2" fill="#93C5FD"/>
-            
-            {/* Stats */}
-            <rect x="260" y="250" width="160" height="120" rx="4" fill="#F3F4F6"/>
-            <rect x="280" y="270" width="80" height="10" rx="2" fill="#E5E7EB"/>
-            <rect x="280" y="290" width="120" height="30" rx="2" fill="#3B82F6"/>
-            <rect x="280" y="330" width="120" height="10" rx="2" fill="#E5E7EB"/>
-            <rect x="280" y="350" width="80" height="10" rx="2" fill="#E5E7EB"/>
-            
-            <rect x="430" y="250" width="160" height="120" rx="4" fill="#F3F4F6"/>
-            <rect x="450" y="270" width="80" height="10" rx="2" fill="#E5E7EB"/>
-            <rect x="450" y="290" width="120" height="30" rx="2" fill="#10B981"/>
-            <rect x="450" y="330" width="120" height="10" rx="2" fill="#E5E7EB"/>
-            <rect x="450" y="350" width="80" height="10" rx="2" fill="#E5E7EB"/>
-            
-            <rect x="600" y="250" width="160" height="120" rx="4" fill="#F3F4F6"/>
-            <rect x="620" y="270" width="80" height="10" rx="2" fill="#E5E7EB"/>
-            <rect x="620" y="290" width="120" height="30" rx="2" fill="#F59E0B"/>
-            <rect x="620" y="330" width="120" height="10" rx="2" fill="#E5E7EB"/>
-            <rect x="620" y="350" width="80" height="10" rx="2" fill="#E5E7EB"/>
-            
-            {/* Chart Line */}
-            <path d="M280 320L320 305L360 310L400 290" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round"/>
-            <path d="M450 320L490 290L530 300L570 280" stroke="#10B981" strokeWidth="2" strokeLinecap="round"/>
-            <path d="M620 320L660 300L700 310L740 290" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round"/>
-          </svg>
+          {/* Tab Content */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="grid md:grid-cols-2 gap-12 items-center"
+            >
+              {/* Content */}
+              <div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                  {tabs[activeTab].content.title}
+                </h3>
+                <p className="text-lg text-gray-600 mb-6">
+                  {tabs[activeTab].content.description}
+                </p>
+                <ul className="space-y-3">
+                  {tabs[activeTab].content.featureList.map((feature, index) => (
+                    <motion.li 
+                      key={index}
+                      className="flex items-start"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.1 }}
+                    >
+                      <CheckIcon className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-1" />
+                      <span className="text-gray-700">{feature}</span>
+                    </motion.li>
+                  ))}
+                </ul>
+              </div>
+              
+              {/* Image/Illustration */}
+              <motion.div
+                className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-2xl shadow-sm"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                {/* Placeholder for feature image */}
+                <div className="aspect-video bg-gradient-to-r from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center">
+                  <div className="text-center p-8">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-full text-blue-600 mb-4 shadow-sm">
+                      {tabs[activeTab].icon}
+                    </div>
+                    <p className="text-blue-800 font-medium">
+                      {tabs[activeTab].name} Feature Visualization
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </section>
