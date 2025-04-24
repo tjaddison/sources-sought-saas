@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 17, 24, 39;
+  --background-rgb: 255, 255, 255;
+  --primary-rgb: 37, 99, 235;
+  --primary-light-rgb: 239, 246, 255;
+  --secondary-rgb: 16, 185, 129;
+  --accent-rgb: 245, 158, 11;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+  font-feature-settings: "ss01", "ss02", "cv01", "cv02";
+}
+
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
+  }
+  
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl leading-tight;
+  }
+  
+  h2 {
+    @apply text-3xl md:text-4xl leading-tight;
+  }
+  
+  h3 {
+    @apply text-2xl leading-tight;
+  }
+  
+  a {
+    @apply transition-all duration-200;
+  }
+}
+
+/* Smooth animations and transitions */
+* {
+  @apply transition-colors duration-200;
+}
+
+/* Modern styled buttons */
+.btn {
+  @apply px-6 py-3 rounded-lg font-medium transition-all duration-200;
+}
+
+.btn-primary {
+  @apply bg-blue-600 hover:bg-blue-700 text-white shadow-sm hover:shadow;
+}
+
+.btn-secondary {
+  @apply bg-white border border-gray-300 hover:border-gray-400 text-gray-800 shadow-sm hover:shadow;
+}
+
+/* Card styling */
+.card {
+  @apply bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden;
+}
+
+/* Animation for elements */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Smooth scrolling for anchor navigation */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Additional styles for focus states for accessibility */
+:focus {
+  @apply outline-none ring-2 ring-blue-600 ring-opacity-50;
+}
+
+button:focus, a:focus {
+  @apply ring-2 ring-blue-600 ring-opacity-50;
+} 
