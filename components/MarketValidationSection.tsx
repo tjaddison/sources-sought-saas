@@ -87,11 +87,11 @@ export default function MarketValidationSection() {
               animate={{ 
                 y: [0, -10, 0],
                 rotate: [0, 5, 0, -5, 0],
-              }}
-              transition={{ 
-                duration: 8, 
-                repeat: Infinity,
-                repeatType: "reverse" 
+                transition: { 
+                  duration: 8, 
+                  repeat: Infinity,
+                  repeatType: "reverse" 
+                }
               }}
             >
               <svg className="w-48 h-48 text-blue-300" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">

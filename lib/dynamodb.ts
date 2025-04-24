@@ -61,7 +61,7 @@ export async function getItemById(id: string) {
     TableName: tableName,
     Key: {
       // Replace 'id' with your actual primary key attribute name
-      id: id,
+      itemId: id,
     },
   };
 
