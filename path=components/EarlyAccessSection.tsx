@@ -53,7 +53,7 @@ export default function EarlyAccessSection() {
             </div>
             <h3 className="text-xl font-semibold mb-2">Founding Member</h3>
             <p className="text-gray-600 mb-4">
-              One-time $99 — lock in lifetime discounts, priority support & direct roadmap influence.
+              One-time $199 — lock in lifetime discounts, priority support & direct roadmap influence.
             </p>
             <Link
               href="/waitlist#early-access"

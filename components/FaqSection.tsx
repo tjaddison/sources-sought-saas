@@ -58,7 +58,7 @@ export default function FAQSection() {
             </div>
             
             <div className="bg-white rounded-xl p-8 shadow-sm">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Is the $99 founding member fee refundable?</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Is the $199 founding member fee refundable?</h3>
               <p className="text-gray-600">
                 Yes, if we don&apos;t launch the product or if you&apos;re unsatisfied with the beta, we&apos;ll refund your founding member fee. Our goal is to build something truly valuable for federal contractors.
               </p>

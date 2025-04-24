@@ -45,7 +45,7 @@ export default function EarlyAccessSection() {
                   <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-gray-600">10% discount when we launch</span>
+                  <span className="text-gray-600">1 month 20% discount when we launch</span>
                 </li>
               </ul>
               <a href="/waitlist?tier=feedback" className="block w-full py-3 px-6 text-center bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium rounded-lg transition-colors">
@@ -62,7 +62,7 @@ export default function EarlyAccessSection() {
             <div className="p-8">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Founding Member</h3>
               <div className="text-gray-500 mb-4">
-                <span className="text-blue-600 font-bold text-lg">$99</span>
+                <span className="text-blue-600 font-bold text-lg">$199</span>
                 <span> one-time fee</span>
               </div>
               <p className="text-gray-600 mb-6">
@@ -85,13 +85,13 @@ export default function EarlyAccessSection() {
                   <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-gray-600">3 months free at launch</span>
+                  <span className="text-gray-600">1 month free at launch</span>
                 </li>
                 <li className="flex items-start">
                   <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-gray-600">25% lifetime discount</span>
+                  <span className="text-gray-600">20% lifetime discount</span>
                 </li>
                 <li className="flex items-start">
                   <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">

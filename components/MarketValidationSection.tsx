@@ -40,7 +40,7 @@ export default function MarketValidationSection() {
               <h3 className="text-xl font-bold text-gray-900">Market Research</h3>
             </div>
             <p className="text-gray-600">
-              Our interviews with <span className="font-medium">50+ small business contractors</span> revealed consistent challenges in discovering and responding to pre-solicitation notices.
+              Our research of <span className="font-medium">small business contractors</span> revealed consistent challenges in discovering and responding to pre-solicitation notices.
             </p>
           </div>
           
