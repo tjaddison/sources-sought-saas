@@ -2,7 +2,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 
 export default function TermsOfServicePage() {
-  const lastUpdated = "October 26, 2023"; // Update this date
+  const lastUpdated = "April 1, 2025"; // Update this date
 
   return (
     <>
@@ -27,7 +27,7 @@ export default function TermsOfServicePage() {
             <div className="prose prose-lg lg:prose-xl text-gray-700 mx-auto space-y-6">
               <h2>1. Agreement to Terms</h2>
               <p>
-                These Terms of Service constitute a legally binding agreement made between you, whether personally or on behalf of an entity (“you”) and [Your Company Name] (“we,” “us” or “our”), concerning your access to and use of the [Your Website URL] website as well as any other media form, media channel, mobile website or mobile application related, linked, or otherwise connected thereto (collectively, the “Site” and the &quot;Services&quot;).
+                These Terms of Service constitute a legally binding agreement made between you, whether personally or on behalf of an entity (“you”) and Xenvya Consulting LLC (“we,” “us” or “our”), concerning your access to and use of this website as well as any other media form, media channel, mobile website or mobile application related, linked, or otherwise connected thereto (collectively, the “Site” and the &quot;Services&quot;).
               </p>
               <p>
                 You agree that by accessing the Services, you have read, understood, and agree to be bound by all of these Terms of Service. If you do not agree with all of these Terms of Service, then you are expressly prohibited from using the Services and you must discontinue use immediately.
@@ -36,9 +36,6 @@ export default function TermsOfServicePage() {
               <h2>2. Use of Our Service</h2>
               <p>
                 We grant you a limited, non-exclusive, non-transferable, and revocable license to use our Service, subject to the Terms. You agree not to use the Service for any purpose that is illegal or prohibited by these Terms.
-              </p>
-              <p>
-                [Add specific conditions of use, e.g., eligibility requirements, acceptable use policies].
               </p>
 
               <h2>3. User Accounts</h2>
@@ -61,16 +58,10 @@ export default function TermsOfServicePage() {
               <p>
                 You may be able to submit content, including text, documents, images, and other materials (&quot;User Content&quot;) to the Service. You retain ownership of your User Content, but you grant us a worldwide, non-exclusive, royalty-free license to use, copy, reproduce, process, adapt, modify, publish, transmit, display, and distribute your User Content in connection with providing and promoting the Service.
               </p>
-              <p>
-                [Add details about responsibility for User Content, prohibited content, rights we have over User Content].
-              </p>
 
               <h2>6. Prohibited Activities</h2>
               <p>
                 You may not access or use the Services for any purpose other than that for which we make the Services available. The Services may not be used in connection with any commercial endeavors except those that are specifically endorsed or approved by us.
-              </p>
-              <p>
-                [List specific prohibited activities, e.g., scraping data, interfering with security features, unauthorized framing, attempting to impersonate another user, harassing employees, etc.].
               </p>
 
               <h2>7. Termination</h2>
@@ -85,21 +76,15 @@ export default function TermsOfServicePage() {
               <p>
                 THE SERVICES ARE PROVIDED ON AN AS-IS AND AS-AVAILABLE BASIS. YOU AGREE THAT YOUR USE OF THE SERVICES WILL BE AT YOUR SOLE RISK. TO THE FULLEST EXTENT PERMITTED BY LAW, WE DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED, IN CONNECTION WITH THE SERVICES AND YOUR USE THEREOF, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
               </p>
-              <p>
-                [Add further disclaimers as relevant, e.g., regarding accuracy of information, availability, security].
-              </p>
 
               <h2>9. Limitation of Liability</h2>
               <p>
                 IN NO EVENT WILL WE OR OUR DIRECTORS, EMPLOYEES, OR AGENTS BE LIABLE TO YOU OR ANY THIRD PARTY FOR ANY DIRECT, INDIRECT, CONSEQUENTIAL, EXEMPLARY, INCIDENTAL, SPECIAL, OR PUNITIVE DAMAGES, INCLUDING LOST PROFIT, LOST REVENUE, LOSS OF DATA, OR OTHER DAMAGES ARISING FROM YOUR USE OF THE SERVICES, EVEN IF WE HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
               </p>
-              <p>
-                [Include any specific limitations or exceptions as required by law or desired].
-              </p>
 
               <h2>10. Governing Law</h2>
               <p>
-                These Terms of Service and your use of the Services are governed by and construed in accordance with the laws of the State of [Your State/Jurisdiction], without regard to its conflict of law principles.
+                These Terms of Service and your use of the Services are governed by and construed in accordance with the laws of the State of Virginia, without regard to its conflict of law principles.
               </p>
 
               <h2>11. Changes to These Terms</h2>
@@ -112,13 +97,7 @@ export default function TermsOfServicePage() {
                 In order to resolve a complaint regarding the Services or to receive further information regarding use of the Services, please contact us at:
               </p>
               <p>
-                Email: [Your Contact Email Address]<br />
-                Address:<br />
-                [Your Company Name]<br />
-                [Your Company Address Line 1]<br />
-                [Your Company Address Line 2]<br />
-                [City, State, Zip Code]<br />
-                [Country]
+                Email: info @ xenvya.com
               </p>
             </div>
           </div>
