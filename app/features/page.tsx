@@ -173,8 +173,9 @@ export default function FeaturesPage() {
                    Give Feedback
                  </Link>
 
-                 {/* Add "Become a Founding Member" Button */}
-                 <Link href="/waitlist#early-access" // Link to the early access section on the waitlist page
+                 {/* Link to the early-access section on the waitlist page */}
+                 <Link
+                   href="/waitlist#early-access"
                    className="inline-block px-8 py-4 bg-white hover:bg-gray-100 text-blue-600 font-medium rounded-lg transition-colors text-lg shadow-md w-full sm:w-auto"
                  >
                    Become a Founding Member

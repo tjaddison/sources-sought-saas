@@ -5,7 +5,7 @@ import SecretSection from '@/components/SecretSection'
 import VisionSection from '@/components/VisionSection'
 import MarketValidationSection from '@/components/MarketValidationSection'
 import EarlyAccessSection from '@/components/EarlyAccessSection'
-// import FaqSection from '@/components/FaqSection'
+import FaqSection from '@/components/FaqSection'
 import Footer from '@/components/Footer'
 
 export default function Home() {
@@ -19,7 +19,7 @@ export default function Home() {
         {/* <FeatureSpotlightSection /> */}
         <MarketValidationSection />
         <EarlyAccessSection />
-        {/* <FaqSection /> */}
+        <FaqSection />
       </main>
       <Footer />
     </>

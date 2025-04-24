@@ -62,7 +62,8 @@ export default function FeedbackPage() {
                 <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed">
                   Ready to take a more active role? Join our exclusive Founding Member community! Get early access, influence the roadmap directly through dedicated feedback sessions, and secure significant lifetime discounts. Help us shape the future of federal contracting intelligence.
                 </p>
-                <Link href="/waitlist#early-access" // Or link directly to the waitlist/early access section/page
+                <Link
+                  href="/waitlist#early-access"
                   className="inline-block px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors text-lg shadow-md transform hover:scale-105 duration-300 ease-in-out"
                 >
                   Learn More & Apply for Early Access
