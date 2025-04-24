@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { putItem } from '@/lib/dynamodb'; // Import your DynamoDB utility function
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 
 // Basic email validation regex
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -43,11 +42,6 @@ export async function POST(request: Request) {
       submittedAt: submittedAt,
       // Add any other relevant fields, e.g., status: 'waitlisted'
     };
-
-    // Find the DynamoDB client configuration and update it
-    const client = new DynamoDBClient({
-      region: "us-east-1"
-    });
 
     // Save to DynamoDB using your putItem function
     await putItem(item);
