@@ -15,7 +15,7 @@ export default function VisionPage() {
               Our Vision: <span className="text-blue-600">Smarter Federal Contracting</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              We&apos;re building GovWin AI to empower federal contractors, especially small businesses, by leveraging artificial intelligence to navigate the complexities of the pre-solicitation landscape and win more opportunities.
+              We&apos;re building GovBiz Agent to empower federal contractors, especially small businesses, by leveraging artificial intelligence to navigate the complexities of the pre-solicitation landscape and win more opportunities.
             </p>
             <div className="mt-10">
               <Link href="/waitlist" className="inline-block px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors text-lg shadow-md">
@@ -57,7 +57,7 @@ export default function VisionPage() {
             <div className="text-center max-w-3xl mx-auto mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our AI-Powered Solution</h2>
               <p className="text-lg text-gray-600">
-                GovWin AI aims to address these challenges head-on by providing intelligent tools designed specifically for the pre-solicitation phase.
+                GovBiz Agent aims to address these challenges head-on by providing intelligent tools designed specifically for the pre-solicitation phase.
               </p>
             </div>
             <div className="space-y-12 max-w-4xl mx-auto">
@@ -85,7 +85,7 @@ export default function VisionPage() {
                  <div className="md:w-2/3">
                    <h3 className="text-2xl font-semibold text-gray-800 mb-3">Automated Requirements Analysis</h3>
                    <p className="text-gray-600 leading-relaxed">
-                     GovWin AI will be designed to rapidly parse Sources Sought documents, extracting key requirements, evaluation factors, deadlines, and points of contact, presenting them in a clear, actionable format.
+                     GovBiz Agent will be designed to rapidly parse Sources Sought documents, extracting key requirements, evaluation factors, deadlines, and points of contact, presenting them in a clear, actionable format.
                    </p>
                  </div>
                </div>
@@ -112,7 +112,7 @@ export default function VisionPage() {
           <div className="container mx-auto px-6 text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Help Us Build the Future</h2>
             <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto mb-10">
-              We are currently in the validation and early development stage. By joining our waitlist or early access program, you can provide crucial feedback that directly shapes GovWin AI into the tool federal contractors need.
+              We are currently in the validation and early development stage. By joining our waitlist or early access program, you can provide crucial feedback that directly shapes GovBiz Agent into the tool federal contractors need.
             </p>
             <Link href="/waitlist" className="inline-block px-8 py-4 bg-white hover:bg-gray-100 text-blue-600 font-medium rounded-lg transition-colors text-lg shadow-md">
               Get Early Access & Provide Feedback

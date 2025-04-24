@@ -17,7 +17,7 @@ export default function FeedbackPage() {
               Share Your Feedback
             </h1>
             <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-              Your insights are crucial as we build GovWin AI. Help us create the best tool for federal contractors.
+              Your insights are crucial as we build GovBiz Agent. Help us create the best tool for federal contractors.
             </p>
           </div>
         </section>
@@ -29,7 +29,7 @@ export default function FeedbackPage() {
               <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-6">Why Your Input Matters</h2>
               <div className="prose prose-lg lg:prose-xl text-gray-700 mx-auto space-y-6">
                 <p>
-                  GovWin AI is currently in the crucial validation and early development stage. We&apos;re actively defining features, refining the user experience, and ensuring we solve the most pressing challenges faced by federal contractors in the pre-solicitation process.
+                  GovBiz Agent is currently in the crucial validation and early development stage. We&apos;re actively defining features, refining the user experience, and ensuring we solve the most pressing challenges faced by federal contractors in the pre-solicitation process.
                 </p>
                 <p>
                   Hearing directly from potential users like you allows us to:
@@ -41,7 +41,7 @@ export default function FeedbackPage() {
                   <li><strong>Uncover unmet needs:</strong> Are there challenges we haven&apos;t considered?</li>
                 </ul>
                 <p>
-                  Your input, whether it&apos;s a suggestion, a critique, or a question, directly influences the direction of GovWin AI and helps us build a tool that truly meets your needs.
+                  Your input, whether it&apos;s a suggestion, a critique, or a question, directly influences the direction of GovBiz Agent and helps us build a tool that truly meets your needs.
                 </p>
                 <h3 className="text-xl font-semibold text-gray-800 pt-4 !mb-3">How to Provide Feedback</h3>
                 <p>

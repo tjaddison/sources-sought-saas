@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "GovWin AI - The Secret Weapon for Federal Contractors",
+  title: "GovBiz Agent - The Secret Weapon for Federal Contractors",
   description: "AI-powered platform that helps federal contractors discover, compete for, and win more government contracts.",
 };
 

@@ -9,7 +9,7 @@ export default function EarlyAccessSection() {
             Early Access Program
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Shape the Future of GovWin AI
+            Shape the Future of GovBiz Agent
           </h2>
           <p className="text-xl text-gray-600">
             Join our early access program to influence our product roadmap and get exclusive benefits when we launch

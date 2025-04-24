@@ -14,21 +14,21 @@ interface Testimonial {
 
 const testimonials: Testimonial[] = [
   {
-    quote: "After 15 years in federal contracting, I've never seen a tool this effective. GovWin AI identified a Sources Sought notice that led to a $5.2M contract with a new agency we weren't previously tracking.",
+    quote: "After 15 years in federal contracting, I've never seen a tool this effective. GovBiz Agent identified a Sources Sought notice that led to a $5.2M contract with a new agency we weren't previously tracking.",
     author: "Michael Rodriguez",
     position: "President",
     company: "Secure Networks, Inc.",
     imageSrc: "/images/michael-rodriguez.jpg"
   },
   {
-    quote: "Our BD team spent hours daily searching SAM.gov and drafting responses. GovWin AI cut that time by 78% and improved our response quality. We've won two contracts directly traced to Sources Sought notices we'd have missed otherwise.",
+    quote: "Our BD team spent hours daily searching SAM.gov and drafting responses. GovBiz Agent cut that time by 78% and improved our response quality. We've won two contracts directly traced to Sources Sought notices we'd have missed otherwise.",
     author: "Jennifer Wilson",
     position: "Director of BD",
     company: "FedTech Systems",
     imageSrc: "/images/jennifer-wilson.jpg"
   },
   {
-    quote: "As a small business, we couldn't afford dedicated BD staff. GovWin AI levels the playing field, giving us the capabilities of a large prime's BD department at a fraction of the cost.",
+    quote: "As a small business, we couldn't afford dedicated BD staff. GovBiz Agent levels the playing field, giving us the capabilities of a large prime's BD department at a fraction of the cost.",
     author: "David Chen",
     position: "Owner",
     company: "Chen Engineering Services (SDVOSB)",

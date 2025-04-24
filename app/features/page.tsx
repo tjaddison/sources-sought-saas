@@ -15,7 +15,7 @@ interface FeatureDetail {
 const plannedFeatures: FeatureDetail[] = [
   {
     title: 'Intelligent Opportunity Matching',
-    description: 'Leveraging AI trained on your company profile (capabilities, past performance, set-asides), GovWin AI will proactively identify and score Sources Sought notices from SAM.gov and other sources, prioritizing those with the highest win probability for your specific business.',
+    description: 'Leveraging AI trained on your company profile (capabilities, past performance, set-asides), GovBiz Agent will proactively identify and score Sources Sought notices from SAM.gov and other sources, prioritizing those with the highest win probability for your specific business.',
     icon: <svg className="w-8 h-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" /></svg>,
   },
   {
@@ -25,7 +25,7 @@ const plannedFeatures: FeatureDetail[] = [
   },
   {
     title: 'AI-Assisted Response Generation',
-    description: 'Get a head start on crafting compelling responses. Based on the analyzed requirements and your company profile, GovWin AI will help generate tailored response outlines, capability statement drafts, and compliance matrices, significantly reducing initial drafting time.',
+    description: 'Get a head start on crafting compelling responses. Based on the analyzed requirements and your company profile, GovBiz Agent will help generate tailored response outlines, capability statement drafts, and compliance matrices, significantly reducing initial drafting time.',
     icon: <svg className="w-8 h-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>,
   },
   {
@@ -64,7 +64,7 @@ export default function FeaturesPage() {
               Core Features
             </h1>
             <p className="text-xl text-gray-600">
-              Explore the key capabilities GovWin AI is designed to offer federal contractors.
+              Explore the key capabilities GovBiz Agent is designed to offer federal contractors.
             </p>
           </div>
 
@@ -76,7 +76,7 @@ export default function FeaturesPage() {
             <div className="container mx-auto px-6">
               <div className="max-w-3xl mx-auto text-center pb-12 md:pb-16">
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-                  How GovWin AI Works For You
+                  How GovBiz Agent Works For You
                 </h2>
                 <p className="text-lg text-gray-600">
                   Our AI-powered workflow simplifies finding and responding to relevant Sources Sought notices.
@@ -93,7 +93,7 @@ export default function FeaturesPage() {
                   <div className="flex-1 text-center md:text-left">
                     <h3 className="text-2xl font-semibold text-gray-800 mb-2">1. Define Your Company Profile</h3>
                     <p className="text-gray-600 leading-relaxed">
-                      Build a comprehensive profile by uploading key documents like <strong className="font-medium text-gray-700">resumes</strong> for key personnel, detailed <strong className="font-medium text-gray-700">capabilities statements</strong>, <strong className="font-medium text-gray-700">past performance descriptions</strong> (including CPARS if available), examples of <strong className="font-medium text-gray-700">past winning proposals</strong>, and relevant <strong className="font-medium text-gray-700">Statements of Work (SOWs)</strong> from previous contracts. Also include relevant NAICS codes, set-aside statuses (like 8(a), WOSB, SDVOSB), and specific areas of expertise. The more comprehensive your profile, the better GovWin AI can identify perfectly matched opportunities.
+                      Build a comprehensive profile by uploading key documents like <strong className="font-medium text-gray-700">resumes</strong> for key personnel, detailed <strong className="font-medium text-gray-700">capabilities statements</strong>, <strong className="font-medium text-gray-700">past performance descriptions</strong> (including CPARS if available), examples of <strong className="font-medium text-gray-700">past winning proposals</strong>, and relevant <strong className="font-medium text-gray-700">Statements of Work (SOWs)</strong> from previous contracts. Also include relevant NAICS codes, set-aside statuses (like 8(a), WOSB, SDVOSB), and specific areas of expertise. The more comprehensive your profile, the better GovBiz Agent can identify perfectly matched opportunities.
                     </p>
                   </div>
                 </div>
@@ -106,7 +106,7 @@ export default function FeaturesPage() {
                   <div className="flex-1 text-center md:text-right">
                     <h3 className="text-2xl font-semibold text-gray-800 mb-2">2. Intelligent Opportunity Discovery</h3>
                     <p className="text-gray-600 leading-relaxed">
-                      GovWin AI continuously scans SAM.gov and other relevant sources for new Sources Sought notices. Our AI analyzes each notice against your profile, calculating a match score based on requirements, keywords, agency history, and your company&apos;s strengths.
+                      GovBiz Agent continuously scans SAM.gov and other relevant sources for new Sources Sought notices. Our AI analyzes each notice against your profile, calculating a match score based on requirements, keywords, agency history, and your company&apos;s strengths.
                     </p>
                   </div>
                 </div>
@@ -160,7 +160,7 @@ export default function FeaturesPage() {
             <div className="container mx-auto px-6 text-center">
               <h2 className="text-3xl md:text-4xl font-bold mb-6">Get Involved & Shape the Future</h2>
               <p className="text-lg md:text-xl text-blue-100 max-w-3xl mx-auto mb-10 leading-relaxed">
-                We&apos;re building GovWin AI collaboratively with the federal contracting community. Join our early access program or waitlist to provide feedback, influence features, and be among the first to leverage AI for pre-solicitation success.
+                We&apos;re building GovBiz Agent collaboratively with the federal contracting community. Join our early access program or waitlist to provide feedback, influence features, and be among the first to leverage AI for pre-solicitation success.
               </p>
               <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
                  {/* Removed "Join Waitlist" Button */}

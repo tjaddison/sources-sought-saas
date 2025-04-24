@@ -44,7 +44,7 @@ export default function DemoLayout({
                <rect width="32" height="32" rx="8" fill="#2563EB"/>
                <path d="M10 16L14 20L22 12" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
              </svg>
-             <span className="text-lg font-semibold text-white">GovWin AI Demo</span>
+             <span className="text-lg font-semibold text-white">GovBiz Agent Demo</span>
            </div>
         </div>
         <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto">

@@ -11,7 +11,7 @@ export default function Hero() {
           </span>
         </h1>
         <p className="text-xl md:text-2xl mb-8 text-blue-100">
-          GovWin AI helps you discover, analyze, and respond to Sources Sought notices with confidence and speed.
+          GovBiz Agent helps you discover, analyze, and respond to Sources Sought notices with confidence and speed.
         </p>
         <Link
           href="/waitlist"

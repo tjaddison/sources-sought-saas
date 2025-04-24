@@ -11,7 +11,7 @@ export default function AboutPage() {
         <section className="bg-gradient-to-b from-blue-50 to-white py-16 md:py-20">
           <div className="container mx-auto px-6 text-center">
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 mb-4">
-              About GovWin AI
+              About GovBiz Agent
             </h1>
             <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
               Leveling the playing field for federal contractors through intelligent automation.
@@ -39,7 +39,7 @@ export default function AboutPage() {
                     <strong className="font-semibold">We believe it shouldn&apos;t be this hard.</strong> Talent, innovation, and the drive to serve shouldn&apos;t be overshadowed by bureaucratic hurdles or a lack of bandwidth.
                   </p>
                   <p>
-                    Our motivation stems from a deep desire to <strong className="font-semibold">level the playing field</strong>. We&apos;re harnessing the power of Artificial Intelligence not just to automate tasks, but to provide genuine strategic leverage. GovWin AI is being built to cut through the noise, illuminate the best-fit opportunities hidden in plain sight, and empower contractors like you to focus on what you do best: delivering exceptional value to government agencies. We&apos;re driven by the vision of a more accessible and equitable federal contracting ecosystem.
+                    Our motivation stems from a deep desire to <strong className="font-semibold">level the playing field</strong>. We&apos;re harnessing the power of Artificial Intelligence not just to automate tasks, but to provide genuine strategic leverage. GovBiz Agent is being built to cut through the noise, illuminate the best-fit opportunities hidden in plain sight, and empower contractors like you to focus on what you do best: delivering exceptional value to government agencies. We&apos;re driven by the vision of a more accessible and equitable federal contracting ecosystem.
                   </p>
                 </div>
               </div>
@@ -58,13 +58,13 @@ export default function AboutPage() {
                </svg>
               <h2 className="text-3xl font-bold text-gray-900 mb-4">A Project by Xenvya</h2>
               <p className="text-lg text-gray-600 mb-4">
-                GovWin AI is an innovation project spearheaded by Xenvya.
+                GovBiz Agent is an innovation project spearheaded by Xenvya.
               </p>
               <p className="text-xl text-gray-700 italic border-l-4 border-blue-500 pl-4 inline-block">
                 &quot;Innovative software and AI solutions that drive business growth and create remarkable customer experiences.&quot;
               </p>
               <p className="text-gray-600 mt-6">
-                Xenvya brings expertise in software development, artificial intelligence, and user-centric design to the development of GovWin AI. We are committed to building high-quality, impactful solutions.
+                Xenvya brings expertise in software development, artificial intelligence, and user-centric design to the development of GovBiz Agent. We are committed to building high-quality, impactful solutions.
               </p>
             </div>
           </div>
@@ -79,7 +79,7 @@ export default function AboutPage() {
                 <div className="bg-blue-50 p-6 rounded-lg">
                   <h3 className="text-xl font-semibold text-gray-800 mb-3">User-Centric Development</h3>
                   <p className="text-gray-700">
-                    We are currently in the validation and early development phase. Feedback from real federal contractors through our waitlist and early access program is crucial to ensuring GovWin AI solves the right problems effectively.
+                    We are currently in the validation and early development phase. Feedback from real federal contractors through our waitlist and early access program is crucial to ensuring GovBiz Agent solves the right problems effectively.
                   </p>
                 </div>
                 <div className="bg-blue-50 p-6 rounded-lg">

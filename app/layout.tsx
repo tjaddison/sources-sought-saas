@@ -5,7 +5,7 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'GovWin AI | Your AI-powered companion for federal contract success',
+  title: 'GovBiz Agent | Your AI-powered companion for federal contract success',
   description: 'Discover, pursue, and win more government contracts with less effort using our AI-powered companion for federal contractors.',
 }
 

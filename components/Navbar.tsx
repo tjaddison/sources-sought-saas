@@ -24,7 +24,7 @@ export default function Navbar() {
                 <rect width="32" height="32" rx="8" fill="#2563EB"/>
                 <path d="M10 16L14 20L22 12" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-              <span className="text-xl font-bold text-gray-900">GovWin AI</span>
+              <span className="text-xl font-bold text-gray-900">GovBiz Agent</span>
             </Link>
             
             <div className="hidden lg:flex items-center ml-10 space-x-8">

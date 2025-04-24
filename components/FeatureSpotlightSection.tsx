@@ -27,7 +27,7 @@ const tabContents: Record<string, TabContentProps> = {
   },
   'requirements-analysis': {
     title: 'Automated Requirements Analysis',
-    description: 'Instantly extract and summarize key requirements from lengthy government documents. GovWin AI breaks down complex attachments, identifies hidden requirements, and flags potential issues.',
+    description: 'Instantly extract and summarize key requirements from lengthy government documents. GovBiz Agent breaks down complex attachments, identifies hidden requirements, and flags potential issues.',
     featureList: [
       'Automated document parsing and analysis',
       'Key requirement extraction and prioritization',
@@ -60,7 +60,7 @@ const tabContents: Record<string, TabContentProps> = {
   },
   'followup-system': {
     title: 'Smart Follow-up System',
-    description: 'Never miss another deadline or follow-up opportunity. GovWin AI reminds you when to confirm receipt, request meetings, and check for solicitation releases.',
+    description: 'Never miss another deadline or follow-up opportunity. GovBiz Agent reminds you when to confirm receipt, request meetings, and check for solicitation releases.',
     featureList: [
       'Automated follow-up reminders',
       'Meeting request draft generation',

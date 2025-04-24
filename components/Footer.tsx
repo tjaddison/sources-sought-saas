@@ -35,10 +35,10 @@ export default function Footer() {
                 <rect width="32" height="32" rx="8" fill="#2563EB"/>
                 <path d="M10 16L14 20L22 12" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-              <span className="text-xl font-bold text-white">GovWin AI</span>
+              <span className="text-xl font-bold text-white">GovBiz Agent</span>
             </Link>
             <p className="text-sm text-gray-400">
-              &copy; {currentYear} GovWin AI by Xenvya. All rights reserved.
+              &copy; {currentYear} GovBiz Agent by Xenvya. All rights reserved.
             </p>
           </div>
 

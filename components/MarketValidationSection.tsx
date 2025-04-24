@@ -7,7 +7,7 @@ export default function MarketValidationSection() {
             Market Opportunity
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Why We&apos;re Building GovWin AI
+            Why We&apos;re Building GovBiz Agent
           </h2>
           <p className="text-xl text-gray-600">
             Federal contracting is a $650B market with significant inefficiencies we believe AI can solve.

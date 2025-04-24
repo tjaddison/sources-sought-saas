@@ -6,11 +6,11 @@ import Link from 'next/link'; // Import Link
 // Define FAQ items directly in the component or import from data source
 const faqItems = [
   {
-    question: "How is GovWin AI different from other contract notification services?",
-    answer: "Unlike traditional services that simply alert you to solicitations, GovWin AI focuses on the earlier, more strategic Sources Sought notices where you can influence requirements. Our system doesn't just notify—it analyzes fit, generates responses, and manages your entire pipeline."
+    question: "How is GovBiz Agent different from other contract notification services?",
+    answer: "Unlike traditional services that simply alert you to solicitations, GovBiz Agent focuses on the earlier, more strategic Sources Sought notices where you can influence requirements. Our system doesn't just notify—it analyzes fit, generates responses, and manages your entire pipeline."
   },
   {
-    question: "What sources does GovWin AI monitor?",
+    question: "What sources does GovBiz Agent monitor?",
     answer: "Our primary focus is SAM.gov for Sources Sought notices. We plan to expand to other relevant federal procurement portals and potentially state/local opportunities based on user feedback."
   },
   {
@@ -19,11 +19,11 @@ const faqItems = [
   },
   {
     question: "What stage is the product in?",
-    answer: "GovWin AI is currently in the validation and early development phase. We are actively building our core AI models and user interface based on feedback from our waitlist and early access partners."
+    answer: "GovBiz Agent is currently in the validation and early development phase. We are actively building our core AI models and user interface based on feedback from our waitlist and early access partners."
   },
    {
     question: "How is the AI trained?",
-    answer: "We're building GovWin AI using state-of-the-art large language models, fine-tuned on a vast dataset of federal contracting documents (Sources Sought, RFPs, capability statements), combined with secure cloud infrastructure and a user-friendly web interface."
+    answer: "We're building GovBiz Agent using state-of-the-art large language models, fine-tuned on a vast dataset of federal contracting documents (Sources Sought, RFPs, capability statements), combined with secure cloud infrastructure and a user-friendly web interface."
   },
 ];
 

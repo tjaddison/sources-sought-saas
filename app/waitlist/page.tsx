@@ -12,10 +12,10 @@ export default function WaitlistPage() {
         <section className="bg-gradient-to-b from-blue-50 to-white py-20 md:py-28">
           <div className="container mx-auto px-6 text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 mb-6">
-              Join the GovWin AI Waitlist
+              Join the GovBiz Agent Waitlist
             </h1>
             <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Be among the first to experience GovWin AI. Sign up now to get early access, influence development, and secure exclusive founding member benefits.
+              Be among the first to experience GovBiz Agent. Sign up now to get early access, influence development, and secure exclusive founding member benefits.
             </p>
           </div>
         </section>
@@ -31,7 +31,7 @@ export default function WaitlistPage() {
                 <ul className="list-none p-0 space-y-4">
                   <li className="flex items-start">
                     <svg className="w-6 h-6 text-blue-600 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    <span><strong>Early Access:</strong> Get preview access to GovWin AI features as they are developed and provide direct feedback.</span>
+                    <span><strong>Early Access:</strong> Get preview access to GovBiz Agent features as they are developed and provide direct feedback.</span>
                   </li>
                   <li className="flex items-start">
                      <svg className="w-6 h-6 text-blue-600 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -47,7 +47,7 @@ export default function WaitlistPage() {
                   </li>
                 </ul>
                  <p className="mt-8 text-sm text-gray-600">
-                   We respect your privacy. Your information will only be used for GovWin AI updates and early access communication.
+                   We respect your privacy. Your information will only be used for GovBiz Agent updates and early access communication.
                  </p>
               </div>
 

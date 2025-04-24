@@ -11,8 +11,8 @@ interface FaqItem {
 /*
 const faqItems: FaqItem[] = [
   {
-    question: "How is GovWin AI different from other contract notification services?",
-    answer: "Unlike traditional services that simply alert you to solicitations, GovWin AI focuses on the earlier, more strategic Sources Sought notices where you can influence requirements. Our system doesn't just notify—it analyzes fit, generates responses, and manages your entire pipeline."
+    question: "How is GovBiz Agent different from other contract notification services?",
+    answer: "Unlike traditional services that simply alert you to solicitations, GovBiz Agent focuses on the earlier, more strategic Sources Sought notices where you can influence requirements. Our system doesn't just notify—it analyzes fit, generates responses, and manages your entire pipeline."
   },
   // ... (rest of faqItems array)
 ];
@@ -37,7 +37,7 @@ export default function FAQSection() {
         <div className="max-w-4xl mx-auto">
           <div className="grid md:grid-cols-2 gap-8">
             <div className="bg-white rounded-xl p-8 shadow-sm">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">When will GovWin AI be available?</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">When will GovBiz Agent be available?</h3>
               <p className="text-gray-600">
                 We&apos;re currently in the research and development phase. Our plan is to launch a beta version to early access partners in Q1 2024, with a public launch targeted for Q2 2024, depending on feedback and testing results.
               </p>
@@ -86,9 +86,9 @@ export default function FAQSection() {
             </div>
             
             <div className="bg-white rounded-xl p-8 shadow-sm">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">What technology will GovWin AI use?</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">What technology will GovBiz Agent use?</h3>
               <p className="text-gray-600">
-                We&apos;re building GovWin AI using state-of-the-art large language models, custom trained on federal contracting data, combined with secure cloud infrastructure and a user-friendly web interface.
+                We&apos;re building GovBiz Agent using state-of-the-art large language models, custom trained on federal contracting data, combined with secure cloud infrastructure and a user-friendly web interface.
               </p>
             </div>
           </div>

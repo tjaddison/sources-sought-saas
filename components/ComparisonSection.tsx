@@ -4,7 +4,7 @@ export default function ComparisonSection() {
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            The GovWin AI Advantage
+            The GovBiz Agent Advantage
           </h2>
           <p className="text-xl text-gray-700 max-w-3xl mx-auto">
             See how we compare to traditional approaches to government contracting
@@ -18,7 +18,7 @@ export default function ComparisonSection() {
                 <th className="p-4 border-b-2 border-gray-200 bg-gray-50 text-left"></th>
                 <th className="p-4 border-b-2 border-gray-200 bg-gray-50 text-left">Traditional Bid Services</th>
                 <th className="p-4 border-b-2 border-gray-200 bg-gray-50 text-left">General-Purpose CRMs</th>
-                <th className="p-4 border-b-2 border-gray-200 bg-blue-50 text-left font-bold text-blue-700">GovWin AI</th>
+                <th className="p-4 border-b-2 border-gray-200 bg-blue-50 text-left font-bold text-blue-700">GovBiz Agent</th>
               </tr>
             </thead>
             <tbody>
