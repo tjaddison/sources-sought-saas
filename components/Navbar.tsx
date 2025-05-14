@@ -7,10 +7,9 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
 
   const navLinks = [
-    { name: 'Vision', href: '/vision' },
     { name: 'Features', href: '/features' },
-    { name: 'About', href: '/about' },
-    { name: 'Give Feedback', href: '/feedback' },
+    { name: 'Pricing', href: '/pricing' },
+    { name: 'ROI Calculator', href: '/roi-calculator' },
   ]
 
   return (
@@ -41,8 +40,8 @@ export default function Navbar() {
           </div>
           
           <div className="hidden lg:flex items-center space-x-4">
-            <Link href="/waitlist" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
-              Join Waitlist
+            <Link href="/pricing" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+              Choose a Plan
             </Link>
             <Link href="/login" className="text-gray-700 hover:text-blue-600 border border-gray-300 px-4 py-2 rounded-lg transition-colors">
               Demo Login
@@ -78,7 +77,7 @@ export default function Navbar() {
                 </Link>
               ))}
               <hr className="border-gray-200" />
-              <Link href="/waitlist" onClick={() => setIsOpen(false)} className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-center">Join Waitlist</Link>
+              <Link href="/pricing" onClick={() => setIsOpen(false)} className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-center">Choose a Plan</Link>
               <Link href="/login" onClick={() => setIsOpen(false)} className="border border-gray-300 text-gray-700 hover:bg-gray-50 py-2 px-4 rounded-lg text-center">Demo Login</Link>
             </div>
           </div>
