@@ -34,12 +34,9 @@ export default function HeroSection() {
               <Link href="/roi-calculator" className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors text-center">
                 Calculate Your Savings
               </Link>
-              <Link href="/pricing" className="px-8 py-4 border border-gray-300 hover:border-blue-600 hover:bg-blue-50 text-gray-800 font-semibold rounded-lg transition-colors text-center">
-                View Pricing
-              </Link>
             </div>
             <div className="mt-6 text-gray-500 italic text-sm">
-              "GovBiz Agent saved us 22 hours per week on opportunity discovery and response creation." — Sarah K., Federal Solutions Inc.
+              "GovBiz Agent saved us 22 hours per week on opportunity discovery and response creation." — Terrence S., MedPacs LLC
             </div>
           </div>
           

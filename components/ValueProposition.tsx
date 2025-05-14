@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 
 export default function ValueProposition() {
   const [isVisible, setIsVisible] = useState(false)
@@ -58,6 +59,12 @@ export default function ValueProposition() {
               GovBiz Agent uses AI to discover opportunities, analyze fit, generate tailored responses, and shape requirements to your advantage—<span className="font-medium">all with 80% less time investment</span>.
             </p>
           </div>
+        </div>
+
+        <div className="text-center mt-10">
+          <Link href="/pricing" className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
+            Choose a Plan
+          </Link>
         </div>
       </div>
     </section>

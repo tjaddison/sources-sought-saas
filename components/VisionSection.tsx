@@ -80,10 +80,10 @@ export default function VisionSection() {
         
         <div className="text-center mt-16">
           <Link 
-            href="/vision"
+            href="/features"
             className="inline-flex items-center px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors group"
           >
-            <span>Learn More About Our Vision</span>
+            <span>Learn More About Our Features</span>
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>

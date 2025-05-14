@@ -9,18 +9,18 @@ export default function Footer() {
     product: [
       { name: 'Features', href: '/features' },
       { name: 'Demo Login', href: '/login' },
-      { name: 'Join Waitlist', href: '/waitlist' },
+      { name: 'Choose a Plan', href: '/pricing' },
     ],
     company: [
       { name: 'About Us', href: '/about' },
-      { name: 'Our Vision', href: '/vision' },
     ],
     legal: [
       { name: 'Privacy Policy', href: '/privacy' }, // Assuming these pages exist or will exist
       { name: 'Terms of Service', href: '/terms' }, // Assuming these pages exist or will exist
     ],
     pricing: [
-      { name: 'Pricing', href: '/pricing' },
+      { name: 'Plans', href: '/pricing' },
+      { name: 'ROI Calculator', href: '/roi-calculator' },
     ],
   };
 
