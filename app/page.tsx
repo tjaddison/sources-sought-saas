@@ -2,7 +2,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import HeroSection from '@/components/HeroSection'
 import ValueProposition from '@/components/ValueProposition'
-import CTASection from '@/components/CTASection'
+import CtaSection from '@/components/CtaSection'
 import FaqSection from '@/components/FaqSection'
 
 export default function Home() {
@@ -12,7 +12,7 @@ export default function Home() {
       <main>
         <HeroSection />
         <ValueProposition />
-        <CTASection />
+        <CtaSection />
         <FaqSection />
       </main>
       <Footer />

@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-export default function CTASection() {
+export default function CtaSection() {
   return (
     <section className="py-20 bg-gradient-to-br from-blue-600 to-blue-800 text-white">
       <div className="container mx-auto px-6 max-w-4xl text-center">

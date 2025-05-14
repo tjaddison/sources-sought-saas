@@ -95,7 +95,7 @@ export default function WaitlistPage() {
               
               <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-100">
                 <p className="text-blue-700 text-sm">
-                  <strong>Limited availability:</strong> We're accepting a limited number of new users to ensure we provide the best service. Join the waitlist today to secure your spot.
+                  <strong>Limited availability:</strong> We&apos;re accepting a limited number of new users to ensure we provide the best service. Join the waitlist today to secure your spot.
                 </p>
               </div>
             </div>
@@ -117,7 +117,7 @@ export default function WaitlistPage() {
           {/* ROI Calculator CTA */}
           <div className="mt-16 text-center">
             <p className="text-lg text-gray-700 mb-4">
-              Want to see exactly how much time and money you'll save?
+              Want to see exactly how much time and money you&apos;ll save?
             </p>
             <Link href="/roi-calculator" className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
               Try Our ROI Calculator
