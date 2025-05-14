@@ -1,18 +1,18 @@
-import Hero from '@/components/Hero'
 import Navbar from '@/components/Navbar'
-import SecretSection from '@/components/SecretSection'
-import VisionSection from '@/components/VisionSection'
-import FaqSection from '@/components/FaqSection'
 import Footer from '@/components/Footer'
+import HeroSection from '@/components/HeroSection'
+import ValueProposition from '@/components/ValueProposition'
+import CTASection from '@/components/CTASection'
+import FaqSection from '@/components/FaqSection'
 
 export default function Home() {
   return (
     <>
       <Navbar />
       <main>
-        <Hero />
-        <SecretSection />
-        <VisionSection />
+        <HeroSection />
+        <ValueProposition />
+        <CTASection />
         <FaqSection />
       </main>
       <Footer />
