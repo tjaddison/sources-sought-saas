@@ -7,10 +7,10 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
 
   const navLinks = [
-    { name: 'Vision', href: '/vision' },
     { name: 'Features', href: '/features' },
-    { name: 'About', href: '/about' },
-    { name: 'Give Feedback', href: '/feedback' },
+    { name: 'Pricing', href: '/pricing' },
+    { name: 'Vision', href: '/vision' },
+    { name: 'ROI Calculator', href: '/roi-calculator' },
   ]
 
   return (

@@ -14,11 +14,13 @@ export default function Footer() {
     company: [
       { name: 'About Us', href: '/about' },
       { name: 'Our Vision', href: '/vision' },
-      { name: 'Give Feedback', href: '/feedback' },
     ],
     legal: [
       { name: 'Privacy Policy', href: '/privacy' }, // Assuming these pages exist or will exist
       { name: 'Terms of Service', href: '/terms' }, // Assuming these pages exist or will exist
+    ],
+    pricing: [
+      { name: 'Pricing', href: '/pricing' },
     ],
   };
 
@@ -75,6 +77,20 @@ export default function Footer() {
             <h3 className="text-sm font-semibold text-gray-300 tracking-wider uppercase mb-4">Legal</h3>
             <ul className="space-y-3">
               {footerLinks.legal.map((link) => (
+                <li key={link.name}>
+                  <Link href={link.href} className="text-base text-gray-400 hover:text-white transition-colors">
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Pricing Link */}
+          <div>
+            <h3 className="text-sm font-semibold text-gray-300 tracking-wider uppercase mb-4">Pricing</h3>
+            <ul className="space-y-3">
+              {footerLinks.pricing.map((link) => (
                 <li key={link.name}>
                   <Link href={link.href} className="text-base text-gray-400 hover:text-white transition-colors">
                     {link.name}

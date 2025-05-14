@@ -1,119 +1,131 @@
 'use client'
 
-// import { useState } from 'react' // Removed unused import
+import { useState } from 'react'
+import Link from 'next/link'
+
+// Simple SVG chevron icon component
+const ChevronDownIcon = ({ className }: { className?: string }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    viewBox="0 0 24 24" 
+    fill="currentColor" 
+    className={className}
+  >
+    <path fillRule="evenodd" d="M12.53 16.28a.75.75 0 01-1.06 0l-7.5-7.5a.75.75 0 011.06-1.06L12 14.69l6.97-6.97a.75.75 0 111.06 1.06l-7.5 7.5z" clipRule="evenodd" />
+  </svg>
+)
+
+// Simple SVG envelope icon component
+const EnvelopeIcon = ({ className }: { className?: string }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    viewBox="0 0 24 24" 
+    fill="currentColor" 
+    className={className}
+  >
+    <path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z" />
+    <path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z" />
+  </svg>
+)
 
 interface FaqItem {
   question: string;
   answer: string;
 }
 
-// Commented out unused variable. Remove if definitely not needed.
-/*
-const faqItems: FaqItem[] = [
-  {
-    question: "How is GovBiz Agent different from other contract notification services?",
-    answer: "Unlike traditional services that simply alert you to solicitations, GovBiz Agent focuses on the earlier, more strategic Sources Sought notices where you can influence requirements. Our system doesn't just notify—it analyzes fit, generates responses, and manages your entire pipeline."
-  },
-  // ... (rest of faqItems array)
-];
-*/
+export default function FaqSection() {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  
+  const faqItems: FaqItem[] = [
+    {
+      question: "How is GovBiz Agent different from other contract notification services?",
+      answer: "Unlike traditional services that simply alert you to solicitations, GovBiz Agent focuses on the earlier, more strategic Sources Sought notices where you can influence requirements. Our system doesn't just notify—it analyzes fit, generates responses, and manages your entire pipeline."
+    },
+    {
+      question: "What sources does GovBiz Agent monitor?",
+      answer: "Our primary focus is SAM.gov for Sources Sought notices. We plan to expand to other relevant federal procurement portals and potentially state/local opportunities based on user feedback."
+    },
+    {
+      question: "How much does GovBiz Agent cost?",
+      answer: "We offer several pricing tiers to fit different needs, starting at $19/month for our Scout plan, $99/month for our popular Agent Pro plan, and $299/month for our Strategist Suite. You can view detailed pricing and features on our pricing page."
+    },
+    {
+      question: "How much time can GovBiz Agent save my team?",
+      answer: "Most customers report saving 70-80% of the time previously spent on manual opportunity identification and initial response drafting. Our ROI calculator can help you estimate your specific time and cost savings based on your team's current processes."
+    },
+    {
+      question: "When will GovBiz Agent be available?",
+      answer: "GovBiz Agent is currently in the validation and early development phase. We're actively building our core AI models and user interface based on feedback from our waitlist and early access partners. We expect to launch a beta version in Q1 2024."
+    },
+    {
+      question: "How is the AI trained?",
+      answer: "We're building GovBiz Agent using state-of-the-art large language models, fine-tuned on a vast dataset of federal contracting documents (Sources Sought, RFPs, capability statements), combined with secure cloud infrastructure and a user-friendly web interface."
+    },
+    {
+      question: "Is there a free trial available?",
+      answer: "Yes, we'll offer a 14-day free trial for all paid plans when we launch. You can join our waitlist now to be notified when we launch and receive early access."
+    },
+    {
+      question: "How do I get started with GovBiz Agent?",
+      answer: "Currently, you can join our waitlist to be among the first to access GovBiz Agent when we launch. You can also explore our demo to get a feel for how the system will work."
+    }
+  ];
 
-export default function FAQSection() {
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="py-20 bg-white" id="faq">
       <div className="container mx-auto px-6">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-block px-4 py-1 rounded-full bg-blue-50 text-blue-600 font-medium text-sm mb-3">
-            Questions & Answers
-          </div>
+        <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Frequently Asked Questions
           </h2>
-          <p className="text-xl text-gray-600">
-            Common questions about our early access program and upcoming product
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Everything you need to know about GovBiz Agent
           </p>
         </div>
         
-        <div className="max-w-4xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="bg-white rounded-xl p-8 shadow-sm">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">When will GovBiz Agent be available?</h3>
-              <p className="text-gray-600">
-                We&apos;re currently in the research and development phase. Our plan is to launch a beta version to early access partners in Q1 2024, with a public launch targeted for Q2 2024, depending on feedback and testing results.
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-xl p-8 shadow-sm">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">How does the early access program work?</h3>
-              <p className="text-gray-600">
-                Early access participants get preview access to our prototype as it&apos;s being developed. You&apos;ll provide feedback that directly shapes the product, while securing benefits like discounted pricing when we launch.
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-xl p-8 shadow-sm">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">What features will be available in the beta?</h3>
-              <p className="text-gray-600">
-                The beta will focus on our core functionality: opportunity matching and requirements analysis for Sources Sought notices. Additional features like response generation will be added as development progresses.
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-xl p-8 shadow-sm">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Is the $199 founding member fee refundable?</h3>
-              <p className="text-gray-600">
-                Yes, if we don&apos;t launch the product or if you&apos;re unsatisfied with the beta, we&apos;ll refund your founding member fee. Our goal is to build something truly valuable for federal contractors.
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-xl p-8 shadow-sm">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">How much time commitment is expected from early users?</h3>
-              <p className="text-gray-600">
-                We value your time. We&apos;ll ask for occasional feedback (15-30 minutes per month) through surveys and optional group feedback sessions. You can choose your level of involvement.
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-xl p-8 shadow-sm">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">How do you handle my data during the beta?</h3>
-              <p className="text-gray-600">
-                Security is a priority even in beta. Your data will be encrypted, stored securely, and never shared with third parties. We&apos;ll provide a data processing agreement for early users with specific privacy requirements.
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-xl p-8 shadow-sm">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">What if I have custom integration needs?</h3>
-              <p className="text-gray-600">
-                Enterprise partners can discuss custom integration requirements with our team. While our initial release will have standard features, we&apos;re planning an API and integration capabilities for future releases.
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-xl p-8 shadow-sm">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">What technology will GovBiz Agent use?</h3>
-              <p className="text-gray-600">
-                We&apos;re building GovBiz Agent using state-of-the-art large language models, custom trained on federal contracting data, combined with secure cloud infrastructure and a user-friendly web interface.
-              </p>
-            </div>
+        <div className="max-w-3xl mx-auto">
+          {/* FAQ Accordion */}
+          <div className="divide-y divide-gray-200 border-t border-b border-gray-200">
+            {faqItems.map((item, index) => (
+              <div key={index} className="py-5">
+                <button
+                  className="flex w-full justify-between items-center text-left focus:outline-none"
+                  onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                >
+                  <h3 className="text-lg font-medium text-gray-900">{item.question}</h3>
+                  <ChevronDownIcon 
+                    className={`w-5 h-5 text-gray-500 transform transition-transform duration-200 ${
+                      openIndex === index ? 'rotate-180' : ''
+                    }`}
+                  />
+                </button>
+                {openIndex === index && (
+                  <div className="mt-3 text-gray-600 animate-fade-in-down">
+                    {item.answer}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
           
-          <div className="mt-12 p-8 bg-blue-50 rounded-xl">
-            <div className="flex flex-col md:flex-row items-center">
-              <div className="md:w-2/3 mb-6 md:mb-0">
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Still have questions?</h3>
-                <p className="text-gray-600">
-                  We&apos;d love to hear from you. Reach out and our team will get back to you promptly.
-                </p>
-              </div>
-              <div className="md:w-1/3 md:text-right">
-                <a href="/contact" className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
-                  Contact Us
-                  <svg className="ml-2 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                  </svg>
-                </a>
-              </div>
-            </div>
+          {/* Still have questions? Contact section */}
+          <div className="mt-12 text-center">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">
+              Still have questions?
+            </h3>
+            <p className="text-gray-600 mb-6">
+              We&apos;re here to help. Join our waitlist to stay updated.
+            </p>
+            <Link 
+              href="/waitlist" 
+              className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+            >
+              <EnvelopeIcon className="w-5 h-5 mr-2" />
+              Join Waitlist
+            </Link>
           </div>
         </div>
       </div>
     </section>
-  );
+  )
 } 
