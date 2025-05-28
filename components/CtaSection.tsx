@@ -10,16 +10,13 @@ export default function CtaSection() {
         <p className="text-xl text-blue-100 mb-10 max-w-3xl mx-auto">
           In just 2 minutes, our ROI Calculator will show you exactly how much time and money you'll save with GovBiz Agent—then find the perfect plan for your needs.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex justify-center">
           <a href="/roi-calculator" className="px-8 py-4 bg-white text-blue-700 hover:bg-blue-50 font-semibold rounded-lg transition-colors text-center">
             Calculate Your ROI First
           </a>
-          <a href="/pricing" className="px-8 py-4 bg-transparent border-2 border-white hover:bg-white/10 text-white font-semibold rounded-lg transition-colors text-center">
-            View Pricing Plans
-          </a>
         </div>
         <p className="mt-6 text-blue-200 text-sm">
-          Join hundreds of federal contractors already saving time and winning more contracts with GovBiz Agent
+          Be among the first federal contractors to transform your approach with GovBiz Agent
         </p>
       </div>
     </section>

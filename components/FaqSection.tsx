@@ -38,8 +38,8 @@ export default function FaqSection() {
   
   const faqItems: FaqItem[] = [
     {
-      question: "How is GovBiz Agent different from other contract notification services?",
-      answer: "Unlike traditional services that simply alert you to solicitations, GovBiz Agent focuses on the earlier, more strategic Sources Sought notices where you can influence requirements. Our system doesn't just notify—it analyzes fit, generates responses, and manages your entire pipeline."
+      question: "How is GovBiz Agent different from other solutions?",
+      answer: "Unlike traditional opportunity tracking tools that simply aggregate contract notices, GovBiz Agent focuses on the pre-solicitation phase where you can actually influence requirements. Our AI analyzes patterns across thousands of federal contracts to help you respond with highly targeted submissions that position your company as the ideal solution provider."
     },
     {
       question: "What sources does GovBiz Agent monitor?",
@@ -47,19 +47,11 @@ export default function FaqSection() {
     },
     {
       question: "How much does GovBiz Agent cost?",
-      answer: "We offer several pricing tiers to fit different needs, starting at $19/month for our Scout plan, $99/month for our popular Agent Pro plan, and $299/month for our Strategist Suite. You can view detailed pricing and features on our pricing page."
+      answer: "We offer a free 'Pathfinder' tier that lets you create your company profile and upload your capability statement. For more advanced features, we have two paid tiers: the Scout plan at $19/month and our popular Agent Pro plan at $99/month. You can view detailed pricing and features on our pricing page."
     },
     {
       question: "How much time can GovBiz Agent save my team?",
-      answer: "Most customers report saving 70-80% of the time previously spent on manual opportunity identification and initial response drafting. Our ROI calculator can help you estimate your specific time and cost savings based on your team's current processes."
-    },
-    {
-      question: "When will GovBiz Agent be available?",
-      answer: "GovBiz Agent is currently in the validation and early development phase. We're actively building our core AI models and user interface based on feedback from our waitlist and early access partners. We expect to launch a beta version in Q1 2024."
-    },
-    {
-      question: "How is the AI trained?",
-      answer: "We're building GovBiz Agent using state-of-the-art large language models, fine-tuned on a vast dataset of federal contracting documents (Sources Sought, RFPs, capability statements), combined with secure cloud infrastructure and a user-friendly web interface."
+      answer: "GovBiz Agent is designed to reduce time spent on manual opportunity identification and initial response drafting by 70-80%. Our ROI calculator can help you estimate your specific time and cost savings based on your team's current processes."
     },
     {
       question: "Is there a free trial available?",

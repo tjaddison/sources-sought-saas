@@ -9,14 +9,11 @@ export default function Footer() {
     product: [
       { name: 'Features', href: '/features' },
       { name: 'ROI Calculator', href: '/roi-calculator' },
-      { name: 'Demo Login', href: '/login' },
+      { name: 'Pricing', href: '/pricing' },
     ],
     company: [
       { name: 'About Us', href: '/about' },
       { name: 'Contact', href: '/contact' },
-    ],
-    pricing: [
-      { name: 'View Plans', href: '/pricing' },
     ],
     legal: [
       { name: 'Privacy Policy', href: '/privacy' },
@@ -30,7 +27,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-12 gap-8">
 
           {/* Logo and Copyright - Takes 4 columns on desktop */}
-          <div className="col-span-2 md:col-span-4">
+          <div className="col-span-2 md:col-span-6">
             <Link href="/" className="flex items-center mb-5">
               <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-3">
                 <rect width="32" height="32" rx="8" fill="#2563EB"/>
@@ -62,19 +59,6 @@ export default function Footer() {
             <h3 className="text-sm font-semibold text-gray-300 tracking-wider uppercase mb-4">Company</h3>
             <ul className="space-y-2">
               {footerLinks.company.map((link) => (
-                <li key={link.name}>
-                  <Link href={link.href} className="text-base text-gray-400 hover:text-white transition-colors">
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="col-span-1 md:col-span-2">
-            <h3 className="text-sm font-semibold text-gray-300 tracking-wider uppercase mb-4">Pricing</h3>
-            <ul className="space-y-2">
-              {footerLinks.pricing.map((link) => (
                 <li key={link.name}>
                   <Link href={link.href} className="text-base text-gray-400 hover:text-white transition-colors">
                     {link.name}
