@@ -56,7 +56,7 @@ export default function ValueProposition() {
               <h3 className="text-xl font-semibold">Our Solution</h3>
             </div>
             <p className="text-gray-700">
-              GovBiz Agent uses AI to discover opportunities, analyze fit, generate tailored responses, and shape requirements to your advantage—<span className="font-medium">all with 80% less time investment</span>.
+              GovBiz Agent uses AI to discover opportunities, analyze fit, generate tailored responses, and shape requirements to your advantage—<span className="font-medium">designed to save you 80% of your time</span>.
             </p>
           </div>
         </div>

@@ -47,7 +47,52 @@ export default function PricingPage() {
         {/* Pricing Tiers */}
         <section className="py-16" id="pricing">
           <div className="container mx-auto px-6">
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid md:grid-cols-3 gap-8 mt-16 max-w-6xl mx-auto px-6">
+              {/* Pathfinder - Free Tier */}
+              <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+                <div className="p-6">
+                  <h2 className="text-xl font-bold text-gray-900 mb-2">Pathfinder</h2>
+                  <p className="text-gray-600 mb-4">Get started with your contracting profile</p>
+                  <div className="mb-6">
+                    <span className="text-4xl font-bold text-gray-900">Free</span>
+                    <span className="text-gray-600">/forever</span>
+                  </div>
+                  <Link href="/signup" className="block w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-center transition-colors">
+                    Create Account
+                  </Link>
+                </div>
+                
+                <div className="border-t border-gray-200 px-6 py-4">
+                  <h3 className="font-medium text-gray-900 mb-3">Included features:</h3>
+                  <ul className="space-y-3">
+                    <li className="flex items-start">
+                      <CheckIcon className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
+                      <span className="text-gray-600">Company profile creation</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckIcon className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
+                      <span className="text-gray-600">Capability statement upload</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckIcon className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
+                      <span className="text-gray-600">Basic company details storage</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckIcon className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
+                      <span className="text-gray-600">Team member resumes (up to 3)</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckIcon className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
+                      <span className="text-gray-600">Company website URL integration</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckIcon className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
+                      <span className="text-gray-600">1 saved search profile</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              
               {/* Scout Tier */}
               <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
                 <div className="p-6">
@@ -132,93 +177,6 @@ export default function PricingPage() {
                   </ul>
                 </div>
               </div>
-              
-              {/* Strategist Suite Tier */}
-              <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="p-6">
-                  <h2 className="text-xl font-bold text-gray-900 mb-2">Strategist Suite</h2>
-                  <p className="text-gray-600 mb-4">For teams and businesses with advanced needs</p>
-                  <div className="mb-6">
-                    <span className="text-4xl font-bold text-gray-900">$299</span>
-                    <span className="text-gray-600">/month</span>
-                    <p className="text-sm text-gray-500 mt-1">Includes up to 5 team members</p>
-                  </div>
-                  <Link href="/waitlist" className="block w-full py-2 px-4 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium rounded-lg text-center transition-colors">
-                    Join Waitlist
-                  </Link>
-                </div>
-                
-                <div className="border-t border-gray-200 px-6 py-4">
-                  <h3 className="font-medium text-gray-900 mb-3">Everything in Agent Pro, plus:</h3>
-                  <ul className="space-y-3">
-                    <li className="flex items-start">
-                      <CheckIcon className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
-                      <span className="text-gray-600">Team collaboration features</span>
-                    </li>
-                    <li className="flex items-start">
-                      <CheckIcon className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
-                      <span className="text-gray-600">Advanced analytics on opportunities</span>
-                    </li>
-                    <li className="flex items-start">
-                      <CheckIcon className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
-                      <span className="text-gray-600">Customizable email templates</span>
-                    </li>
-                    <li className="flex items-start">
-                      <CheckIcon className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
-                      <span className="text-gray-600">Basic RFP Prep Agent access</span>
-                    </li>
-                    <li className="flex items-start">
-                      <CheckIcon className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
-                      <span className="text-gray-600">Basic Compliance Check Agent</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              
-              {/* Enterprise Copilot Tier */}
-              <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="p-6">
-                  <h2 className="text-xl font-bold text-gray-900 mb-2">Enterprise Copilot</h2>
-                  <p className="text-gray-600 mb-4">For larger organizations with specialized needs</p>
-                  <div className="mb-6">
-                    <span className="text-2xl font-bold text-gray-900">Custom Pricing</span>
-                    <p className="text-sm text-gray-500 mt-1">Tailored to your organization</p>
-                  </div>
-                  <Link href="/contact" className="block w-full py-2 px-4 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium rounded-lg text-center transition-colors">
-                    Contact Us
-                  </Link>
-                </div>
-                
-                <div className="border-t border-gray-200 px-6 py-4">
-                  <h3 className="font-medium text-gray-900 mb-3">Everything in Strategist, plus:</h3>
-                  <ul className="space-y-3">
-                    <li className="flex items-start">
-                      <CheckIcon className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
-                      <span className="text-gray-600">Unlimited users</span>
-                    </li>
-                    <li className="flex items-start">
-                      <CheckIcon className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
-                      <span className="text-gray-600">Full access to all agents</span>
-                    </li>
-                    <li className="flex items-start">
-                      <CheckIcon className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
-                      <span className="text-gray-600">API access</span>
-                    </li>
-                    <li className="flex items-start">
-                      <CheckIcon className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
-                      <span className="text-gray-600">Custom integrations</span>
-                    </li>
-                    <li className="flex items-start">
-                      <CheckIcon className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
-                      <span className="text-gray-600">Dedicated account manager</span>
-                    </li>
-                    <li className="flex items-start">
-                      <CheckIcon className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
-                      <span className="text-gray-600">Advanced security features</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
             </div>
           </div>
         </section>
@@ -235,33 +193,41 @@ export default function PricingPage() {
                 <thead className="bg-gray-50 border-b">
                   <tr>
                     <th className="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Feature</th>
+                    <th className="py-3 px-6 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Pathfinder</th>
                     <th className="py-3 px-6 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Scout</th>
                     <th className="py-3 px-6 text-center text-xs font-medium text-blue-600 uppercase tracking-wider">Agent Pro</th>
-                    <th className="py-3 px-6 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Strategist Suite</th>
-                    <th className="py-3 px-6 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Enterprise Copilot</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   <tr>
                     <td className="py-4 px-6 text-sm font-medium text-gray-900">Saved Search Profiles</td>
+                    <td className="py-4 px-6 text-sm text-gray-500 text-center">1</td>
                     <td className="py-4 px-6 text-sm text-gray-500 text-center">3</td>
-                    <td className="py-4 px-6 text-sm text-gray-500 text-center">Unlimited</td>
-                    <td className="py-4 px-6 text-sm text-gray-500 text-center">Unlimited</td>
                     <td className="py-4 px-6 text-sm text-gray-500 text-center">Unlimited</td>
                   </tr>
                   <tr>
                     <td className="py-4 px-6 text-sm font-medium text-gray-900">AI-Matched Notices</td>
+                    <td className="py-4 px-6 text-sm text-gray-500 text-center">—</td>
                     <td className="py-4 px-6 text-sm text-gray-500 text-center">10/week</td>
-                    <td className="py-4 px-6 text-sm text-gray-500 text-center">Unlimited</td>
-                    <td className="py-4 px-6 text-sm text-gray-500 text-center">Unlimited</td>
                     <td className="py-4 px-6 text-sm text-gray-500 text-center">Unlimited</td>
                   </tr>
                   <tr>
                     <td className="py-4 px-6 text-sm font-medium text-gray-900">AI-Assisted Email Drafts</td>
+                    <td className="py-4 px-6 text-sm text-gray-500 text-center">—</td>
                     <td className="py-4 px-6 text-sm text-gray-500 text-center">3/month</td>
                     <td className="py-4 px-6 text-sm text-gray-500 text-center">25/month</td>
-                    <td className="py-4 px-6 text-sm text-gray-500 text-center">50/month</td>
-                    <td className="py-4 px-6 text-sm text-gray-500 text-center">Unlimited</td>
+                  </tr>
+                  <tr>
+                    <td className="py-4 px-6 text-sm font-medium text-gray-900">Capability Statement Upload</td>
+                    <td className="py-4 px-6 text-center">
+                      <CheckIcon className="h-5 w-5 text-green-500 mx-auto" />
+                    </td>
+                    <td className="py-4 px-6 text-center">
+                      <CheckIcon className="h-5 w-5 text-green-500 mx-auto" />
+                    </td>
+                    <td className="py-4 px-6 text-center">
+                      <CheckIcon className="h-5 w-5 text-green-500 mx-auto" />
+                    </td>
                   </tr>
                   <tr>
                     <td className="py-4 px-6 text-sm font-medium text-gray-900">Pipeline Tracking</td>
@@ -269,70 +235,17 @@ export default function PricingPage() {
                       <XMarkIcon className="h-5 w-5 text-gray-400 mx-auto" />
                     </td>
                     <td className="py-4 px-6 text-center">
-                      <CheckIcon className="h-5 w-5 text-green-500 mx-auto" />
-                    </td>
-                    <td className="py-4 px-6 text-center">
-                      <CheckIcon className="h-5 w-5 text-green-500 mx-auto" />
+                      <XMarkIcon className="h-5 w-5 text-gray-400 mx-auto" />
                     </td>
                     <td className="py-4 px-6 text-center">
                       <CheckIcon className="h-5 w-5 text-green-500 mx-auto" />
                     </td>
                   </tr>
                   <tr>
-                    <td className="py-4 px-6 text-sm font-medium text-gray-900">Capability Statement Upload</td>
-                    <td className="py-4 px-6 text-center">
-                      <XMarkIcon className="h-5 w-5 text-gray-400 mx-auto" />
-                    </td>
-                    <td className="py-4 px-6 text-center">
-                      <CheckIcon className="h-5 w-5 text-green-500 mx-auto" />
-                    </td>
-                    <td className="py-4 px-6 text-center">
-                      <CheckIcon className="h-5 w-5 text-green-500 mx-auto" />
-                    </td>
-                    <td className="py-4 px-6 text-center">
-                      <CheckIcon className="h-5 w-5 text-green-500 mx-auto" />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="py-4 px-6 text-sm font-medium text-gray-900">Team Collaboration</td>
-                    <td className="py-4 px-6 text-center">
-                      <XMarkIcon className="h-5 w-5 text-gray-400 mx-auto" />
-                    </td>
-                    <td className="py-4 px-6 text-center">
-                      <XMarkIcon className="h-5 w-5 text-gray-400 mx-auto" />
-                    </td>
-                    <td className="py-4 px-6 text-center">
-                      <CheckIcon className="h-5 w-5 text-green-500 mx-auto" />
-                    </td>
-                    <td className="py-4 px-6 text-center">
-                      <CheckIcon className="h-5 w-5 text-green-500 mx-auto" />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="py-4 px-6 text-sm font-medium text-gray-900">Additional AI Agents</td>
-                    <td className="py-4 px-6 text-center">
-                      <XMarkIcon className="h-5 w-5 text-gray-400 mx-auto" />
-                    </td>
-                    <td className="py-4 px-6 text-center">
-                      <XMarkIcon className="h-5 w-5 text-gray-400 mx-auto" />
-                    </td>
-                    <td className="py-4 px-6 text-sm text-gray-500 text-center">Basic</td>
-                    <td className="py-4 px-6 text-sm text-gray-500 text-center">Full Access</td>
-                  </tr>
-                  <tr>
-                    <td className="py-4 px-6 text-sm font-medium text-gray-900">API Access & Custom Integrations</td>
-                    <td className="py-4 px-6 text-center">
-                      <XMarkIcon className="h-5 w-5 text-gray-400 mx-auto" />
-                    </td>
-                    <td className="py-4 px-6 text-center">
-                      <XMarkIcon className="h-5 w-5 text-gray-400 mx-auto" />
-                    </td>
-                    <td className="py-4 px-6 text-center">
-                      <XMarkIcon className="h-5 w-5 text-gray-400 mx-auto" />
-                    </td>
-                    <td className="py-4 px-6 text-center">
-                      <CheckIcon className="h-5 w-5 text-green-500 mx-auto" />
-                    </td>
+                    <td className="py-4 px-6 text-sm font-medium text-gray-900">Team Member Profiles</td>
+                    <td className="py-4 px-6 text-sm text-gray-500 text-center">Up to 3</td>
+                    <td className="py-4 px-6 text-sm text-gray-500 text-center">Up to 5</td>
+                    <td className="py-4 px-6 text-sm text-gray-500 text-center">Unlimited</td>
                   </tr>
                 </tbody>
               </table>

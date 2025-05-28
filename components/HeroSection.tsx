@@ -36,7 +36,7 @@ export default function HeroSection() {
               </Link>
             </div>
             <div className="mt-6 text-gray-500 italic text-sm">
-              "GovBiz Agent saved us 22 hours per week on opportunity discovery and response creation." — Terrence S., MedPacs LLC
+              Experience the future of federal contracting with GovBiz Agent's innovative AI-powered approach.
             </div>
           </div>
           
@@ -74,7 +74,7 @@ export default function HeroSection() {
                 </div>
                 <div>
                   <div className="text-lg font-semibold">10x+ ROI</div>
-                  <div className="text-gray-500">Verified by current customers</div>
+                  <div className="text-gray-500">Based on time savings and win rate</div>
                 </div>
               </div>
             </div>

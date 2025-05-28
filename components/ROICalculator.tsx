@@ -113,10 +113,7 @@ export default function ROICalculator() {
       <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 text-center">
         Sources Sought Efficiency Calculator
       </h2>
-      <p className="text-gray-600 mb-8 text-center max-w-3xl mx-auto">
-        See how much time and money you could save by using GovBiz Agent to find, analyze, and respond to Sources Sought notices.
-      </p>
-      
+
       <div className="grid md:grid-cols-2 gap-8">
         {/* Input Section */}
         <div className="bg-gray-50 p-6 rounded-lg">
@@ -138,7 +135,7 @@ export default function ROICalculator() {
                 onChange={(e) => setHoursPerResponse(parseFloat(e.target.value))}
                 className="flex-grow h-2 bg-blue-100 rounded-lg appearance-none cursor-pointer"
               />
-              <div className="w-20 flex items-center">
+              <div className="w-24 flex items-center">
                 <input
                   type="number"
                   min="0.5"

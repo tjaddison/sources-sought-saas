@@ -5,10 +5,10 @@ export default function EarlyAccessSection() {
     <section className="py-20 bg-gradient-to-br from-blue-600 to-blue-800 text-white">
       <div className="container mx-auto px-6 max-w-4xl text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-6">
-          Get Started with GovBiz Agent Today
+          Be Among the First to Use GovBiz Agent
         </h2>
         <p className="text-xl text-blue-100 mb-10 max-w-3xl mx-auto">
-          Choose a plan that fits your business needs and start winning more federal contracts with less effort.
+          Join our early users and start winning more federal contracts with our innovative AI-powered platform.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link href="/roi-calculator" className="px-8 py-4 bg-white text-blue-700 hover:bg-blue-50 font-semibold rounded-lg transition-colors text-center">

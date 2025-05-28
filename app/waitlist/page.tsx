@@ -85,9 +85,9 @@ export default function WaitlistPage() {
                     </div>
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-1">10x+ ROI</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-1">Potential 10x+ ROI</h3>
                     <p className="text-gray-600">
-                      Our current customers are seeing returns of 10x or more on their investment through higher win rates and time savings.
+                      Our projections indicate returns of 10x or more on your investment through higher win rates and significant time savings.
                     </p>
                   </div>
                 </div>
