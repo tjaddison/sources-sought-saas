@@ -4,7 +4,7 @@ export default function BenefitsSection() {
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Why Federal Contractors Choose GovBiz Agent
+            Why Federal Contractors Choose GovCon Agent
           </h2>
           <p className="text-xl text-gray-700 max-w-3xl mx-auto">
             Gain a competitive advantage in the crowded federal marketplace
@@ -21,7 +21,7 @@ export default function BenefitsSection() {
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-3">10x Faster Opportunity Identification</h3>
             <p className="text-gray-700">
-              Stop wasting hours on SAM.gov searches. GovBiz Agent continuously monitors for Sources Sought notices that match your capabilities.
+              Stop wasting hours on SAM.gov searches. GovCon Agent continuously monitors for Sources Sought notices that match your capabilities.
             </p>
           </div>
           

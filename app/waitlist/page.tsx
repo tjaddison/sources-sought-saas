@@ -14,7 +14,7 @@ export default function WaitlistPage() {
               Join Our Waitlist
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Be the first to know when GovBiz Agent launches and get early access to our federal contracting intelligence platform.
+              Be the first to know when GovCon Agent launches and get early access to our federal contracting intelligence platform.
             </p>
           </div>
           

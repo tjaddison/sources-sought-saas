@@ -23,7 +23,7 @@ export default function Navbar() {
                 <rect width="32" height="32" rx="8" fill="#2563EB"/> {/* Blue-600 */}
                 <path d="M10 16L14 20L22 12" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-              <span className="text-xl font-bold text-gray-900">GovBiz Agent</span>
+              <span className="text-xl font-bold text-gray-900">GovCon Agent</span>
             </Link>
           </div>
 
@@ -41,7 +41,7 @@ export default function Navbar() {
             <Link href="/waitlist" className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-5 rounded-lg font-medium transition-colors shadow-sm">
               Join Waitlist
             </Link>
-            <Link href="/login" className="border border-gray-300 text-gray-700 hover:bg-gray-50 py-2 px-5 rounded-lg font-medium transition-colors">
+            <Link href="/auth/login" className="border border-gray-300 text-gray-700 hover:bg-gray-50 py-2 px-5 rounded-lg font-medium transition-colors">
               Demo Login
             </Link>
           </div>
@@ -79,7 +79,7 @@ export default function Navbar() {
               ))}
               <hr className="border-gray-200 my-2" />
               <Link href="/waitlist" onClick={() => setIsOpen(false)} className="bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-4 rounded-lg text-center font-medium shadow-sm">Join Waitlist</Link>
-              <Link href="/login" onClick={() => setIsOpen(false)} className="border border-gray-300 text-gray-700 hover:bg-gray-50 py-2.5 px-4 rounded-lg text-center font-medium">Demo Login</Link>
+              <Link href="/auth/login" onClick={() => setIsOpen(false)} className="border border-gray-300 text-gray-700 hover:bg-gray-50 py-2.5 px-4 rounded-lg text-center font-medium">Demo Login</Link>
             </div>
           </div>
         )}

@@ -13,7 +13,7 @@ export default function FeedbackPage() {
               Share Your Feedback
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              We value your insights and suggestions to improve GovBiz Agent
+              We value your insights and suggestions to improve GovCon Agent
             </p>
           </div>
           
@@ -107,10 +107,10 @@ export default function FeedbackPage() {
           
           <div className="text-center bg-blue-50 p-8 rounded-xl border border-blue-100">
             <h2 className="text-2xl font-bold text-gray-900 mb-3">
-              Ready to try GovBiz Agent?
+              Ready to try GovCon Agent?
             </h2>
             <p className="text-gray-700 mb-6">
-              Experience the full power of GovBiz Agent with one of our carefully designed plans
+              Experience the full power of GovCon Agent with one of our carefully designed plans
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/roi-calculator" className="px-6 py-3 bg-white border border-blue-600 text-blue-700 hover:bg-blue-50 font-semibold rounded-lg transition-colors">

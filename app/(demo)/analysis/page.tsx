@@ -1,11 +1,11 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
 import { demoOpportunities, demoAnalysisResults, Opportunity, AnalysisResult } from '@/lib/demo-data'; // Adjust path
 
-export default function AnalysisPage() {
+function AnalysisPageContent() {
   const searchParams = useSearchParams();
   const oppId = searchParams.get('oppId');
   const [opportunity, setOpportunity] = useState<Opportunity | null>(null);
@@ -103,5 +103,13 @@ export default function AnalysisPage() {
          </p>
       )}
     </div>
+  );
+}
+
+export default function AnalysisPage() {
+  return (
+    <Suspense fallback={<div className="text-center p-10">Analyzing opportunity...</div>}>
+      <AnalysisPageContent />
+    </Suspense>
   );
 } 

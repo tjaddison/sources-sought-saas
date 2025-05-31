@@ -1,8 +1,9 @@
-'use client' // Needed for Logout button interaction
+'use client'
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
+import Image from 'next/image';
+import { usePathname } from 'next/navigation';
+import { useUser } from '@auth0/nextjs-auth0';
 
 // Simple Icons for Demo Navigation
 const DashboardIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>;
@@ -19,12 +20,35 @@ export default function DemoLayout({
   children: React.ReactNode
 }) {
   const pathname = usePathname();
-  const router = useRouter();
+  const { user, isLoading } = useUser();
 
-  const handleLogout = () => {
-    Cookies.remove('demo_authenticated');
-    router.push('/login');
-  };
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Authentication Required</h1>
+          <p className="text-gray-600 mb-6">Please log in to access the demo.</p>
+          <a 
+            href="/auth/login"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors"
+          >
+            Login
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   const navItems = [
     { href: '/dashboard', label: 'Dashboard', icon: <DashboardIcon /> },
@@ -44,7 +68,7 @@ export default function DemoLayout({
                <rect width="32" height="32" rx="8" fill="#2563EB"/>
                <path d="M10 16L14 20L22 12" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
              </svg>
-             <span className="text-lg font-semibold text-white">GovBiz Agent Demo</span>
+             <span className="text-lg font-semibold text-white">GovCon Agent Demo</span>
            </div>
         </div>
         <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
@@ -73,15 +97,24 @@ export default function DemoLayout({
              );
           })}
         </nav>
-         {/* Logout Button */}
+         {/* User Info and Logout */}
          <div className="p-4 mt-auto border-t border-gray-700">
-            <button
-                onClick={handleLogout}
+            <div className="flex items-center mb-3">
+              {user.picture && (
+                <Image src={user.picture} alt="Profile" width={32} height={32} className="w-8 h-8 rounded-full mr-2" />
+              )}
+              <div className="text-sm">
+                <p className="text-white font-medium">{user.name}</p>
+                <p className="text-gray-400 text-xs">{user.email}</p>
+              </div>
+            </div>
+            <a
+                href="/auth/logout"
                 className="group flex items-center w-full px-2 py-2 text-sm font-medium rounded-md text-gray-300 hover:bg-red-700 hover:text-white transition-colors duration-150 ease-in-out"
             >
                <span className="mr-3 flex-shrink-0 h-5 w-5"><LogoutIcon /></span>
                Logout
-            </button>
+            </a>
          </div>
       </aside>
 

@@ -13,7 +13,7 @@ export default function FaqPage() {
               Frequently Asked Questions
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Find answers to common questions about GovBiz Agent, our features, and the early access program.
+              Find answers to common questions about GovCon Agent, our features, and the early access program.
             </p>
           </div>
         </section>
