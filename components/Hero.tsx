@@ -13,7 +13,7 @@ export default function Hero() {
           </h1>
           {/* Updated Sub-headline */}
           <p className="text-lg md:text-xl text-gray-600 leading-relaxed mb-10">
-            We&apos;re building GovBiz Agent: Your intelligent co-pilot designed to find, analyze, and respond to crucial Sources Sought notices — giving you the strategic advantage before the competition even starts.
+            We&apos;re building GovCon Agent: Your intelligent co-pilot designed to find, analyze, and respond to crucial Sources Sought notices — giving you the strategic advantage before the competition even starts.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             {/* Updated CTA Button Text */}
@@ -32,7 +32,7 @@ export default function Hero() {
           <div className="aspect-video bg-gray-200 rounded-lg shadow-lg flex items-center justify-center">
              <span className="text-gray-500">Future Product Visual/Demo Here</span> 
              // Or use ImageFallback:
-             // <ImageFallback src="/images/hero-visual.png" alt="GovBiz Agent Interface Preview" width={1000} height={563} className="rounded-lg" /> 
+             // <ImageFallback src="/images/hero-visual.png" alt="GovCon Agent Interface Preview" width={1000} height={563} className="rounded-lg" /> 
           </div>
         </div> 
         */}

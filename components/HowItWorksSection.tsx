@@ -4,7 +4,7 @@ export default function HowItWorksSection() {
       <div className="container mx-auto px-6">
         <div className="text-center mb-20">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            How GovBiz Agent Works
+            How GovCon Agent Works
           </h2>
           <p className="text-xl text-gray-700 max-w-3xl mx-auto">
             A strategic approach to government contracting
@@ -63,7 +63,7 @@ export default function HowItWorksSection() {
             <div className="md:w-2/3">
               <h3 className="text-2xl font-bold text-gray-900 mb-3">Discover High-Value Opportunities</h3>
               <p className="text-gray-700 mb-4">
-                GovBiz Agent continuously scans Sources Sought notices and ranks them by fit, potential value, and win probability for your specific business.
+                GovCon Agent continuously scans Sources Sought notices and ranks them by fit, potential value, and win probability for your specific business.
               </p>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <li className="flex items-center">

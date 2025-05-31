@@ -21,12 +21,12 @@ export default function TermsOfServicePage() {
           <div className="container mx-auto px-6 max-w-4xl">
             <div className="prose prose-lg lg:prose-xl text-gray-700 mx-auto space-y-6">
               <p>
-                Welcome to GovBiz Agent. By accessing or using our services, you agree to be bound by these Terms of Service.
+                Welcome to GovCon Agent. By accessing or using our services, you agree to be bound by these Terms of Service.
               </p>
               
               <h2>1. Services Description</h2>
               <p>
-                GovBiz Agent provides AI-powered tools to help federal contractors discover, analyze, and respond to Sources Sought notices and other government contracting opportunities.
+                GovCon Agent provides AI-powered tools to help federal contractors discover, analyze, and respond to Sources Sought notices and other government contracting opportunities.
               </p>
               
               <h2>2. User Accounts</h2>
@@ -46,12 +46,12 @@ export default function TermsOfServicePage() {
               
               <h2>5. Intellectual Property</h2>
               <p>
-                All content, features, and functionality of our services, including but not limited to text, graphics, logos, and software, are owned by GovBiz Agent and are protected by copyright, trademark, and other intellectual property laws.
+                All content, features, and functionality of our services, including but not limited to text, graphics, logos, and software, are owned by GovCon Agent and are protected by copyright, trademark, and other intellectual property laws.
               </p>
               
               <h2>6. Limitation of Liability</h2>
               <p>
-                GovBiz Agent shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your access to or use of, or inability to access or use, the services.
+                GovCon Agent shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your access to or use of, or inability to access or use, the services.
               </p>
               
               <h2>7. Modifications to Terms</h2>
@@ -71,7 +71,7 @@ export default function TermsOfServicePage() {
               
               <h2>10. Contact Information</h2>
               <p>
-                If you have any questions about these Terms, please contact us at info@govbizagent.com.
+                If you have any questions about these Terms, please contact us at info@GovConagent.com.
               </p>
             </div>
           </div>

@@ -1,57 +1,7 @@
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
-import FeatureSpotlightSection from '@/components/FeatureSpotlightSection'
 
-// Define an interface for feature details (optional but good practice)
-interface FeatureDetail {
-  title: string;
-  description: string;
-  icon: JSX.Element; // Using JSX element for the icon
-}
-
-// Commented out unused variable. Remove if definitely not needed.
-/*
-const plannedFeatures: FeatureDetail[] = [
-  {
-    title: 'Intelligent Opportunity Matching',
-    description: 'Leveraging AI trained on your company profile (capabilities, past performance, set-asides), GovBiz Agent will proactively identify and score Sources Sought notices from SAM.gov and other sources, prioritizing those with the highest win probability for your specific business.',
-    icon: <svg className="w-8 h-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" /></svg>,
-  },
-  {
-    title: 'Automated Requirements Analysis',
-    description: 'Save hours of manual review. Our AI will automatically parse lengthy Sources Sought documents to extract and summarize key information: core requirements, evaluation criteria, response deadlines, agency contacts, potential competitors, and required submission formats.',
-    icon: <svg className="w-8 h-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>,
-  },
-  {
-    title: 'AI-Assisted Response Generation',
-    description: 'Get a head start on crafting compelling responses. Based on the analyzed requirements and your company profile, GovBiz Agent will help generate tailored response outlines, capability statement drafts, and compliance matrices, significantly reducing initial drafting time.',
-    icon: <svg className="w-8 h-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>,
-  },
-  {
-    title: 'Pipeline Management & Tracking',
-    description: 'Visualize and manage your Sources Sought pipeline from discovery to submission. Track status, assign tasks, store documents, and monitor deadlines within a dedicated, user-friendly interface.',
-    icon: <svg className="w-8 h-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>,
-  },
-   {
-    title: 'Competitive Intelligence Insights',
-    description: 'Gain insights into potential competitors who might respond to the same Sources Sought notices. Understand their past performance and capabilities related to the opportunity (based on publicly available data).',
-    icon: <svg className="w-8 h-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>,
-  },
-   {
-    title: 'Collaboration Tools',
-    description: 'Facilitate teamwork on Sources Sought responses. Allow multiple users to view opportunities, share notes, assign tasks, and track progress within the platform.',
-    icon: <svg className="w-8 h-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2V7a2 2 0 012-2h2m6-4h2a2 2 0 012 2v6a2 2 0 01-2 2h-2" /></svg>,
-  },
-];
-*/
-
-// Simple SVG Icons for Workflow Steps (Replace with more specific icons if desired)
-const ProfileIcon = () => <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>;
-const SearchIcon = () => <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>;
-const ListIcon = () => <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>;
-const EditIcon = () => <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>;
-const CheckIcon = () => <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>;
 
 export default function FeaturesPage() {
   return (
@@ -67,7 +17,7 @@ export default function FeaturesPage() {
                 Features That Transform Federal Contracting
               </h1>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                GovBiz Agent combines AI-powered opportunity discovery with strategic insights to help you win contracts before they're even written.
+                GovCon Agent combines AI-powered opportunity discovery with strategic insights to help you win contracts before they're even written.
               </p>
             </div>
           </div>
@@ -241,7 +191,7 @@ export default function FeaturesPage() {
               See How Much Time & Money You'll Save
             </h2>
             <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
-              Our ROI Calculator will show you exactly how GovBiz Agent can transform your federal contracting approach.
+              Our ROI Calculator will show you exactly how GovCon Agent can transform your federal contracting approach.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/roi-calculator" className="px-8 py-4 bg-white text-blue-600 hover:bg-blue-50 font-semibold rounded-lg transition-colors">

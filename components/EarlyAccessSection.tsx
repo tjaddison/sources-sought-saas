@@ -5,7 +5,7 @@ export default function EarlyAccessSection() {
     <section className="py-20 bg-gradient-to-br from-blue-600 to-blue-800 text-white">
       <div className="container mx-auto px-6 max-w-4xl text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-6">
-          Be Among the First to Use GovBiz Agent
+          Be Among the First to Use GovCon Agent
         </h2>
         <p className="text-xl text-blue-100 mb-10 max-w-3xl mx-auto">
           Join our early users and start winning more federal contracts with our innovative AI-powered platform.

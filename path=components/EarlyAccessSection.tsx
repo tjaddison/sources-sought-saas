@@ -23,7 +23,7 @@ export default function EarlyAccessSection() {
         <div className="max-w-3xl mx-auto mb-16">
           <h2 className="text-4xl font-extrabold text-white mb-4">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-300 to-blue-200">
-              Shape the Future of GovBiz Agent
+              Shape the Future of GovCon Agent
             </span>
           </h2>
           <p className="text-lg text-blue-200">

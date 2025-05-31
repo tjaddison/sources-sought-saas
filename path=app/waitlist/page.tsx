@@ -13,7 +13,7 @@ export default function WaitlistPage() {
         <section className="bg-gradient-to-br from-purple-600 to-indigo-700 text-white py-20 md:py-28">
           <div className="container mx-auto px-6 text-center">
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
-              Join the GovBiz Agent Waitlist
+              Join the GovCon Agent Waitlist
             </h1>
             <p className="text-lg md:text-xl text-purple-100 max-w-2xl mx-auto">
               Be the first to know when we launch and get early access opportunities. Sign up below to stay informed and help shape the future of federal contracting AI.

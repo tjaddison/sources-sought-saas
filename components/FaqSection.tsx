@@ -38,28 +38,28 @@ export default function FaqSection() {
   
   const faqItems: FaqItem[] = [
     {
-      question: "How is GovBiz Agent different from other solutions?",
-      answer: "Unlike traditional opportunity tracking tools that simply aggregate contract notices, GovBiz Agent focuses on the pre-solicitation phase where you can actually influence requirements. Our AI analyzes patterns across thousands of federal contracts to help you respond with highly targeted submissions that position your company as the ideal solution provider."
+      question: "How is GovCon Agent different from other solutions?",
+      answer: "Unlike traditional opportunity tracking tools that simply aggregate contract notices, GovCon Agent focuses on the pre-solicitation phase where you can actually influence requirements. Our AI analyzes patterns across thousands of federal contracts to help you respond with highly targeted submissions that position your company as the ideal solution provider."
     },
     {
-      question: "What sources does GovBiz Agent monitor?",
+      question: "What sources does GovCon Agent monitor?",
       answer: "Our primary focus is SAM.gov for Sources Sought notices. We plan to expand to other relevant federal procurement portals and potentially state/local opportunities based on user feedback."
     },
     {
-      question: "How much does GovBiz Agent cost?",
+      question: "How much does GovCon Agent cost?",
       answer: "We offer a free 'Pathfinder' tier that lets you create your company profile and upload your capability statement. For more advanced features, we have two paid tiers: the Scout plan at $19/month and our popular Agent Pro plan at $99/month. You can view detailed pricing and features on our pricing page."
     },
     {
-      question: "How much time can GovBiz Agent save my team?",
-      answer: "GovBiz Agent is designed to reduce time spent on manual opportunity identification and initial response drafting by 70-80%. Our ROI calculator can help you estimate your specific time and cost savings based on your team's current processes."
+      question: "How much time can GovCon Agent save my team?",
+      answer: "GovCon Agent is designed to reduce time spent on manual opportunity identification and initial response drafting by 70-80%. Our ROI calculator can help you estimate your specific time and cost savings based on your team's current processes."
     },
     {
       question: "Is there a free trial available?",
       answer: "Yes, we'll offer a 14-day free trial for all paid plans when we launch. You can join our waitlist now to be notified when we launch and receive early access."
     },
     {
-      question: "How do I get started with GovBiz Agent?",
-      answer: "Currently, you can join our waitlist to be among the first to access GovBiz Agent when we launch. You can also explore our demo to get a feel for how the system will work."
+      question: "How do I get started with GovCon Agent?",
+      answer: "Currently, you can join our waitlist to be among the first to access GovCon Agent when we launch. You can also explore our demo to get a feel for how the system will work."
     }
   ];
 
@@ -71,7 +71,7 @@ export default function FaqSection() {
             Frequently Asked Questions
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Everything you need to know about GovBiz Agent
+            Everything you need to know about GovCon Agent
           </p>
         </div>
         

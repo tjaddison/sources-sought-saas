@@ -260,7 +260,7 @@ export default function PricingPage() {
               Calculate Your Potential Savings
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto mb-8">
-              Use our ROI calculator to see how much time and money your organization could save by using GovBiz Agent.
+              Use our ROI calculator to see how much time and money your organization could save by using GovCon Agent.
             </p>
             <Link href="/roi-calculator" className="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
               Try Our ROI Calculator
@@ -312,7 +312,7 @@ export default function PricingPage() {
           <div className="container mx-auto px-6 text-center">
             <h2 className="text-3xl font-bold mb-6">Ready to Transform Your Federal Contracting Process?</h2>
             <p className="text-xl text-blue-100 max-w-2xl mx-auto mb-8">
-              Join our waitlist today to be among the first to experience GovBiz Agent when we launch.
+              Join our waitlist today to be among the first to experience GovCon Agent when we launch.
             </p>
             <Link href="/waitlist" className="inline-block px-8 py-4 bg-white hover:bg-gray-100 text-blue-600 font-medium rounded-lg transition-colors text-lg shadow-md">
               Join the Waitlist

@@ -33,7 +33,7 @@ export default function Footer() {
                 <rect width="32" height="32" rx="8" fill="#2563EB"/>
                 <path d="M10 16L14 20L22 12" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-              <span className="text-xl font-bold text-white">GovBiz Agent</span>
+              <span className="text-xl font-bold text-white">GovCon Agent</span>
             </Link>
             <p className="text-sm text-gray-400 mb-5">
               AI-powered federal contracting intelligence that helps you win more contracts with less effort.
@@ -86,7 +86,7 @@ export default function Footer() {
         {/* Bottom section with social links */}
         <div className="pt-8 mt-8 border-t border-gray-700 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-gray-500 mb-4 md:mb-0">
-          &copy; {currentYear} GovBiz Agent by Xenvya.  All rights reserved.
+          &copy; {currentYear} GovCon Agent by Xenvya.  All rights reserved.
           </p>
           
           <div className="flex space-x-6">

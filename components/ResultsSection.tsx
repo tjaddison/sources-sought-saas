@@ -51,7 +51,7 @@ export default function ResultsSection() {
         {/* Testimonial */}
         <div className="max-w-4xl mx-auto bg-gray-50 rounded-2xl p-8 md:p-10">
           <blockquote className="text-xl italic text-gray-800 leading-relaxed mb-6">
-            &quot;GovBiz Agent expanded our pipeline by 278% while cutting our administrative workload in half. We closed a $1.2M contract we would have completely missed without it.&quot;
+            &quot;GovCon Agent expanded our pipeline by 278% while cutting our administrative workload in half. We closed a $1.2M contract we would have completely missed without it.&quot;
           </blockquote>
           
           <div className="flex items-center">

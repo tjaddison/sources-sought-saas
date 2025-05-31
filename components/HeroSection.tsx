@@ -28,7 +28,7 @@ export default function HeroSection() {
               Win Federal Contracts <span className="text-blue-600">Before</span> They're Even Written
             </h1>
             <p className="text-xl text-gray-600 mb-8">
-              While your competitors react to finalized RFPs, GovBiz Agent helps you shape requirements in the pre-solicitation phase—doubling your win rate and slashing response time by 80%.
+              While your competitors react to finalized RFPs, GovCon Agent helps you shape requirements in the pre-solicitation phase—doubling your win rate and slashing response time by 80%.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/roi-calculator" className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors text-center">
@@ -36,7 +36,7 @@ export default function HeroSection() {
               </Link>
             </div>
             <div className="mt-6 text-gray-500 italic text-sm">
-              Experience the future of federal contracting with GovBiz Agent's innovative AI-powered approach.
+              Experience the future of federal contracting with GovCon Agent's innovative AI-powered approach.
             </div>
           </div>
           

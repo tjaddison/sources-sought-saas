@@ -1,11 +1,11 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
 import { demoOpportunities, demoResponseDrafts, Opportunity, ResponseDraft } from '@/lib/demo-data'; // Adjust path
 
-export default function ResponsePage() {
+function ResponsePageContent() {
   const searchParams = useSearchParams();
   const oppId = searchParams.get('oppId');
   const [opportunity, setOpportunity] = useState<Opportunity | null>(null);
@@ -100,5 +100,13 @@ export default function ResponsePage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function ResponsePage() {
+  return (
+    <Suspense fallback={<div className="text-center p-10">Loading...</div>}>
+      <ResponsePageContent />
+    </Suspense>
   );
 } 

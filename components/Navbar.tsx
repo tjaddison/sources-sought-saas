@@ -2,9 +2,12 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
+import { useUser } from '@auth0/nextjs-auth0'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
+  const { user, isLoading } = useUser()
 
   const navLinks = [
     { name: 'Features', href: '/features' },
@@ -23,7 +26,7 @@ export default function Navbar() {
                 <rect width="32" height="32" rx="8" fill="#2563EB"/>
                 <path d="M10 16L14 20L22 12" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-              <span className="text-xl font-bold text-gray-900">GovBiz Agent</span>
+              <span className="text-xl font-bold text-gray-900">GovCon Agent</span>
             </Link>
             
             <div className="hidden lg:flex items-center ml-10 space-x-8">
@@ -43,9 +46,28 @@ export default function Navbar() {
             <Link href="/pricing" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
               Choose a Plan
             </Link>
-            <Link href="/login" className="text-gray-700 hover:text-blue-600 border border-gray-300 px-4 py-2 rounded-lg transition-colors">
-              Demo Login
-            </Link>
+            {!isLoading && (
+              user ? (
+                <div className="flex items-center space-x-3">
+                  <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-lg transition-colors">
+                    Dashboard
+                  </Link>
+                  <div className="flex items-center space-x-2">
+                    {user.picture && (
+                      <Image src={user.picture} alt="Profile" width={32} height={32} className="w-8 h-8 rounded-full" />
+                    )}
+                    <span className="text-gray-700">{user.name}</span>
+                  </div>
+                  <a href="/auth/logout" className="text-gray-700 hover:text-blue-600 border border-gray-300 px-4 py-2 rounded-lg transition-colors">
+                    Logout
+                  </a>
+                </div>
+              ) : (
+                <a href="/auth/login" className="text-gray-700 hover:text-blue-600 border border-gray-300 px-4 py-2 rounded-lg transition-colors">
+                  Login
+                </a>
+              )
+            )}
           </div>
           
           <button 
@@ -78,7 +100,16 @@ export default function Navbar() {
               ))}
               <hr className="border-gray-200" />
               <Link href="/pricing" onClick={() => setIsOpen(false)} className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-center">Choose a Plan</Link>
-              <Link href="/login" onClick={() => setIsOpen(false)} className="border border-gray-300 text-gray-700 hover:bg-gray-50 py-2 px-4 rounded-lg text-center">Demo Login</Link>
+              {!isLoading && (
+                user ? (
+                  <>
+                    <Link href="/dashboard" onClick={() => setIsOpen(false)} className="border border-gray-300 text-gray-700 hover:bg-gray-50 py-2 px-4 rounded-lg text-center">Dashboard</Link>
+                    <a href="/auth/logout" onClick={() => setIsOpen(false)} className="border border-gray-300 text-gray-700 hover:bg-gray-50 py-2 px-4 rounded-lg text-center">Logout</a>
+                  </>
+                ) : (
+                  <a href="/auth/login" onClick={() => setIsOpen(false)} className="border border-gray-300 text-gray-700 hover:bg-gray-50 py-2 px-4 rounded-lg text-center">Login</a>
+                )
+              )}
             </div>
           </div>
         )}

@@ -26,7 +26,7 @@ export default function PrivacyPolicyPage() {
           <div className="container mx-auto px-6 max-w-4xl">
             <div className="prose prose-lg lg:prose-xl text-gray-700 mx-auto space-y-6">
               <p>
-                Welcome to GovBiz Agent (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;). We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about this privacy notice, or our practices with regards to your personal information, please contact us at info @ xenvya.com.
+                Welcome to GovCon Agent (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;). We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about this privacy notice, or our practices with regards to your personal information, please contact us at info @ xenvya.com.
               </p>
 
               <p>

@@ -22,7 +22,7 @@ export default function ROICalculator() {
   const [timeframe, setTimeframe] = useState<'day' | 'week' | 'month' | 'year'>('month');
   const [hourlyRate, setHourlyRate] = useState(75);
   
-  // GovBiz Agent parameters
+  // GovCon Agent parameters
   const timeReductionPercentage = 0.8; // 80% time reduction
   const monthlyPlanCost = 99; // $99/month for Agent Pro plan
   
@@ -63,13 +63,13 @@ export default function ROICalculator() {
         break;
     }
     
-    const yearlyResponses = monthlyResponses * 12;
+    // const yearlyResponses = monthlyResponses * 12;
     
     // Manual process calculations
     const manualHoursMonthly = monthlyResponses * hoursPerResponse;
     const manualCostMonthly = manualHoursMonthly * hourlyRate;
     
-    // GovBiz Agent calculations
+    // GovCon Agent calculations
     const hoursPerResponseWithAgent = hoursPerResponse * (1 - timeReductionPercentage);
     const agentHoursMonthly = monthlyResponses * hoursPerResponseWithAgent;
     const agentHumanCostMonthly = agentHoursMonthly * hourlyRate;
@@ -215,11 +215,11 @@ export default function ROICalculator() {
             </p>
           </div>
           
-          {/* GovBiz Agent info */}
+          {/* GovCon Agent info */}
           <div className="mt-8 bg-blue-50 p-4 rounded-lg">
-            <h4 className="font-medium text-blue-700 mb-2">The GovBiz Agent Way</h4>
+            <h4 className="font-medium text-blue-700 mb-2">The GovCon Agent Way</h4>
             <p className="text-sm text-gray-600 mb-1">
-              GovBiz Agent typically reduces the time spent per notice by <strong className="text-blue-700">80%</strong>.
+              GovCon Agent typically reduces the time spent per notice by <strong className="text-blue-700">80%</strong>.
             </p>
             <p className="text-sm text-gray-600">
               Comparison based on our &apos;Agent Pro&apos; plan at <strong className="text-blue-700">${monthlyPlanCost}/month</strong>.
@@ -264,7 +264,7 @@ export default function ROICalculator() {
             </div>
             
             <div className="bg-white p-4 rounded-lg shadow-sm">
-              <h4 className="text-sm font-medium text-gray-500 mb-2">With GovBiz Agent</h4>
+              <h4 className="text-sm font-medium text-gray-500 mb-2">With GovCon Agent</h4>
               <p className="text-lg font-bold text-green-600 mb-1">
                 {viewMode === 'monthly' ? 
                   `${agentHoursPerMonth.toFixed(1)} hours` : 
@@ -327,7 +327,7 @@ export default function ROICalculator() {
           
           {/* Interpretive Text */}
           <p className="text-gray-700 mb-6">
-            Imagine what you could do with an extra {timeSavedPerMonth.toFixed(1)} hours each month! GovBiz Agent doesn&apos;t just save you money, it frees you up to focus on winning contracts.
+            Imagine what you could do with an extra {timeSavedPerMonth.toFixed(1)} hours each month! GovCon Agent doesn&apos;t just save you money, it frees you up to focus on winning contracts.
           </p>
           
           {/* Call to Action */}

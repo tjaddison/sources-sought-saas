@@ -58,7 +58,7 @@ export async function POST(request: Request) {
     // if (error.name === 'SomeDynamoDbError') { ... }
 
     // Type assertion or check needed before accessing properties
-    let responseMessage = errorMessage;
+    const responseMessage = errorMessage;
     if (error instanceof Error) {
         // Optionally use error.message if it's safe to expose
         // responseMessage = error.message;
