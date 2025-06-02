@@ -1,0 +1,292 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { IndexingJob } from '@/lib/dynamodb';
+import { 
+  MagnifyingGlassIcon,
+  DocumentIcon,
+  UserGroupIcon,
+  ClipboardDocumentListIcon,
+  PlayIcon,
+  ClockIcon,
+  CheckCircleIcon,
+  ExclamationTriangleIcon,
+  ArrowPathIcon
+} from '@heroicons/react/24/outline';
+import toast from 'react-hot-toast';
+import clsx from 'clsx';
+
+interface ContentIndexingDashboardProps {
+  indexingHistory: IndexingJob[];
+  documentCounts: {
+    capability: number;
+    resume: number;
+    proposal: number;
+    total: number;
+  };
+  indexedCounts: {
+    capability: number;
+    resume: number;
+    proposal: number;
+    total: number;
+  };
+}
+
+export default function ContentIndexingDashboard({
+  indexingHistory,
+  documentCounts,
+  indexedCounts,
+}: ContentIndexingDashboardProps) {
+  const router = useRouter();
+  const [isStartingIndex, setIsStartingIndex] = useState(false);
+
+  const latestJob = indexingHistory.length > 0 ? indexingHistory[0] : null;
+  const isJobRunning = latestJob?.status === 'pending' || latestJob?.status === 'processing';
+
+  const handleStartIndexing = async () => {
+    if (isJobRunning || documentCounts.total === 0) return;
+
+    setIsStartingIndex(true);
+    
+    try {
+      const response = await fetch('/api/indexing/start', {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to start indexing');
+      }
+
+      toast.success('Content indexing started');
+      router.refresh();
+    } catch (error) {
+      console.error('Error starting indexing:', error);
+      toast.error('Failed to start indexing');
+    } finally {
+      setIsStartingIndex(false);
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'pending':
+        return <ClockIcon className="h-5 w-5 text-yellow-500" />;
+      case 'processing':
+        return <ArrowPathIcon className="h-5 w-5 text-blue-500 animate-spin" />;
+      case 'completed':
+        return <CheckCircleIcon className="h-5 w-5 text-green-500" />;
+      case 'failed':
+        return <ExclamationTriangleIcon className="h-5 w-5 text-red-500" />;
+      default:
+        return <ClockIcon className="h-5 w-5 text-gray-400" />;
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'pending':
+        return 'text-yellow-700 bg-yellow-100';
+      case 'processing':
+        return 'text-blue-700 bg-blue-100';
+      case 'completed':
+        return 'text-green-700 bg-green-100';
+      case 'failed':
+        return 'text-red-700 bg-red-100';
+      default:
+        return 'text-gray-700 bg-gray-100';
+    }
+  };
+
+  const documentTypes = [
+    {
+      type: 'capability',
+      name: 'Capability Statements',
+      icon: DocumentIcon,
+      color: 'blue',
+    },
+    {
+      type: 'resume',
+      name: 'Team Resumes',
+      icon: UserGroupIcon,
+      color: 'green',
+    },
+    {
+      type: 'proposal',
+      name: 'Past Proposals',
+      icon: ClipboardDocumentListIcon,
+      color: 'purple',
+    },
+  ];
+
+  return (
+    <div className="space-y-8">
+      {/* Current Status */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-lg font-medium text-gray-900">Indexing Status</h2>
+          {latestJob && (
+            <div className={clsx(
+              'flex items-center space-x-2 px-3 py-1 rounded-full text-sm font-medium',
+              getStatusColor(latestJob.status)
+            )}>
+              {getStatusIcon(latestJob.status)}
+              <span className="capitalize">{latestJob.status}</span>
+            </div>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h3 className="text-sm font-medium text-gray-900 mb-3">
+              Document Overview
+            </h3>
+            <div className="space-y-3">
+              {documentTypes.map((docType) => {
+                const total = documentCounts[docType.type as keyof typeof documentCounts];
+                const indexed = indexedCounts[docType.type as keyof typeof indexedCounts];
+                const percentage = total > 0 ? (indexed / total) * 100 : 0;
+
+                return (
+                  <div key={docType.type} className="flex items-center space-x-3">
+                    <docType.icon className={`h-5 w-5 text-${docType.color}-600`} />
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-700">{docType.name}</span>
+                        <span className="text-gray-500">{indexed}/{total}</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+                        <div
+                          className={`bg-${docType.color}-600 h-2 rounded-full transition-all duration-300`}
+                          style={{ width: `${percentage}%` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-medium text-gray-900 mb-3">
+              Quick Actions
+            </h3>
+            <div className="space-y-3">
+              <button
+                onClick={handleStartIndexing}
+                disabled={isStartingIndex || isJobRunning || documentCounts.total === 0}
+                className={clsx(
+                  'w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-lg font-medium transition-colors',
+                  documentCounts.total === 0
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : isJobRunning
+                    ? 'bg-yellow-100 text-yellow-700 cursor-not-allowed'
+                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                )}
+              >
+                {isStartingIndex ? (
+                  <ArrowPathIcon className="h-5 w-5 animate-spin" />
+                ) : (
+                  <PlayIcon className="h-5 w-5" />
+                )}
+                <span>
+                  {documentCounts.total === 0
+                    ? 'No Documents to Index'
+                    : isJobRunning
+                    ? 'Indexing in Progress'
+                    : 'Start Content Indexing'}
+                </span>
+              </button>
+
+              {latestJob && latestJob.status === 'completed' && (
+                <div className="text-sm text-gray-600 text-center">
+                  Last indexed: {formatDate(latestJob.completedAt || latestJob.startedAt)}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Indexing Process Info */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+        <div className="flex items-start space-x-3">
+          <MagnifyingGlassIcon className="h-6 w-6 text-blue-600 mt-0.5" />
+          <div>
+            <h3 className="text-lg font-medium text-blue-900 mb-2">
+              How Content Indexing Works
+            </h3>
+            <ul className="text-sm text-blue-800 space-y-2">
+              <li>• Extracts text content from your uploaded documents</li>
+              <li>• Generates searchable embeddings using AI technology</li>
+              <li>• Enables better matching with relevant opportunities</li>
+              <li>• Processes documents securely with user data isolation</li>
+              <li>• Updates your profile's searchability and relevance scoring</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* Indexing History */}
+      {indexingHistory.length > 0 && (
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div className="p-6 border-b border-gray-200">
+            <h2 className="text-lg font-medium text-gray-900">Indexing History</h2>
+          </div>
+          
+          <div className="divide-y divide-gray-200">
+            {indexingHistory.slice(0, 10).map((job) => (
+              <div key={job.jobId} className="p-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    {getStatusIcon(job.status)}
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">
+                        Indexing Job #{job.jobId.slice(-8)}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Started: {formatDate(job.startedAt)}
+                        {job.completedAt && ` • Completed: ${formatDate(job.completedAt)}`}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="text-right">
+                    <div className={clsx(
+                      'inline-flex px-2 py-1 rounded-full text-xs font-medium',
+                      getStatusColor(job.status)
+                    )}>
+                      {job.status}
+                    </div>
+                    {job.documentsProcessed && (
+                      <p className="text-sm text-gray-500 mt-1">
+                        {job.documentsProcessed} documents processed
+                      </p>
+                    )}
+                  </div>
+                </div>
+                
+                {job.error && (
+                  <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-sm text-red-700">Error: {job.error}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
