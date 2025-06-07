@@ -7,7 +7,7 @@ export async function middleware(request: NextRequest) {
   console.log(`🔍 Middleware processing: ${pathname}`)
   
   try {
-    const session = await auth0.getSession(request)
+    const session = await auth0.getSession()
     if (session?.user && request.nextUrl.pathname === '/') {
       return NextResponse.redirect(new URL('/admin/dashboard', request.url))
     }

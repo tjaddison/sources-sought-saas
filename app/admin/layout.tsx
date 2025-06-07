@@ -27,8 +27,10 @@ export default async function AdminLayout({
   return (
     <div className="min-h-screen bg-gray-50">
       <AdminNavigation user={session.user} />
-      <main className="py-6">
-        {children}
+      <main className="lg:pl-64 py-6">
+        <div className="px-4 sm:px-6 lg:px-8">
+          {children}
+        </div>
       </main>
       <Toaster position="top-right" />
     </div>

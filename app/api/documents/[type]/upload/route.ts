@@ -51,13 +51,24 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ typ
     const documentId = uuidv4();
     
     // Generate S3 upload URL
-    const { uploadUrl, s3Key } = await generateUploadUrl(
-      user.userId,
-      type,
-      documentId,
-      fileName,
-      contentType
-    );
+    let uploadUrl, s3Key;
+    try {
+      const result = await generateUploadUrl(
+        user.userId,
+        type,
+        documentId,
+        fileName,
+        contentType
+      );
+      uploadUrl = result.uploadUrl;
+      s3Key = result.s3Key;
+    } catch (error) {
+      console.error('Failed to generate S3 upload URL:', error);
+      return Response.json(
+        { error: 'Failed to generate upload URL. Please check S3 configuration.' },
+        { status: 500 }
+      );
+    }
 
     // Create document record in DynamoDB
     const document = await createDocument({

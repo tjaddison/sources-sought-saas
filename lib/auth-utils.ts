@@ -11,7 +11,8 @@ export interface AuthUser {
 
 export async function getAuthenticatedUser(req: NextRequest): Promise<AuthUser | null> {
   try {
-    const session = await auth0.getSession(req);
+    // Auth0Client.getSession() without parameters gets the session from cookies
+    const session = await auth0.getSession();
     
     if (!session?.user?.sub || !session?.user?.email) {
       return null;

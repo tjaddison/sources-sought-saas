@@ -84,35 +84,25 @@ export default function FileUploadZone({
   };
 
   const uploadFile = async (file: File, type: string) => {
-    // Get upload URL from API
-    const response = await fetch(`/api/documents/${type}/upload`, {
+    // Create FormData and upload directly through our API
+    const formData = new FormData();
+    formData.append('file', file);
+
+    console.log('Uploading file:', { fileName: file.name, fileSize: file.size, fileType: file.type });
+
+    const response = await fetch(`/api/documents/${type}/upload-direct`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        fileName: file.name,
-        fileSize: file.size,
-        contentType: file.type,
-      }),
+      body: formData,
     });
 
     if (!response.ok) {
-      throw new Error('Failed to get upload URL');
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to upload file');
     }
 
-    const { uploadUrl } = await response.json();
-
-    // Upload file to S3
-    const uploadResponse = await fetch(uploadUrl, {
-      method: 'PUT',
-      body: file,
-      headers: {
-        'Content-Type': file.type,
-      },
-    });
-
-    if (!uploadResponse.ok) {
-      throw new Error('Failed to upload file');
-    }
+    const result = await response.json();
+    console.log('Upload successful:', result);
+    return result;
   };
 
   return (
