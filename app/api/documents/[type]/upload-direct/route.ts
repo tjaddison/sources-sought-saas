@@ -68,6 +68,9 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ typ
     const documentId = uuidv4();
     const s3Key = `users/${user.userId}/${type}/${documentId}-${file.name}`;
     
+    console.log('Generated unique documentId:', documentId);
+    console.log('File details:', { userId: user.userId, documentType: type, fileName: file.name });
+    
     // Upload file to S3
     try {
       const buffer = Buffer.from(await file.arrayBuffer());

@@ -90,7 +90,7 @@ export default function AdminNavigation({ user }: AdminNavigationProps) {
                   Welcome, {user.name || user.email}
                 </div>
                 <a
-                  href="/api/auth/logout"
+                  href="/auth/logout"
                   className="flex items-center space-x-2 text-gray-500 hover:text-gray-700"
                 >
                   <ArrowRightOnRectangleIcon className="h-5 w-5" />

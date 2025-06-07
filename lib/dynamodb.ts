@@ -125,13 +125,49 @@ export interface Document {
   uploadedAt: string;
 }
 
+export async function getAllDocumentsForUser(userId: string): Promise<Document[]> {
+  if (!userId) throw new Error("User ID is required");
+
+  console.log('Fetching all documents for user:', { userId, tableName: documentsTableName });
+
+  // Since we're using composite keys, we need to scan with a filter
+  const params = {
+    TableName: documentsTableName,
+    FilterExpression: "originalUserId = :userId",
+    ExpressionAttributeValues: {
+      ":userId": userId
+    }
+  };
+
+  try {
+    const data = await ddbDocClient.send(new ScanCommand(params));
+    console.log(`Found ${data.Items?.length || 0} total documents for user ${userId}`);
+    
+    // Transform items back to original structure
+    const documents = (data.Items || []).map(item => ({
+      ...item,
+      userId: item.originalUserId || userId // Restore original userId
+    }));
+    
+    // Remove the temporary fields
+    documents.forEach(doc => delete doc.originalUserId);
+    
+    return documents as Document[];
+  } catch (error) {
+    console.error("Error getting documents:", error);
+    throw new Error("Could not fetch documents");
+  }
+}
+
 export async function getDocumentsByType(userId: string, documentType: string): Promise<Document[]> {
   if (!userId || !documentType) throw new Error("User ID and document type are required");
 
+  console.log('Fetching documents:', { userId, documentType, tableName: documentsTableName });
+
+  // Since we're using composite keys, we need to scan with a filter
   const params = {
     TableName: documentsTableName,
-    KeyConditionExpression: "userId = :userId",
-    FilterExpression: "documentType = :documentType",
+    FilterExpression: "originalUserId = :userId AND documentType = :documentType",
     ExpressionAttributeValues: {
       ":userId": userId,
       ":documentType": documentType
@@ -139,8 +175,19 @@ export async function getDocumentsByType(userId: string, documentType: string): 
   };
 
   try {
-    const data = await ddbDocClient.send(new QueryCommand(params));
-    return data.Items as Document[] || [];
+    const data = await ddbDocClient.send(new ScanCommand(params));
+    console.log(`Found ${data.Items?.length || 0} documents of type ${documentType} for user ${userId}`);
+    
+    // Transform items back to original structure
+    const documents = (data.Items || []).map(item => ({
+      ...item,
+      userId: item.originalUserId || userId // Restore original userId
+    }));
+    
+    // Remove the temporary fields
+    documents.forEach(doc => delete doc.originalUserId);
+    
+    return documents as Document[];
   } catch (error) {
     console.error("Error getting documents:", error);
     throw new Error("Could not fetch documents");
@@ -148,14 +195,31 @@ export async function getDocumentsByType(userId: string, documentType: string): 
 }
 
 export async function createDocument(document: Document): Promise<Document> {
+  console.log('Creating document in DynamoDB:', {
+    userId: document.userId,
+    documentId: document.documentId,
+    documentType: document.documentType,
+    fileName: document.fileName,
+    tableName: documentsTableName
+  });
+  
+  // Since the table only has userId as the primary key, we need to use a composite key
+  // Store the original userId in a separate field and use userId#documentId as the key
+  const itemToStore = {
+    ...document,
+    userId: `${document.userId}#${document.documentId}`, // Composite key
+    originalUserId: document.userId // Store original userId for queries
+  };
+  
   const params = {
     TableName: documentsTableName,
-    Item: document
+    Item: itemToStore
   };
 
   try {
     await ddbDocClient.send(new PutCommand(params));
-    return document;
+    console.log('Document created successfully:', document.documentId);
+    return document; // Return original document structure
   } catch (error) {
     console.error("Error creating document:", error);
     throw new Error("Could not save document");
@@ -163,9 +227,10 @@ export async function createDocument(document: Document): Promise<Document> {
 }
 
 export async function deleteDocument(userId: string, documentId: string): Promise<void> {
+  // Use composite key for deletion
   const params = {
     TableName: documentsTableName,
-    Key: { userId, documentId }
+    Key: { userId: `${userId}#${documentId}` }
   };
 
   try {
