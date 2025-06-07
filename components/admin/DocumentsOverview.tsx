@@ -23,21 +23,30 @@ const documentTypes = [
     name: 'Capability Statements',
     description: 'Company capabilities, past performance, and qualifications',
     icon: DocumentIcon,
-    color: 'blue',
+    iconBgColor: 'bg-blue-100',
+    iconColor: 'text-blue-600',
+    buttonBgColor: 'bg-blue-600',
+    buttonHoverColor: 'hover:bg-blue-700',
   },
   {
     type: 'resume',
     name: 'Team Resumes',
     description: 'Key personnel and team member qualifications',
     icon: UserGroupIcon,
-    color: 'green',
+    iconBgColor: 'bg-green-100',
+    iconColor: 'text-green-600',
+    buttonBgColor: 'bg-green-600',
+    buttonHoverColor: 'hover:bg-green-700',
   },
   {
     type: 'proposal',
     name: 'Past Proposals',
     description: 'Examples of previous proposals and submissions',
     icon: ClipboardDocumentListIcon,
-    color: 'purple',
+    iconBgColor: 'bg-purple-100',
+    iconColor: 'text-purple-600',
+    buttonBgColor: 'bg-purple-600',
+    buttonHoverColor: 'hover:bg-purple-700',
   },
 ];
 
@@ -54,8 +63,8 @@ export default function DocumentsOverview({ documentCounts }: DocumentsOverviewP
           >
             <div className="p-6">
               <div className="flex items-center space-x-3 mb-4">
-                <div className={`p-2 rounded-lg bg-${docType.color}-100`}>
-                  <docType.icon className={`h-6 w-6 text-${docType.color}-600`} />
+                <div className={`p-2 rounded-lg ${docType.iconBgColor}`}>
+                  <docType.icon className={`h-6 w-6 ${docType.iconColor}`} />
                 </div>
                 <div>
                   <h3 className="text-lg font-medium text-gray-900">
@@ -74,7 +83,7 @@ export default function DocumentsOverview({ documentCounts }: DocumentsOverviewP
               <div className="space-y-3">
                 <Link
                   href={`/admin/documents/${docType.type}/upload`}
-                  className={`flex items-center justify-center space-x-2 w-full px-4 py-2 bg-${docType.color}-600 text-white rounded-lg hover:bg-${docType.color}-700 transition-colors`}
+                  className={`flex items-center justify-center space-x-2 w-full px-4 py-2 ${docType.buttonBgColor} text-white rounded-lg ${docType.buttonHoverColor} transition-colors`}
                 >
                   <PlusIcon className="h-4 w-4" />
                   <span>Upload New</span>
