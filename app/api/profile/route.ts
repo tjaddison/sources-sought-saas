@@ -37,32 +37,80 @@ export const GET = requireAuth(async (req: NextRequest, user) => {
 });
 
 export const PUT = requireAuth(async (req: NextRequest, user) => {
-  try {
-    const body = await req.json();
-    const validatedData = updateProfileSchema.parse(body);
+  console.log('=== PUT /profile endpoint started ===');
+  console.log('Authenticated user:', {
+    userId: user.userId,
+    email: user.email,
+    name: user.name
+  });
 
-    // Get existing profile to preserve other fields
+  try {
+    // Debug request body parsing
+    console.log('Parsing request body...');
+    const body = await req.json();
+    console.log('Raw request body:', body);
+
+    // Debug validation
+    console.log('Validating data against schema...');
+    const validatedData = updateProfileSchema.parse(body);
+    console.log('Validated data:', validatedData);
+
+    // Debug existing profile retrieval
+    console.log(`Fetching existing profile for userId: ${user.userId}`);
     const existingProfile = await getUserProfile(user.userId);
-    
-    const updatedProfile = await createOrUpdateUserProfile({
+    console.log('Existing profile:', existingProfile);
+
+    // Debug profile merge
+    const profileToUpdate = {
       ...existingProfile,
       userId: user.userId,
       email: user.email,
       ...validatedData,
-    });
+    };
+    console.log('Profile data to update:', profileToUpdate);
 
+    // Debug database update
+    console.log('Updating profile in database...');
+    const updatedProfile = await createOrUpdateUserProfile(profileToUpdate);
+    console.log('Updated profile result:', updatedProfile);
+
+    console.log('=== PUT /profile endpoint completed successfully ===');
     return Response.json(updatedProfile);
+
   } catch (error) {
+    console.error('=== PUT /profile endpoint error ===');
+    
     if (error instanceof z.ZodError) {
+      console.error('Validation error details:', {
+        errorType: 'ZodError',
+        errors: error.errors
+      });
+      
       return Response.json(
-        { error: 'Validation error', details: error.errors },
+        { 
+          error: 'Validation error', 
+          details: error.errors 
+        },
         { status: 400 }
       );
     }
-    
-    console.error('Error updating profile:', error);
+
+
+    // Log the full error object
+    console.error('Full error object:', error);
+
     return Response.json(
-      { error: 'Internal server error' },
+      { 
+        error: 'Internal server error',
+        timestamp: new Date().toISOString(),
+        // In development, you might want to include more details
+        ...(process.env.NODE_ENV === 'development' && {
+          details: {
+            message: error instanceof Error ? error.message : 'Unknown error',
+            type: error instanceof Error ? error.constructor.name : 'Unknown'
+          }
+        })
+      },
       { status: 500 }
     );
   }

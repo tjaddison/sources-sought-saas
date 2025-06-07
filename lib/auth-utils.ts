@@ -28,10 +28,22 @@ export async function getAuthenticatedUser(req: NextRequest): Promise<AuthUser |
   }
 }
 
+type RouteContext = {
+  params?: Promise<Record<string, string>>;
+};
+
 export function requireAuth(
-  handler: (req: NextRequest, user: AuthUser, context?: { params?: Record<string, string> }) => Promise<Response>
+  handler: (req: NextRequest, user: AuthUser) => Promise<Response>
+): (req: NextRequest) => Promise<Response>;
+
+export function requireAuth<T extends RouteContext>(
+  handler: (req: NextRequest, user: AuthUser, context: T) => Promise<Response>
+): (req: NextRequest, context: T) => Promise<Response>;
+
+export function requireAuth<T extends RouteContext>(
+  handler: (req: NextRequest, user: AuthUser, context?: T) => Promise<Response>
 ) {
-  return async (req: NextRequest, context?: { params?: Record<string, string> }): Promise<Response> => {
+  return async (req: NextRequest, context?: T): Promise<Response> => {
     const user = await getAuthenticatedUser(req);
     
     if (!user) {
@@ -44,6 +56,6 @@ export function requireAuth(
       );
     }
 
-    return handler(req, user, context);
+    return handler(req, user, context as T);
   };
 }

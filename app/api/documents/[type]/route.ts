@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 import { getAuthenticatedUser } from '@/lib/auth-utils';
 import { getDocumentsByType } from '@/lib/dynamodb';
 
-export async function GET(req: NextRequest, { params }: { params: { type: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ type: string }> }) {
   try {
     const user = await getAuthenticatedUser(req);
     
@@ -13,7 +13,7 @@ export async function GET(req: NextRequest, { params }: { params: { type: string
       );
     }
 
-    const { type } = params;
+    const { type } = await params;
     
     if (!['capability', 'resume', 'proposal'].includes(type)) {
       return Response.json(

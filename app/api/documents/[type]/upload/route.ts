@@ -18,7 +18,7 @@ const allowedMimeTypes = [
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
 ];
 
-export async function POST(req: NextRequest, { params }: { params: { type: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ type: string }> }) {
   try {
     const user = await getAuthenticatedUser(req);
     
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest, { params }: { params: { type: strin
       );
     }
 
-    const { type } = params;
+    const { type } = await params;
     
     if (!allowedTypes.includes(type as typeof allowedTypes[number])) {
       return Response.json(

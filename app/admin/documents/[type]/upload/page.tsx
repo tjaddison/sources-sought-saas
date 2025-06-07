@@ -14,9 +14,9 @@ const TYPE_NAMES = {
 export default async function DocumentUploadPage({ 
   params 
 }: { 
-  params: { type: string } 
+  params: Promise<{ type: string }>
 }) {
-  const { type } = params;
+  const { type } = await params;
   
   if (!VALID_TYPES.includes(type)) {
     notFound();

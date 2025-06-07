@@ -7,6 +7,11 @@ export async function middleware(request: NextRequest) {
   console.log(`🔍 Middleware processing: ${pathname}`)
   
   try {
+    const session = await auth0.getSession(request)
+    if (session?.user && request.nextUrl.pathname === '/') {
+      return NextResponse.redirect(new URL('/admin/dashboard', request.url))
+    }
+
     // Apply Auth0 middleware first
     console.log(`📋 Applying Auth0 middleware for: ${pathname}`)
     const response = await auth0.middleware(request)
@@ -34,7 +39,7 @@ export async function middleware(request: NextRequest) {
     }
 
     console.log(`🔐 Protected route detected, checking session: ${pathname}`)
-    const session = await auth0.getSession(request)
+    // const session = await auth0.getSession(request)
     
     // Redirect to login if not authenticated
     if (!session?.user) {

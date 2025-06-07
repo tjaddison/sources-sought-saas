@@ -1,8 +1,8 @@
 import { getItemById } from '@/lib/dynamodb'; // Adjust path if needed
 
 // This is a Server Component by default in the App Router
-export default async function ItemPage({ params }: { params: { id: string } }) {
-  const itemId = params.id;
+export default async function ItemPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id: itemId } = await params;
   let itemData;
   let error = null;
 

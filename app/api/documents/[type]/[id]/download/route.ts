@@ -3,7 +3,7 @@ import { getAuthenticatedUser } from '@/lib/auth-utils';
 import { getDocumentsByType } from '@/lib/dynamodb';
 import { generateDownloadUrl } from '@/lib/s3';
 
-export async function GET(req: NextRequest, { params }: { params: { type: string; id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ type: string; id: string }> }) {
   try {
     const user = await getAuthenticatedUser(req);
     
@@ -14,7 +14,7 @@ export async function GET(req: NextRequest, { params }: { params: { type: string
       );
     }
 
-    const { type, id } = params;
+    const { type, id } = await params;
     
     if (!['capability', 'resume', 'proposal'].includes(type)) {
       return Response.json(
