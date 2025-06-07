@@ -4,12 +4,22 @@ import { getIndexingJobHistory } from '@/lib/dynamodb';
 
 export const GET = requireAuth(async (req: NextRequest, user) => {
   try {
+    const { searchParams } = new URL(req.url);
+    const jobId = searchParams.get('jobId');
+    
     const jobs = await getIndexingJobHistory(user.userId);
+    
+    if (jobId) {
+      const specificJob = jobs.find(job => job.jobId === jobId);
+      return Response.json({ job: specificJob || null });
+    }
+    
     const latestJob = jobs.length > 0 ? jobs[0] : null;
     
     return Response.json({ 
       latestJob,
-      hasJobs: jobs.length > 0 
+      hasJobs: jobs.length > 0,
+      history: jobs
     });
   } catch (error) {
     console.error('Error getting indexing status:', error);

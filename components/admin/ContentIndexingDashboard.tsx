@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { IndexingJob } from '@/lib/dynamodb';
+import { IndexingJob, UserProfile } from '@/lib/dynamodb';
 import { 
   MagnifyingGlassIcon,
   DocumentIcon,
@@ -12,7 +12,8 @@ import {
   ClockIcon,
   CheckCircleIcon,
   ExclamationTriangleIcon,
-  ArrowPathIcon
+  ArrowPathIcon,
+  BuildingOfficeIcon
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
@@ -31,12 +32,14 @@ interface ContentIndexingDashboardProps {
     proposal: number;
     total: number;
   };
+  userProfile: UserProfile | null;
 }
 
 export default function ContentIndexingDashboard({
   indexingHistory,
   documentCounts,
   indexedCounts,
+  userProfile,
 }: ContentIndexingDashboardProps) {
   const router = useRouter();
   const [isStartingIndex, setIsStartingIndex] = useState(false);
@@ -44,8 +47,20 @@ export default function ContentIndexingDashboard({
   const latestJob = indexingHistory.length > 0 ? indexingHistory[0] : null;
   const isJobRunning = latestJob?.status === 'pending' || latestJob?.status === 'processing';
 
+  // Auto-refresh when a job is running
+  useEffect(() => {
+    if (isJobRunning) {
+      const interval = setInterval(() => {
+        router.refresh();
+      }, 3000); // Refresh every 3 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [isJobRunning, router]);
+
   const handleStartIndexing = async () => {
-    if (isJobRunning || documentCounts.total === 0) return;
+    const hasContent = documentCounts.total > 0 || userProfile?.companyDescription;
+    if (isJobRunning || !hasContent) return;
 
     setIsStartingIndex(true);
     
@@ -146,7 +161,7 @@ export default function ContentIndexingDashboard({
           )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div>
             <h3 className="text-sm font-medium text-gray-900 mb-3">
               Document Overview
@@ -180,15 +195,54 @@ export default function ContentIndexingDashboard({
 
           <div>
             <h3 className="text-sm font-medium text-gray-900 mb-3">
+              Company Description
+            </h3>
+            <div className="space-y-3">
+              <div className="flex items-start space-x-3">
+                <BuildingOfficeIcon className="h-5 w-5 text-gray-600 mt-0.5" />
+                <div className="flex-1">
+                  {userProfile?.companyDescription ? (
+                    <p className="text-sm text-gray-600 line-clamp-4">
+                      {userProfile.companyDescription}
+                    </p>
+                  ) : (
+                    <p className="text-sm text-gray-400 italic">
+                      No company description added
+                    </p>
+                  )}
+                </div>
+              </div>
+              
+              <div className="mt-2 p-2 bg-gray-50 rounded-lg">
+                <p className="text-xs text-gray-600">
+                  {userProfile?.companyDescription ? 
+                    "✓ Will be included in content indexing" : 
+                    "⚠ Add description for better matching"
+                  }
+                </p>
+                {!userProfile?.companyDescription && (
+                  <a 
+                    href="/admin/profile/company-info" 
+                    className="text-xs text-blue-600 hover:text-blue-700 mt-1 inline-block"
+                  >
+                    Add company description →
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-medium text-gray-900 mb-3">
               Quick Actions
             </h3>
             <div className="space-y-3">
               <button
                 onClick={handleStartIndexing}
-                disabled={isStartingIndex || isJobRunning || documentCounts.total === 0}
+                disabled={isStartingIndex || isJobRunning || (!userProfile?.companyDescription && documentCounts.total === 0)}
                 className={clsx(
                   'w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-lg font-medium transition-colors',
-                  documentCounts.total === 0
+                  (!userProfile?.companyDescription && documentCounts.total === 0)
                     ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                     : isJobRunning
                     ? 'bg-yellow-100 text-yellow-700 cursor-not-allowed'
@@ -201,13 +255,23 @@ export default function ContentIndexingDashboard({
                   <PlayIcon className="h-5 w-5" />
                 )}
                 <span>
-                  {documentCounts.total === 0
-                    ? 'No Documents to Index'
+                  {(!userProfile?.companyDescription && documentCounts.total === 0)
+                    ? 'No Content to Index'
                     : isJobRunning
                     ? 'Indexing in Progress'
                     : 'Start Content Indexing'}
                 </span>
               </button>
+
+              {isJobRunning && (
+                <button
+                  onClick={() => router.refresh()}
+                  className="w-full flex items-center justify-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
+                >
+                  <ArrowPathIcon className="h-4 w-4" />
+                  <span>Refresh Status</span>
+                </button>
+              )}
 
               {latestJob && latestJob.status === 'completed' && (
                 <div className="text-sm text-gray-600 text-center">

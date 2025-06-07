@@ -1,6 +1,6 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
-import { GetCommand, PutCommand, ScanCommand, QueryCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb";
+import { GetCommand, PutCommand, ScanCommand, QueryCommand, DeleteCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 
 // Ensure environment variables are set
 const region = process.env.AWS_REGION;
@@ -159,6 +159,40 @@ export async function getAllDocumentsForUser(userId: string): Promise<Document[]
   }
 }
 
+export async function getDocumentsByUserId(userId: string): Promise<Document[]> {
+  if (!userId) throw new Error("User ID is required");
+
+  console.log('Fetching all documents for user:', { userId, tableName: documentsTableName });
+
+  // Since we're using composite keys, we need to scan with a filter
+  const params = {
+    TableName: documentsTableName,
+    FilterExpression: "originalUserId = :userId",
+    ExpressionAttributeValues: {
+      ":userId": userId
+    }
+  };
+
+  try {
+    const data = await ddbDocClient.send(new ScanCommand(params));
+    console.log(`Found ${data.Items?.length || 0} documents for user ${userId}`);
+    
+    // Transform items back to original structure
+    const documents = (data.Items || []).map(item => {
+      const { originalUserId, ...rest } = item;
+      return {
+        ...rest,
+        userId: originalUserId || userId // Restore original userId
+      };
+    });
+    
+    return documents as Document[];
+  } catch (error) {
+    console.error("Error getting documents:", error);
+    throw new Error("Could not fetch documents");
+  }
+}
+
 export async function getDocumentsByType(userId: string, documentType: string): Promise<Document[]> {
   if (!userId || !documentType) throw new Error("User ID and document type are required");
 
@@ -253,14 +287,27 @@ export interface IndexingJob {
 }
 
 export async function createIndexingJob(job: IndexingJob): Promise<IndexingJob> {
+  // Ensure the job has both userId and jobId
+  if (!job.userId || !job.jobId) {
+    throw new Error("Both userId and jobId are required for indexing job");
+  }
+  
+  // Since the table only has userId as key, we'll store the composite key as userId#jobId
+  const itemToStore = {
+    ...job,
+    userId: `${job.userId}#${job.jobId}`, // Composite key
+    originalUserId: job.userId // Store original userId for queries
+  };
+  
   const params = {
     TableName: indexingJobsTableName,
-    Item: job
+    Item: itemToStore
   };
 
   try {
     await ddbDocClient.send(new PutCommand(params));
-    return job;
+    console.log('Indexing job created:', { userId: job.userId, jobId: job.jobId });
+    return job; // Return original structure
   } catch (error) {
     console.error("Error creating indexing job:", error);
     throw new Error("Could not create indexing job");
@@ -268,21 +315,137 @@ export async function createIndexingJob(job: IndexingJob): Promise<IndexingJob> 
 }
 
 export async function getIndexingJobHistory(userId: string): Promise<IndexingJob[]> {
+  // Since we're using composite keys, we need to scan with a filter
   const params = {
     TableName: indexingJobsTableName,
-    KeyConditionExpression: "userId = :userId",
+    FilterExpression: "originalUserId = :userId",
     ExpressionAttributeValues: {
       ":userId": userId
-    },
-    ScanIndexForward: false // Most recent first
+    }
   };
 
   try {
-    const data = await ddbDocClient.send(new QueryCommand(params));
-    return data.Items as IndexingJob[] || [];
+    const data = await ddbDocClient.send(new ScanCommand(params));
+    
+    // Transform items back to original structure
+    const jobs = (data.Items || []).map(item => {
+      const { originalUserId, ...rest } = item;
+      return {
+        ...rest,
+        userId: originalUserId || userId // Restore original userId
+      } as IndexingJob;
+    });
+    
+    // Sort by startedAt descending (most recent first)
+    jobs.sort((a, b) => {
+      const dateA = new Date(a.startedAt).getTime();
+      const dateB = new Date(b.startedAt).getTime();
+      return dateB - dateA;
+    });
+    
+    return jobs;
   } catch (error) {
     console.error("Error getting indexing job history:", error);
     throw new Error("Could not fetch indexing job history");
+  }
+}
+
+export async function updateIndexingJob(userId: string, jobId: string, updates: Partial<IndexingJob>): Promise<void> {
+  console.log('Updating indexing job:', { userId, jobId, updates });
+  
+  const updateExpressions: string[] = [];
+  const expressionAttributeNames: Record<string, string> = {};
+  const expressionAttributeValues: Record<string, any> = {};
+
+  Object.entries(updates).forEach(([key, value]) => {
+    if (value !== undefined && key !== 'userId' && key !== 'jobId' && key !== 'originalUserId') {
+      updateExpressions.push(`#${key} = :${key}`);
+      expressionAttributeNames[`#${key}`] = key;
+      expressionAttributeValues[`:${key}`] = value;
+    }
+  });
+
+  if (updateExpressions.length === 0) return;
+
+  // Use composite key for update
+  const params = {
+    TableName: indexingJobsTableName,
+    Key: { userId: `${userId}#${jobId}` }, // Composite key matching what we stored
+    UpdateExpression: `SET ${updateExpressions.join(', ')}`,
+    ExpressionAttributeNames: expressionAttributeNames,
+    ExpressionAttributeValues: expressionAttributeValues,
+  };
+
+  console.log('UpdateCommand params:', JSON.stringify(params, null, 2));
+
+  try {
+    await ddbDocClient.send(new UpdateCommand(params));
+    console.log('Indexing job updated successfully');
+  } catch (error) {
+    console.error("Error updating indexing job:", error);
+    throw new Error("Could not update indexing job");
+  }
+}
+
+// User Profile Embedding Functions
+export interface UserEmbedding {
+  userId: string;
+  embedding: number[];
+  embeddingModel: string;
+  lastIndexedAt: string;
+  documentsIncluded: number;
+  tokensUsed: number;
+}
+
+export async function updateUserEmbedding(embedding: UserEmbedding): Promise<void> {
+  const params = {
+    TableName: usersTableName,
+    Key: { userId: embedding.userId },
+    UpdateExpression: `SET embedding = :embedding, 
+                          embeddingModel = :embeddingModel, 
+                          lastIndexedAt = :lastIndexedAt,
+                          documentsIncluded = :documentsIncluded,
+                          tokensUsed = :tokensUsed`,
+    ExpressionAttributeValues: {
+      ':embedding': embedding.embedding,
+      ':embeddingModel': embedding.embeddingModel,
+      ':lastIndexedAt': embedding.lastIndexedAt,
+      ':documentsIncluded': embedding.documentsIncluded,
+      ':tokensUsed': embedding.tokensUsed,
+    },
+  };
+
+  try {
+    await ddbDocClient.send(new UpdateCommand(params));
+  } catch (error) {
+    console.error("Error updating user embedding:", error);
+    throw new Error("Could not update user embedding");
+  }
+}
+
+export async function markDocumentsAsIndexed(userId: string, documentIds: string[]): Promise<void> {
+  const updatePromises = documentIds.map(async (documentId) => {
+    const params = {
+      TableName: documentsTableName,
+      Key: { userId: `${userId}#${documentId}` },
+      UpdateExpression: 'SET #indexed = :indexed',
+      ExpressionAttributeNames: {
+        '#indexed': 'indexed'
+      },
+      ExpressionAttributeValues: {
+        ':indexed': true,
+      },
+    };
+
+    return ddbDocClient.send(new UpdateCommand(params));
+  });
+
+  try {
+    await Promise.all(updatePromises);
+    console.log(`Marked ${documentIds.length} documents as indexed`);
+  } catch (error) {
+    console.error("Error marking documents as indexed:", error);
+    throw new Error("Could not mark documents as indexed");
   }
 }
 

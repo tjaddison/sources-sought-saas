@@ -1,5 +1,5 @@
 import { Auth0Client } from '@auth0/nextjs-auth0/server';
-import { getIndexingJobHistory, getDocumentsByType } from '@/lib/dynamodb';
+import { getIndexingJobHistory, getDocumentsByType, getUserProfile } from '@/lib/dynamodb';
 import { redirect } from 'next/navigation';
 import ContentIndexingDashboard from '@/components/admin/ContentIndexingDashboard';
 
@@ -12,11 +12,10 @@ export default async function ContentIndexingPage() {
     redirect('/auth/login');
   }
 
-  // Get indexing job history
-  const indexingHistory = await getIndexingJobHistory(session.user.sub);
-  
-  // Get document counts for each type
-  const [capabilities, resumes, proposals] = await Promise.all([
+  // Get user profile, indexing job history, and documents
+  const [userProfile, indexingHistory, capabilities, resumes, proposals] = await Promise.all([
+    getUserProfile(session.user.sub),
+    getIndexingJobHistory(session.user.sub),
     getDocumentsByType(session.user.sub, 'capability'),
     getDocumentsByType(session.user.sub, 'resume'),
     getDocumentsByType(session.user.sub, 'proposal'),
@@ -49,6 +48,7 @@ export default async function ContentIndexingPage() {
         indexingHistory={indexingHistory}
         documentCounts={documentCounts}
         indexedCounts={indexedCounts}
+        userProfile={userProfile}
       />
     </div>
   );
