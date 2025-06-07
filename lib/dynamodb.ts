@@ -144,13 +144,13 @@ export async function getAllDocumentsForUser(userId: string): Promise<Document[]
     console.log(`Found ${data.Items?.length || 0} total documents for user ${userId}`);
     
     // Transform items back to original structure
-    const documents = (data.Items || []).map(item => ({
-      ...item,
-      userId: item.originalUserId || userId // Restore original userId
-    }));
-    
-    // Remove the temporary fields
-    documents.forEach(doc => delete doc.originalUserId);
+    const documents = (data.Items || []).map(item => {
+      const { originalUserId, ...rest } = item;
+      return {
+        ...rest,
+        userId: originalUserId || userId // Restore original userId
+      };
+    });
     
     return documents as Document[];
   } catch (error) {
@@ -179,13 +179,13 @@ export async function getDocumentsByType(userId: string, documentType: string): 
     console.log(`Found ${data.Items?.length || 0} documents of type ${documentType} for user ${userId}`);
     
     // Transform items back to original structure
-    const documents = (data.Items || []).map(item => ({
-      ...item,
-      userId: item.originalUserId || userId // Restore original userId
-    }));
-    
-    // Remove the temporary fields
-    documents.forEach(doc => delete doc.originalUserId);
+    const documents = (data.Items || []).map(item => {
+      const { originalUserId, ...rest } = item;
+      return {
+        ...rest,
+        userId: originalUserId || userId // Restore original userId
+      };
+    });
     
     return documents as Document[];
   } catch (error) {
