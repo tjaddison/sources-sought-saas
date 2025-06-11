@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { IndexingJob, UserProfile } from '@/lib/dynamodb';
+import { hasProfileChanged } from '@/lib/profile-utils';
 import { 
   MagnifyingGlassIcon,
   DocumentIcon,
@@ -13,7 +14,8 @@ import {
   CheckCircleIcon,
   ExclamationTriangleIcon,
   ArrowPathIcon,
-  BuildingOfficeIcon
+  BuildingOfficeIcon,
+  InformationCircleIcon
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
@@ -46,6 +48,14 @@ export default function ContentIndexingDashboard({
 
   const latestJob = indexingHistory.length > 0 ? indexingHistory[0] : null;
   const isJobRunning = latestJob?.status === 'pending' || latestJob?.status === 'processing';
+  
+  // Check if reindexing is needed
+  const documentsChanged = latestJob?.status === 'completed' && 
+    (documentCounts.total !== indexedCounts.total || 
+     (latestJob.documentsProcessed && latestJob.documentsProcessed !== documentCounts.total));
+  
+  const profileChanged = hasProfileChanged(userProfile, latestJob);
+  const needsReindexing = documentsChanged || profileChanged;
 
   // Auto-refresh when a job is running
   useEffect(() => {
@@ -146,6 +156,49 @@ export default function ContentIndexingDashboard({
 
   return (
     <div className="space-y-8">
+      {/* Reindexing Alert */}
+      {needsReindexing && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+          <div className="flex items-start space-x-3">
+            <ExclamationTriangleIcon className="h-5 w-5 text-amber-600 mt-0.5" />
+            <div className="flex-1">
+              <h3 className="text-sm font-medium text-amber-900">
+                Reindexing Recommended
+              </h3>
+              <div className="text-sm text-amber-700 mt-1 space-y-1">
+                {documentsChanged && (
+                  <p>• Documents have been added or removed since the last indexing</p>
+                )}
+                {profileChanged && (
+                  <p>• Company description has been updated since the last indexing</p>
+                )}
+                <p className="font-medium mt-2">
+                  Please run indexing again to ensure all content is searchable.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Info Banner for First Time */}
+      {!latestJob && documentCounts.total > 0 && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="flex items-start space-x-3">
+            <InformationCircleIcon className="h-5 w-5 text-blue-600 mt-0.5" />
+            <div className="flex-1">
+              <h3 className="text-sm font-medium text-blue-900">
+                Ready to Index
+              </h3>
+              <p className="text-sm text-blue-700 mt-1">
+                You have uploaded documents that need to be indexed for search. 
+                Click "Start Content Indexing" to make your content searchable.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* Current Status */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <div className="flex items-center justify-between mb-6">
@@ -259,6 +312,8 @@ export default function ContentIndexingDashboard({
                     ? 'No Content to Index'
                     : isJobRunning
                     ? 'Indexing in Progress'
+                    : needsReindexing
+                    ? 'Reindex Content'
                     : 'Start Content Indexing'}
                 </span>
               </button>
