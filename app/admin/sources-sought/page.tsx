@@ -46,6 +46,17 @@ const SORT_OPTIONS = [
   { value: 'relevance', label: 'Relevance' },
 ];
 
+const TYPE_OPTIONS = [
+  { value: '', label: 'All Types' },
+  { value: 'Sources Sought', label: 'Sources Sought' },
+  { value: 'Solicitation', label: 'Solicitation' },
+  { value: 'Pre-solicitation', label: 'Pre-solicitation' },
+  { value: 'Combined Synopsis/Solicitation', label: 'Combined Synopsis/Solicitation' },
+  { value: 'Sale of Surplus Property', label: 'Sale of Surplus Property' },
+  { value: 'Special Notice', label: 'Special Notice' },
+  { value: 'Award Notice', label: 'Award Notice' },
+];
+
 const PAGE_SIZE_OPTIONS = [10, 25, 50];
 
 export default function SourcesSoughtPage() {
@@ -54,6 +65,7 @@ export default function SourcesSoughtPage() {
   
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'updated_date');
+  const [typeFilter, setTypeFilter] = useState(searchParams.get('type') || '');
   const [pageSize, setPageSize] = useState(Number(searchParams.get('pageSize')) || 25);
   const [currentPage, setCurrentPage] = useState(Number(searchParams.get('page')) || 1);
   const [isLoading, setIsLoading] = useState(false);
@@ -72,6 +84,10 @@ export default function SourcesSoughtPage() {
         pageSize: pageSize.toString(),
       });
       
+      if (typeFilter) {
+        params.append('type', typeFilter);
+      }
+      
       const response = await fetch(`/api/sources-sought/search?${params}`);
       
       if (!response.ok) {
@@ -85,7 +101,7 @@ export default function SourcesSoughtPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [searchQuery, sortBy, currentPage, pageSize]);
+  }, [searchQuery, sortBy, typeFilter, currentPage, pageSize]);
 
   const debouncedSearch = useCallback(
     debounce((query: string) => {
@@ -115,6 +131,18 @@ export default function SourcesSoughtPage() {
     setSortBy(newSort);
     const params = new URLSearchParams(searchParams);
     params.set('sort', newSort);
+    params.set('page', '1');
+    router.push(`/admin/sources-sought?${params}`);
+  };
+
+  const handleTypeChange = (newType: string) => {
+    setTypeFilter(newType);
+    const params = new URLSearchParams(searchParams);
+    if (newType) {
+      params.set('type', newType);
+    } else {
+      params.delete('type');
+    }
     params.set('page', '1');
     router.push(`/admin/sources-sought?${params}`);
   };
@@ -157,9 +185,9 @@ export default function SourcesSoughtPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-gray-900">Sources Sought Opportunities</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">Government Opportunities</h1>
         <p className="mt-2 text-sm text-gray-600">
-          Search and browse sources sought opportunities from SAM.gov
+          Search and browse government contracting opportunities from SAM.gov
         </p>
       </div>
 
@@ -182,6 +210,20 @@ export default function SourcesSoughtPage() {
             </div>
             
             <div className="flex gap-4">
+              <div className="relative">
+                <select
+                  value={typeFilter}
+                  onChange={(e) => handleTypeChange(e.target.value)}
+                  className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                >
+                  {TYPE_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              
               <div className="relative">
                 <select
                   value={sortBy}

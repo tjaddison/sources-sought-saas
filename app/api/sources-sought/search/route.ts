@@ -8,6 +8,7 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get('page') || '1', 10);
     const pageSize = parseInt(searchParams.get('pageSize') || '25', 10);
     const sortBy = searchParams.get('sort') || 'updated_date';
+    const type = searchParams.get('type') || '';
 
     if (page < 1 || pageSize < 1 || pageSize > 100) {
       return NextResponse.json(
@@ -29,7 +30,8 @@ export async function GET(request: NextRequest) {
       query,
       pageSize,
       offset,
-      sortBy as 'updated_date' | 'title_asc' | 'title_desc' | 'relevance'
+      sortBy as 'updated_date' | 'title_asc' | 'title_desc' | 'relevance',
+      type
     );
 
     // Log first item structure for debugging

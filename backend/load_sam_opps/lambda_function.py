@@ -250,13 +250,31 @@ def process_opportunity(opportunity: Dict[str, Any], client) -> bool:
         # Convert opportunity to Weaviate object
         weaviate_obj = create_weaviate_object_from_opportunity(opportunity)
         
-        # Use replace to upsert the object (creates if doesn't exist, updates if exists)
-        collection.data.replace(
-            uuid=notice_id,
-            properties=weaviate_obj
-        )
+        # Check if object exists and use appropriate method
+        try:
+            existing = collection.data.get_by_id(notice_id)
+            if existing:
+                # Update existing object
+                collection.data.update(
+                    uuid=notice_id,
+                    properties=weaviate_obj
+                )
+                logger.info(f"Updated opportunity: {notice_id}")
+            else:
+                # Should not happen, but handle gracefully
+                collection.data.insert(
+                    properties=weaviate_obj,
+                    uuid=notice_id
+                )
+                logger.info(f"Inserted opportunity: {notice_id}")
+        except Exception:
+            # Object doesn't exist, insert it
+            collection.data.insert(
+                properties=weaviate_obj,
+                uuid=notice_id
+            )
+            logger.info(f"Inserted new opportunity: {notice_id}")
         
-        logger.info(f"Indexed/updated opportunity: {notice_id}")
         return True
         
     except Exception as e:
