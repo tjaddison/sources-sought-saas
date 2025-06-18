@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   images: {
     domains: ['lh3.googleusercontent.com', 's.gravatar.com', 'cdn.auth0.com'],
     unoptimized: process.env.NODE_ENV !== 'production',

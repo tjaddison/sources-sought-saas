@@ -1,8 +1,8 @@
 import { getItemById } from '@/lib/dynamodb'; // Adjust path if needed
 
 // This is a Server Component by default in the App Router
-export default async function ItemPage({ params }: { params: { id: string } }) {
-  const itemId = params.id;
+export default async function ItemPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id: itemId } = await params;
   let itemData;
   let error = null;
 
@@ -28,8 +28,8 @@ export default async function ItemPage({ params }: { params: { id: string } }) {
   }
 
   // Replace 'title' and 'description' with your actual item attributes
-  const title = itemData.title || 'No Title';
-  const description = itemData.description || 'No Description';
+  const title = (typeof itemData.title === 'string' ? itemData.title : null) || 'No Title';
+  const description = (typeof itemData.description === 'string' ? itemData.description : null) || 'No Description';
 
   return (
     <div className="container mx-auto p-4">
