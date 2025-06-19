@@ -13,6 +13,7 @@ interface SourcesSoughtItem {
     creationTimeUnix: string;
     lastUpdateTimeUnix: string;
     distance?: number;
+    score?: number;
   };
   content: string;
   notice_id: string;
@@ -30,6 +31,7 @@ interface SourcesSoughtItem {
   fullParentPathName?: string;
   archived?: boolean;
   cancelled?: boolean;
+  matchPercentage?: number;
 }
 
 interface SearchResponse {
@@ -37,6 +39,13 @@ interface SearchResponse {
   total: number;
   page: number;
   pageSize: number;
+  searchMode?: string;
+  alpha?: number;
+  userProfile?: {
+    lastIndexedAt?: string;
+    documentsIncluded?: number;
+    embeddingModel?: string;
+  };
 }
 
 const SORT_OPTIONS = [
@@ -68,6 +77,7 @@ export default function SourcesSoughtPage() {
   const [typeFilter, setTypeFilter] = useState(searchParams.get('type') || '');
   const [pageSize, setPageSize] = useState(Number(searchParams.get('pageSize')) || 25);
   const [currentPage, setCurrentPage] = useState(Number(searchParams.get('page')) || 1);
+  const [useHybridSearch, setUseHybridSearch] = useState(searchParams.get('hybrid') === 'true');
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<SearchResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -88,7 +98,11 @@ export default function SourcesSoughtPage() {
         params.append('type', typeFilter);
       }
       
-      const response = await fetch(`/api/sources-sought/search?${params}`);
+      const endpoint = useHybridSearch 
+        ? '/api/sources-sought/hybrid-search' 
+        : '/api/sources-sought/search';
+        
+      const response = await fetch(`${endpoint}?${params}`);
       
       if (!response.ok) {
         throw new Error('Failed to fetch data');
@@ -101,7 +115,7 @@ export default function SourcesSoughtPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [searchQuery, sortBy, typeFilter, currentPage, pageSize]);
+  }, [searchQuery, sortBy, typeFilter, currentPage, pageSize, useHybridSearch]);
 
   const debouncedSearch = useCallback(
     debounce((query: string) => {
@@ -162,6 +176,19 @@ export default function SourcesSoughtPage() {
     router.push(`/admin/sources-sought?${params}`);
   };
 
+  const handleHybridSearchToggle = () => {
+    const newValue = !useHybridSearch;
+    setUseHybridSearch(newValue);
+    const params = new URLSearchParams(searchParams);
+    if (newValue) {
+      params.set('hybrid', 'true');
+    } else {
+      params.delete('hybrid');
+    }
+    params.set('page', '1');
+    router.push(`/admin/sources-sought?${params}`);
+  };
+
   const formatDate = (dateString: string) => {
     try {
       return format(new Date(dateString), 'MMM dd, yyyy');
@@ -193,24 +220,47 @@ export default function SourcesSoughtPage() {
 
       <div className="bg-white shadow rounded-lg">
         <div className="p-6 border-b border-gray-200">
-          <div className="flex flex-col lg:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                  placeholder="Search opportunities..."
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                />
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <label className="flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={useHybridSearch}
+                    onChange={handleHybridSearchToggle}
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  />
+                  <span className="ml-2 text-sm text-gray-700">
+                    Use Profile Matching
+                  </span>
+                </label>
+                {useHybridSearch && data?.userProfile && (
+                  <span className="text-xs text-gray-500">
+                    Last indexed: {formatDate(data.userProfile.lastIndexedAt || '')} | 
+                    {data.userProfile.documentsIncluded} documents
+                  </span>
+                )}
               </div>
             </div>
             
-            <div className="flex gap-4">
-              <div className="relative">
+            <div className="flex flex-col lg:flex-row gap-4">
+              <div className="flex-1">
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    placeholder={useHybridSearch ? "Search opportunities matching your profile..." : "Search opportunities..."}
+                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  />
+                </div>
+              </div>
+              
+              <div className="flex gap-4">
+                <div className="relative">
                 <select
                   value={typeFilter}
                   onChange={(e) => handleTypeChange(e.target.value)}
@@ -237,6 +287,7 @@ export default function SourcesSoughtPage() {
                   ))}
                 </select>
               </div>
+            </div>
             </div>
           </div>
         </div>
@@ -278,12 +329,19 @@ export default function SourcesSoughtPage() {
                   <div key={item._additional.id} className="border rounded-lg p-6 hover:shadow-md transition-shadow">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
-                        <Link
-                          href={`/admin/sources-sought/${item.notice_id}`}
-                          className="text-lg font-medium text-blue-600 hover:text-blue-800"
-                        >
-                          {item.title}
-                        </Link>
+                        <div className="flex items-start justify-between">
+                          <Link
+                            href={`/admin/sources-sought/${item.notice_id}`}
+                            className="text-lg font-medium text-blue-600 hover:text-blue-800 flex-1"
+                          >
+                            {item.title}
+                          </Link>
+                          {useHybridSearch && item.matchPercentage !== undefined && (
+                            <span className="ml-4 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                              {item.matchPercentage}% Match
+                            </span>
+                          )}
+                        </div>
                         
                         <p className="mt-1 text-sm text-gray-600">
                           <span className="font-medium">Notice ID:</span> {item.notice_id}
