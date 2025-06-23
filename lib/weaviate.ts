@@ -31,6 +31,7 @@ export interface WeaviateSourcesSoughtItem {
     lastUpdateTimeUnix: string;
     distance?: number;
     score?: number;
+    certainty?: number;
   };
   content: string;
   notice_id: string;
@@ -197,29 +198,58 @@ export async function hybridSearchWithUserProfile(
   let allObjects: any[] = [];
   let currentOffset = 0;
   let hasMore = true;
+  let isFallbackSearch = false;
   
   console.log('Starting hybrid search with user profile...');
+  console.log('User embedding length:', userEmbedding.length);
   
   // Fetch all records in batches
   while (hasMore) {
     let result;
     
-    // Use hybrid search combining vector similarity with keyword search
-    if (query && query.trim() !== '') {
-      // Hybrid search with both user embedding and query
-      result = await collection.query.hybrid(query, {
+    try {
+      // Now that Weaviate has vectors, use hybrid search
+      console.log('Performing hybrid search with vector embeddings');
+      
+      if (query && query.trim() !== '') {
+        // Hybrid search combining vector similarity and BM25
+        console.log('Performing hybrid search with query:', query);
+        result = await collection.query.hybrid(query, {
+          limit: batchSize,
+          offset: currentOffset,
+          vector: userEmbedding,
+          alpha: alpha, // Balance between vector (0) and keyword (1) search
+          returnMetadata: ['score', 'explainScore', 'distance'],
+        });
+      } else {
+        // Pure vector search with user embedding
+        console.log('Performing pure vector search');
+        console.log('Vector dimensions:', userEmbedding.length);
+        // Note: nearVector doesn't support offset, we'll handle pagination later
+        result = await collection.query.nearVector(userEmbedding, {
+          limit: Math.min(batchSize * 10, 10000), // Get more results to handle pagination
+          returnMetadata: ['distance', 'certainty'],
+        });
+      }
+      console.log('Vector search result objects count:', result.objects?.length || 0);
+    } catch (error) {
+      console.error('Error in vector search - full details:', error);
+      if (error instanceof Error) {
+        console.error('Error message:', error.message);
+        console.error('Error stack:', error.stack);
+        
+        // Check if it's a dimension mismatch error
+        if (error.message && error.message.includes('dimension')) {
+          console.error('Vector dimension mismatch detected!');
+          console.error('User embedding dimensions:', userEmbedding.length);
+        }
+      }
+      
+      // Fallback to regular fetch if vector search fails
+      console.log('Falling back to regular fetch due to vector search error');
+      result = await collection.query.fetchObjects({
         limit: batchSize,
         offset: currentOffset,
-        vector: userEmbedding,
-        alpha: alpha, // Balance between vector and keyword search
-        returnMetadata: ['score', 'explainScore'],
-      });
-    } else {
-      // Pure vector search with user embedding
-      result = await collection.query.nearVector(userEmbedding, {
-        limit: batchSize,
-        offset: currentOffset,
-        returnMetadata: ['distance', 'certainty'],
       });
     }
     
@@ -228,11 +258,16 @@ export async function hybridSearchWithUserProfile(
     
     allObjects = allObjects.concat(result.objects);
     
-    // Check if we have more records to fetch
-    if (result.objects.length < batchSize) {
+    // For vector search, we get all results in one query, so stop after first batch
+    if (!query || query.trim() === '') {
       hasMore = false;
     } else {
-      currentOffset += batchSize;
+      // For hybrid search with offset support, continue pagination
+      if (result.objects.length < batchSize) {
+        hasMore = false;
+      } else {
+        currentOffset += batchSize;
+      }
     }
     
     // Safety check
@@ -243,6 +278,26 @@ export async function hybridSearchWithUserProfile(
   }
   
   console.log(`Total records fetched: ${allObjects.length}`);
+  
+  // If vector search returned no results, fall back to BM25 search
+  if (allObjects.length === 0 && (!query || query.trim() === '')) {
+    console.log('Vector search returned 0 results, falling back to BM25 search...');
+    isFallbackSearch = true;
+    
+    // Extract keywords from user profile if available
+    let searchQuery = 'government contracting opportunity sources sought';
+    
+    try {
+      const result = await collection.query.bm25(searchQuery, {
+        limit: limit + offset,
+        returnMetadata: ['score'],
+      });
+      allObjects = result.objects;
+      console.log(`BM25 search returned: ${allObjects.length} objects`);
+    } catch (error) {
+      console.error('BM25 search also failed:', error);
+    }
+  }
   
   // Apply type filter if specified
   let filteredObjects = allObjects;
@@ -255,8 +310,12 @@ export async function hybridSearchWithUserProfile(
   
   // Sort by score/distance (best matches first)
   filteredObjects.sort((a: any, b: any) => {
-    const scoreA = a._additional?.score || (1 - (a._additional?.distance || 1));
-    const scoreB = b._additional?.score || (1 - (b._additional?.distance || 1));
+    // Check both metadata and _additional for compatibility
+    const metaA = a.metadata || a._additional || {};
+    const metaB = b.metadata || b._additional || {};
+    
+    const scoreA = metaA.score || (1 - (metaA.distance || 1));
+    const scoreB = metaB.score || (1 - (metaB.distance || 1));
     return scoreB - scoreA;
   });
   
@@ -265,19 +324,49 @@ export async function hybridSearchWithUserProfile(
   
   // Transform objects and calculate match percentage
   const items = paginatedObjects.map((obj: any) => {
-    // Calculate match percentage based on score or distance
     let matchPercentage = 0;
-    if (obj._additional?.score !== undefined) {
+    
+    // Log the first few objects to debug
+    if (paginatedObjects.indexOf(obj) < 3) {
+      console.log('Object metadata:', obj.metadata);
+      console.log('Object _additional:', obj._additional);
+    }
+    
+    // Calculate match percentage based on different scoring methods
+    // Check both metadata and _additional for compatibility
+    const metadata = obj.metadata || obj._additional || {};
+    
+    if (isFallbackSearch) {
+      // For fallback BM25 search, assign a default match percentage
+      // BM25 scores can vary widely, so we'll use a simple mapping
+      if (metadata.score !== undefined && metadata.score > 0) {
+        // BM25 scores typically range from 0 to ~10+
+        // Map to percentage: score of 1 = 40%, score of 3 = 60%, score of 5+ = 80%
+        const bm25Score = metadata.score;
+        if (bm25Score >= 5) matchPercentage = 80;
+        else if (bm25Score >= 3) matchPercentage = 60;
+        else if (bm25Score >= 1) matchPercentage = 40;
+        else matchPercentage = 20;
+      } else {
+        // Default match for BM25 results without score
+        matchPercentage = 30;
+      }
+    } else if (metadata.score !== undefined) {
       // Hybrid search returns a score between 0 and 1
-      matchPercentage = Math.round(obj._additional.score * 100);
-    } else if (obj._additional?.distance !== undefined) {
-      // Vector search returns distance (lower is better)
-      // Convert distance to similarity percentage
-      // Assuming distance range is typically 0-2
-      matchPercentage = Math.round(Math.max(0, (1 - obj._additional.distance / 2)) * 100);
-    } else if (obj._additional?.certainty !== undefined) {
-      // Some Weaviate versions return certainty
-      matchPercentage = Math.round(obj._additional.certainty * 100);
+      matchPercentage = Math.round(metadata.score * 100);
+    } else if (metadata.distance !== undefined) {
+      // Vector search returns cosine distance
+      // Cosine distance range: 0 (identical) to 2 (opposite)
+      // Convert to similarity: 1 - (distance / 2)
+      const similarity = 1 - (metadata.distance / 2);
+      matchPercentage = Math.round(Math.max(0, similarity * 100));
+      
+      console.log(`Distance: ${metadata.distance}, Similarity: ${similarity}, Match: ${matchPercentage}%`);
+    } else if (metadata.certainty !== undefined) {
+      // Some Weaviate versions return certainty (-1 to 1)
+      // Convert to 0-100 scale
+      const normalizedCertainty = (metadata.certainty + 1) / 2;
+      matchPercentage = Math.round(normalizedCertainty * 100);
     }
     
     return {
@@ -285,8 +374,9 @@ export async function hybridSearchWithUserProfile(
         id: obj.uuid || '',
         creationTimeUnix: obj.properties?.posted_date || '',
         lastUpdateTimeUnix: obj.properties?.posted_date || '',
-        distance: obj._additional?.distance,
-        score: obj._additional?.score,
+        distance: metadata.distance,
+        score: metadata.score,
+        certainty: metadata.certainty,
       },
       ...obj.properties,
       matchPercentage,

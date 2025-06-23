@@ -90,6 +90,7 @@ export async function GET(request: NextRequest) {
         lastIndexedAt: userProfile.lastIndexedAt,
         documentsIncluded: userProfile.documentsIncluded,
         embeddingModel: userProfile.embeddingModel,
+        companyDescription: userProfile.companyDescription,
       },
     });
   } catch (error) {

@@ -12,7 +12,7 @@ from datetime import datetime
 
 # Configure logging - reduced verbosity for performance
 logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.INFO)  # Change to DEBUG to see vector creation logs
 
 # Remove duplicate handlers and simplify
 if not logger.handlers:
@@ -174,7 +174,12 @@ def ensure_class_exists(client):
         from weaviate.classes.config import Configure, Property, DataType
         
         properties = [
-            Property(name="content", data_type=DataType.TEXT),
+            Property(
+                name="content", 
+                data_type=DataType.TEXT,
+                vectorize_property_name=True,
+                tokenization=Configure.Tokenization.word
+            ),
             Property(name="notice_id", data_type=DataType.TEXT),
             Property(name="title", data_type=DataType.TEXT),
             Property(name="posted_date", data_type=DataType.DATE),
@@ -195,9 +200,11 @@ def ensure_class_exists(client):
         client.collections.create(
             name=WEAVIATE_INDEX_NAME,
             vectorizer_config=Configure.Vectorizer.text2vec_openai(
-                model="text-embedding-ada-002"
+                model="text-embedding-3-small",
+                vectorize_collection_name=False
             ),
-            properties=properties
+            properties=properties,
+            generative_config=Configure.Generative.openai()
         )
         logger.info(f"Created collection: {WEAVIATE_INDEX_NAME}")
 
@@ -251,29 +258,30 @@ def process_opportunity(opportunity: Dict[str, Any], client) -> bool:
         weaviate_obj = create_weaviate_object_from_opportunity(opportunity)
         
         # Check if object exists and use appropriate method
-        try:
-            existing = collection.data.get_by_id(notice_id)
-            if existing:
-                # Update existing object
-                collection.data.update(
-                    uuid=notice_id,
-                    properties=weaviate_obj
-                )
-                logger.info(f"Updated opportunity: {notice_id}")
-            else:
-                # Should not happen, but handle gracefully
-                collection.data.insert(
-                    properties=weaviate_obj,
-                    uuid=notice_id
-                )
-                logger.info(f"Inserted opportunity: {notice_id}")
-        except Exception:
-            # Object doesn't exist, insert it
-            collection.data.insert(
+        if collection.data.exists(notice_id):
+            # Update existing object
+            result = collection.data.update(
+                uuid=notice_id,
+                properties=weaviate_obj
+            )
+            logger.info(f"Updated opportunity: {notice_id}")
+            
+            # Verify vector was updated
+            updated_obj = collection.query.fetch_object_by_id(notice_id, include_vector=True)
+            if updated_obj and hasattr(updated_obj, 'vector') and updated_obj.vector:
+                logger.debug(f"Vector updated for {notice_id}, dimension: {len(updated_obj.vector)}")
+        else:
+            # Insert new object
+            result = collection.data.insert(
                 properties=weaviate_obj,
                 uuid=notice_id
             )
             logger.info(f"Inserted new opportunity: {notice_id}")
+            
+            # Verify vector was created
+            inserted_obj = collection.query.fetch_object_by_id(notice_id, include_vector=True)
+            if inserted_obj and hasattr(inserted_obj, 'vector') and inserted_obj.vector:
+                logger.debug(f"Vector created for {notice_id}, dimension: {len(inserted_obj.vector)}")
         
         return True
         

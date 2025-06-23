@@ -3,9 +3,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { MagnifyingGlassIcon, AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, AdjustmentsHorizontalIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
 import { format } from 'date-fns';
 import debounce from 'lodash/debounce';
+import { analyzeMatch } from '@/lib/match-analyzer';
 
 interface SourcesSoughtItem {
   _additional: {
@@ -45,6 +46,7 @@ interface SearchResponse {
     lastIndexedAt?: string;
     documentsIncluded?: number;
     embeddingModel?: string;
+    companyDescription?: string;
   };
 }
 
@@ -81,6 +83,7 @@ export default function SourcesSoughtPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<SearchResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [hoveredItemId, setHoveredItemId] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
     setIsLoading(true);
@@ -237,7 +240,7 @@ export default function SourcesSoughtPage() {
                 {useHybridSearch && data?.userProfile && (
                   <span className="text-xs text-gray-500">
                     Last indexed: {formatDate(data.userProfile.lastIndexedAt || '')} | 
-                    {data.userProfile.documentsIncluded} documents
+                    Company profile only
                   </span>
                 )}
               </div>
@@ -253,7 +256,7 @@ export default function SourcesSoughtPage() {
                     type="text"
                     value={searchQuery}
                     onChange={handleSearchChange}
-                    placeholder={useHybridSearch ? "Search opportunities matching your profile..." : "Search opportunities..."}
+                    placeholder={useHybridSearch ? "Search opportunities matching your company profile..." : "Search opportunities..."}
                     className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                 </div>
@@ -299,6 +302,32 @@ export default function SourcesSoughtPage() {
         )}
 
         <div className="p-6">
+          {useHybridSearch && data && data.items.length > 0 && !isLoading && (
+            <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <h3 className="text-sm font-medium text-blue-900 mb-2">Semantic Search Results</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <div>
+                  <span className="text-blue-700">High Matches (80%+):</span>
+                  <span className="ml-2 font-medium text-blue-900">
+                    {data.items.filter(item => (item.matchPercentage || 0) >= 80).length}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-blue-700">Good Matches (60-79%):</span>
+                  <span className="ml-2 font-medium text-blue-900">
+                    {data.items.filter(item => (item.matchPercentage || 0) >= 60 && (item.matchPercentage || 0) < 80).length}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-blue-700">Average Match Score:</span>
+                  <span className="ml-2 font-medium text-blue-900">
+                    {Math.round(data.items.reduce((sum, item) => sum + (item.matchPercentage || 0), 0) / data.items.length)}%
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+
           {isLoading ? (
             <div className="flex justify-center py-12">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -306,9 +335,16 @@ export default function SourcesSoughtPage() {
           ) : data && data.items.length > 0 ? (
             <>
               <div className="mb-4 flex justify-between items-center">
-                <p className="text-sm text-gray-600">
-                  Showing {startResult} - {endResult} of {data.total.toLocaleString()} results
-                </p>
+                <div>
+                  <p className="text-sm text-gray-600">
+                    Showing {startResult} - {endResult} of {data.total.toLocaleString()} results
+                  </p>
+                  {useHybridSearch && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      Using AI-powered semantic matching based on your company profile
+                    </p>
+                  )}
+                </div>
                 
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-600">Show:</span>
@@ -325,23 +361,56 @@ export default function SourcesSoughtPage() {
               </div>
 
               <div className="space-y-4">
-                {data.items.map((item) => (
-                  <div key={item._additional.id} className="border rounded-lg p-6 hover:shadow-md transition-shadow">
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <div className="flex items-start justify-between">
-                          <Link
-                            href={`/admin/sources-sought/${item.notice_id}`}
-                            className="text-lg font-medium text-blue-600 hover:text-blue-800 flex-1"
-                          >
-                            {item.title}
-                          </Link>
-                          {useHybridSearch && item.matchPercentage !== undefined && (
-                            <span className="ml-4 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                              {item.matchPercentage}% Match
-                            </span>
-                          )}
-                        </div>
+                {data.items.map((item) => {
+                  const matchReasons = useHybridSearch && data.userProfile 
+                    ? analyzeMatch(item, { companyDescription: data.userProfile.companyDescription })
+                    : [];
+                    
+                  return (
+                    <div 
+                      key={item._additional.id} 
+                      className="border rounded-lg p-6 hover:shadow-md transition-shadow relative"
+                      onMouseEnter={() => setHoveredItemId(item._additional.id)}
+                      onMouseLeave={() => setHoveredItemId(null)}
+                    >
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <div className="flex items-start justify-between">
+                            <Link
+                              href={`/admin/sources-sought/${item.notice_id}`}
+                              className="text-lg font-medium text-blue-600 hover:text-blue-800 flex-1"
+                            >
+                              {item.title}
+                            </Link>
+                            {useHybridSearch && item.matchPercentage !== undefined && (
+                              <div className="ml-4 flex items-center space-x-2">
+                                <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                                  item.matchPercentage >= 80 ? 'bg-green-100 text-green-800' :
+                                  item.matchPercentage >= 60 ? 'bg-yellow-100 text-yellow-800' :
+                                  item.matchPercentage >= 40 ? 'bg-orange-100 text-orange-800' :
+                                  'bg-gray-100 text-gray-800'
+                                }`}>
+                                  {item.matchPercentage}% Match
+                                </span>
+                                <span className="text-xs text-gray-500">
+                                  {item.matchPercentage >= 80 ? 'High' :
+                                   item.matchPercentage >= 60 ? 'Medium' :
+                                   item.matchPercentage >= 40 ? 'Low' : 'Weak'} Probability
+                                </span>
+                                {matchReasons.length > 0 && (
+                                  <div className="relative group">
+                                    <InformationCircleIcon className="h-5 w-5 text-gray-400 cursor-help" />
+                                    <div className="absolute z-10 invisible group-hover:visible bg-gray-900 text-white text-xs rounded-md px-3 py-2 -mt-1 -ml-48 w-48">
+                                      <div className="font-semibold mb-1">Match Insights:</div>
+                                      {matchReasons.map((reason, idx) => (
+                                        <div key={idx} className="mt-1">• {reason}</div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </div>
                         
                         <p className="mt-1 text-sm text-gray-600">
                           <span className="font-medium">Notice ID:</span> {item.notice_id}
@@ -390,7 +459,8 @@ export default function SourcesSoughtPage() {
                       </div>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
 
               {totalPages > 1 && (

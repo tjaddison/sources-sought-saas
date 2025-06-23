@@ -59,16 +59,17 @@ export async function processIndexingJob(userId: string, jobId: string): Promise
       throw new Error('Failed to extract text from any documents');
     }
 
-    // Combine all texts for indexing
-    const combinedText = combineTextsForIndexing(
-      userProfile.companyDescription || '',
-      documentTexts
-    );
+    // Use only company description for profile matching
+    const profileText = userProfile.companyDescription || '';
+    
+    if (!profileText) {
+      throw new Error('Company description is required for profile matching');
+    }
 
-    console.log('Generating embedding for combined text');
+    console.log('Generating embedding for company profile only');
 
-    // Generate embedding for the combined text
-    const embeddingResult = await generateEmbedding(combinedText);
+    // Generate embedding for company description only
+    const embeddingResult = await generateEmbedding(profileText);
 
     // Store embedding in user profile
     await updateUserEmbedding({

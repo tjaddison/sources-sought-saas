@@ -2,23 +2,23 @@
 
 ## Common Issues and Solutions
 
-### 1. Voyage AI API Errors
+### 1. OpenAI API Errors
 
-**Error**: `401 Invalid Voyage AI API key`
+**Error**: `401 Invalid OpenAI API key`
 **Solution**:
-1. Sign up for a Voyage AI account at https://www.voyageai.com/
+1. Sign up for an OpenAI account at https://platform.openai.com/
 2. Get your API key from the dashboard
-3. Add `VOYAGE_API_KEY=your-key` to your `.env.local` file
+3. Add `OPENAI_API_KEY=your-key` to your `.env.local` file
 
-**Error**: `429 Voyage AI API rate limit exceeded`
+**Error**: `429 OpenAI API rate limit exceeded`
 **Solution**:
 1. Wait a few minutes and try again
-2. Consider upgrading your Voyage AI plan for higher rate limits
+2. Consider upgrading your OpenAI plan for higher rate limits
 3. For testing without API calls, set `MOCK_EMBEDDINGS=true` in your `.env.local` file
 
-**Error**: `402 Voyage AI API quota exceeded`
+**Error**: `402 OpenAI API quota exceeded`
 **Solution**:
-1. Check your Voyage AI account billing
+1. Check your OpenAI account billing
 2. Add credits or upgrade your plan
 3. For testing, use `MOCK_EMBEDDINGS=true`
 
