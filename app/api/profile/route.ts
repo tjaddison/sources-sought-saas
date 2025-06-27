@@ -3,6 +3,9 @@ import { requireAuth } from '@/lib/auth-utils';
 import { getUserProfile, createOrUpdateUserProfile } from '@/lib/dynamodb';
 import { z } from 'zod';
 
+// Use Node.js runtime for AWS SDK compatibility
+export const runtime = 'nodejs';
+
 const updateProfileSchema = z.object({
   companyDescription: z.string().max(5000).optional(),
   companyWebsite: z.string().url().optional().or(z.literal('')),

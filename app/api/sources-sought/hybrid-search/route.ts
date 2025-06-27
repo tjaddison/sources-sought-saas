@@ -3,6 +3,9 @@ import { hybridSearchWithUserProfile } from '@/lib/weaviate';
 import { getUserProfile } from '@/lib/dynamodb';
 import { auth0 } from '@/lib/auth0';
 
+// Use Node.js runtime for AWS SDK compatibility
+export const runtime = 'nodejs';
+
 export async function GET(request: NextRequest) {
   try {
     // Get user session
