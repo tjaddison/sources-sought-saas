@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeftIcon, DocumentTextIcon, BuildingOfficeIcon, CalendarIcon } from '@heroicons/react/24/outline';
 import { format } from 'date-fns';
+import { OpportunityAnalysis } from '@/components/opportunity-analysis';
 
 interface SourcesSoughtDetail {
   _additional: {
@@ -219,6 +220,9 @@ export default async function SourcesSoughtDetailPage({
           </div>
         </div>
       </div>
+
+      {/* AI Analysis Section */}
+      <OpportunityAnalysis opportunity={data} />
     </div>
   );
 }
