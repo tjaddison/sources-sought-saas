@@ -154,30 +154,70 @@ export async function getSourcesSoughtById(noticeId: string): Promise<WeaviateSo
   const collectionName = process.env.WEAVIATE_INDEX_NAME || 'SamOopsWeaviateCluster';
   const collection = client.collections.get(collectionName);
 
-  // Fetch a batch of records and filter in memory
-  const result = await collection.query.fetchObjects({
-    limit: 1000,
-  });
+  // Fetch records in batches until we find the one with the matching notice_id
+  const batchSize = 1000;
+  let offset = 0;
+  let found = false;
+  let foundObject = null;
 
-  // Filter by notice_id only
-  const filteredObjects = result.objects.filter((obj: any) => 
-    obj.properties?.notice_id === noticeId
-  );
+  console.log(`Searching for notice_id: ${noticeId}`);
 
-  if (filteredObjects.length === 0) {
-    return null;
+  while (!found) {
+    try {
+      const result = await collection.query.fetchObjects({
+        limit: batchSize,
+        offset: offset,
+      });
+
+      if (result.objects.length === 0) {
+        // No more records to search
+        break;
+      }
+
+      // Filter by notice_id
+      const filteredObjects = result.objects.filter((obj: any) => 
+        obj.properties?.notice_id === noticeId
+      );
+
+      if (filteredObjects.length > 0) {
+        found = true;
+        foundObject = filteredObjects[0];
+        console.log(`Found notice_id ${noticeId} at offset ${offset}`);
+        break;
+      }
+
+      // If we haven't found it and got fewer records than the batch size,
+      // we've reached the end
+      if (result.objects.length < batchSize) {
+        break;
+      }
+
+      offset += batchSize;
+
+      // Safety check to prevent infinite loop
+      if (offset > 50000) {
+        console.warn('Reached safety limit while searching for notice');
+        break;
+      }
+    } catch (error) {
+      console.error('Error fetching batch at offset', offset, error);
+      break;
+    }
   }
 
-  const obj = filteredObjects[0];
+  if (!foundObject) {
+    console.log(`Notice_id ${noticeId} not found in database`);
+    return null;
+  }
   
   // Transform the object to match our expected structure
   return {
     _additional: {
-      id: obj.uuid || '',
-      creationTimeUnix: obj.properties?.posted_date || '',
-      lastUpdateTimeUnix: obj.properties?.posted_date || '',
+      id: foundObject.uuid || '',
+      creationTimeUnix: foundObject.properties?.posted_date || '',
+      lastUpdateTimeUnix: foundObject.properties?.posted_date || '',
     },
-    ...obj.properties,
+    ...foundObject.properties,
   } as WeaviateSourcesSoughtItem;
 }
 

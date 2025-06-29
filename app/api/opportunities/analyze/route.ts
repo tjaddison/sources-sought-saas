@@ -38,8 +38,8 @@ export const POST = requireAuth(async (request: NextRequest, user) => {
         skipCache,
         checkCacheOnly
       }),
-      // Add timeout to prevent hanging
-      signal: AbortSignal.timeout(30000) // 30 second timeout
+      // Add timeout to prevent hanging - increased for AI analysis
+      signal: AbortSignal.timeout(120000) // 120 second timeout
     })
 
     if (!lambdaResponse.ok) {

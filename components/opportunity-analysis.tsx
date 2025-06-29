@@ -20,24 +20,40 @@ import clsx from 'clsx'
 interface OpportunityAnalysisProps {
   opportunity: any
   onAnalysisComplete?: () => void
+  externalAnalysisResult?: AnalysisResult | null
+  externalIsAnalyzing?: boolean
+  externalError?: string | null
+  onAnalyze?: (skipCache?: boolean) => Promise<void>
 }
 
 interface AnalysisResult {
   success: boolean
   analysis: string
   winProbability: number
-  recommendation: 'GO' | 'NO-GO'
+  recommendation: 'GO' | 'NO-GO' | 'REVIEW'
   analyzedAt: string
   modelUsed: string
   cached?: boolean
 }
 
-export function OpportunityAnalysis({ opportunity, onAnalysisComplete }: OpportunityAnalysisProps) {
+export function OpportunityAnalysis({ 
+  opportunity, 
+  onAnalysisComplete,
+  externalAnalysisResult,
+  externalIsAnalyzing,
+  externalError,
+  onAnalyze
+}: OpportunityAnalysisProps) {
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState('summary')
   const [isLoadingCached, setIsLoadingCached] = useState(true)
+
+  // Use external state if provided
+  const actualIsAnalyzing = externalIsAnalyzing !== undefined ? externalIsAnalyzing : isAnalyzing
+  const actualAnalysisResult = externalAnalysisResult !== undefined ? externalAnalysisResult : analysisResult
+  const actualError = externalError !== undefined ? externalError : error
 
   // Helper function to create a clean copy of opportunity data
   const getCleanOpportunity = () => {
@@ -82,6 +98,12 @@ export function OpportunityAnalysis({ opportunity, onAnalysisComplete }: Opportu
   }
 
   const analyzeOpportunity = async (skipCache = false) => {
+    // Use external analyze function if provided
+    if (onAnalyze) {
+      await onAnalyze(skipCache)
+      return
+    }
+
     setIsAnalyzing(true)
     setError(null)
 
@@ -104,7 +126,8 @@ export function OpportunityAnalysis({ opportunity, onAnalysisComplete }: Opportu
       })
 
       if (!response.ok) {
-        throw new Error('Failed to analyze opportunity')
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || 'Failed to analyze opportunity')
       }
 
       const result = await response.json()
@@ -119,6 +142,12 @@ export function OpportunityAnalysis({ opportunity, onAnalysisComplete }: Opportu
 
   // Check for existing analysis on component mount
   useEffect(() => {
+    // Skip if using external state
+    if (externalAnalysisResult !== undefined) {
+      setIsLoadingCached(false)
+      return
+    }
+
     const checkForCachedAnalysis = async () => {
       setIsLoadingCached(true)
       try {
@@ -150,10 +179,12 @@ export function OpportunityAnalysis({ opportunity, onAnalysisComplete }: Opportu
     }
 
     checkForCachedAnalysis()
-  }, [opportunity.notice_id])
+  }, [opportunity.notice_id, externalAnalysisResult])
 
   const getRecommendationColor = (recommendation: string) => {
-    return recommendation === 'GO' ? 'text-green-600' : 'text-red-600'
+    if (recommendation === 'GO') return 'text-green-600'
+    if (recommendation === 'NO-GO') return 'text-red-600'
+    return 'text-yellow-600' // REVIEW
   }
 
   const getWinProbabilityColor = (probability: number) => {
@@ -174,7 +205,7 @@ export function OpportunityAnalysis({ opportunity, onAnalysisComplete }: Opportu
     return match ? match[0] : ''
   }
 
-  if (!analysisResult) {
+  if (!actualAnalysisResult) {
     return (
       <div className="bg-white shadow rounded-lg">
         <div className="px-6 py-4 border-b border-gray-200">
@@ -212,15 +243,15 @@ export function OpportunityAnalysis({ opportunity, onAnalysisComplete }: Opportu
           
           <button
             onClick={() => analyzeOpportunity()}
-            disabled={isAnalyzing}
+            disabled={actualIsAnalyzing}
             className={clsx(
               "w-full flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white",
-              isAnalyzing
+              actualIsAnalyzing
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             )}
           >
-            {isAnalyzing ? (
+            {actualIsAnalyzing ? (
               <>
                 <ArrowPathIcon className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" />
                 Analyzing Opportunity...
@@ -235,13 +266,13 @@ export function OpportunityAnalysis({ opportunity, onAnalysisComplete }: Opportu
             </>
           )}
 
-          {error && (
+          {actualError && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4">
               <div className="flex">
                 <XCircleIcon className="h-5 w-5 text-red-600 mt-0.5" />
                 <div className="ml-3">
                   <h3 className="text-sm font-medium text-red-900">Error</h3>
-                  <p className="mt-1 text-sm text-red-700">{error}</p>
+                  <p className="mt-1 text-sm text-red-700">{actualError}</p>
                 </div>
               </div>
             </div>
@@ -261,8 +292,8 @@ export function OpportunityAnalysis({ opportunity, onAnalysisComplete }: Opportu
               <h2 className="text-lg font-semibold text-gray-900">Opportunity Analysis Results</h2>
             </div>
             <p className="mt-1 text-sm text-gray-600">
-              Analyzed {new Date(analysisResult.analyzedAt).toLocaleDateString()} 
-              {analysisResult.cached && (
+              Analyzed {new Date(actualAnalysisResult.analyzedAt).toLocaleDateString()} 
+              {actualAnalysisResult.cached && (
                 <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                   Cached
                 </span>
@@ -271,7 +302,7 @@ export function OpportunityAnalysis({ opportunity, onAnalysisComplete }: Opportu
           </div>
           <button
             onClick={() => analyzeOpportunity(true)} // Force fresh analysis
-            disabled={isAnalyzing}
+            disabled={actualIsAnalyzing}
             className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ArrowPathIcon className="h-4 w-4 mr-1" />
@@ -286,13 +317,15 @@ export function OpportunityAnalysis({ opportunity, onAnalysisComplete }: Opportu
           {/* Recommendation */}
           <div className="bg-gray-50 rounded-lg p-4">
             <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Recommendation</h3>
-            <div className={clsx("mt-2 text-2xl font-bold flex items-center gap-2", getRecommendationColor(analysisResult.recommendation))}>
-              {analysisResult.recommendation === 'GO' ? (
+            <div className={clsx("mt-2 text-2xl font-bold flex items-center gap-2", getRecommendationColor(actualAnalysisResult.recommendation))}>
+              {actualAnalysisResult.recommendation === 'GO' ? (
                 <CheckCircleIcon className="h-8 w-8" />
-              ) : (
+              ) : actualAnalysisResult.recommendation === 'NO-GO' ? (
                 <XCircleIcon className="h-8 w-8" />
+              ) : (
+                <ExclamationCircleIcon className="h-8 w-8" />
               )}
-              {analysisResult.recommendation}
+              {actualAnalysisResult.recommendation}
             </div>
           </div>
 
@@ -300,20 +333,20 @@ export function OpportunityAnalysis({ opportunity, onAnalysisComplete }: Opportu
           <div className="bg-gray-50 rounded-lg p-4">
             <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Win Probability</h3>
             <div className="mt-2 space-y-2">
-              <div className="text-2xl font-bold">{analysisResult.winProbability}%</div>
+              <div className="text-2xl font-bold">{actualAnalysisResult.winProbability}%</div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div 
-                  className={clsx("h-2 rounded-full", getWinProbabilityColor(analysisResult.winProbability))}
-                  style={{ width: `${analysisResult.winProbability}%` }}
+                  className={clsx("h-2 rounded-full", getWinProbabilityColor(actualAnalysisResult.winProbability))}
+                  style={{ width: `${actualAnalysisResult.winProbability}%` }}
                 />
               </div>
               <span className={clsx(
                 "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium",
-                analysisResult.winProbability >= 70 ? "bg-green-100 text-green-800" :
-                analysisResult.winProbability >= 40 ? "bg-yellow-100 text-yellow-800" :
+                actualAnalysisResult.winProbability >= 70 ? "bg-green-100 text-green-800" :
+                actualAnalysisResult.winProbability >= 40 ? "bg-yellow-100 text-yellow-800" :
                 "bg-red-100 text-red-800"
               )}>
-                {getWinProbabilityLabel(analysisResult.winProbability)}
+                {getWinProbabilityLabel(actualAnalysisResult.winProbability)}
               </span>
             </div>
           </div>
@@ -322,7 +355,7 @@ export function OpportunityAnalysis({ opportunity, onAnalysisComplete }: Opportu
           <div className="bg-gray-50 rounded-lg p-4">
             <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Opportunity Trend</h3>
             <div className="mt-2 flex items-center gap-2">
-              {analysisResult.winProbability >= 50 ? (
+              {actualAnalysisResult.winProbability >= 50 ? (
                 <>
                   <ArrowTrendingUpIcon className="h-8 w-8 text-green-600" />
                   <span className="text-lg font-medium">Favorable</span>
@@ -371,7 +404,7 @@ export function OpportunityAnalysis({ opportunity, onAnalysisComplete }: Opportu
                   <div>
                     <h3 className="text-lg font-medium text-gray-900 mb-2">Executive Summary</h3>
                     <p className="text-gray-700 whitespace-pre-wrap">
-                      {analysisResult.analysis.split('\n\n')[0]}
+                      {actualAnalysisResult.analysis.split('\n\n')[0]}
                     </p>
                   </div>
                 </div>
@@ -386,7 +419,7 @@ export function OpportunityAnalysis({ opportunity, onAnalysisComplete }: Opportu
                     <div>
                       <h3 className="text-lg font-medium text-gray-900 mb-2">Opportunity Assessment</h3>
                       <p className="text-gray-700 whitespace-pre-wrap">
-                        {parseAnalysisSection(analysisResult.analysis, 'Opportunity Assessment')}
+                        {parseAnalysisSection(actualAnalysisResult.analysis, 'Opportunity Assessment')}
                       </p>
                     </div>
                   </div>
@@ -398,7 +431,7 @@ export function OpportunityAnalysis({ opportunity, onAnalysisComplete }: Opportu
                     <div>
                       <h3 className="text-lg font-medium text-gray-900 mb-2">Company Fit Analysis</h3>
                       <p className="text-gray-700 whitespace-pre-wrap">
-                        {parseAnalysisSection(analysisResult.analysis, 'Company Fit Analysis')}
+                        {parseAnalysisSection(actualAnalysisResult.analysis, 'Company Fit Analysis')}
                       </p>
                     </div>
                   </div>
@@ -413,7 +446,7 @@ export function OpportunityAnalysis({ opportunity, onAnalysisComplete }: Opportu
                   <div>
                     <h3 className="text-lg font-medium text-gray-900 mb-2">Strategic Recommendations</h3>
                     <p className="text-gray-700 whitespace-pre-wrap">
-                      {parseAnalysisSection(analysisResult.analysis, 'Recommendations')}
+                      {parseAnalysisSection(actualAnalysisResult.analysis, 'Recommendations')}
                     </p>
                   </div>
                 </div>
@@ -423,7 +456,7 @@ export function OpportunityAnalysis({ opportunity, onAnalysisComplete }: Opportu
             {activeTab === 'full' && (
               <div className="space-y-4">
                 <h3 className="text-lg font-medium text-gray-900">Complete Analysis Report</h3>
-                <p className="text-gray-700 whitespace-pre-wrap">{analysisResult.analysis}</p>
+                <p className="text-gray-700 whitespace-pre-wrap">{actualAnalysisResult.analysis}</p>
               </div>
             )}
           </div>

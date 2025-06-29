@@ -74,16 +74,27 @@ export default function SourcesSoughtPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
-  const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
-  const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'updated_date');
-  const [typeFilter, setTypeFilter] = useState(searchParams.get('type') || '');
-  const [pageSize, setPageSize] = useState(Number(searchParams.get('pageSize')) || 25);
-  const [currentPage, setCurrentPage] = useState(Number(searchParams.get('page')) || 1);
-  const [useHybridSearch, setUseHybridSearch] = useState(searchParams.get('hybrid') === 'true');
+  // Initialize state from URL params first
+  const initialState = {
+    searchQuery: searchParams.get('q') || '',
+    sortBy: searchParams.get('sort') || 'updated_date',
+    typeFilter: searchParams.get('type') || '',
+    pageSize: Number(searchParams.get('pageSize')) || 25,
+    currentPage: Number(searchParams.get('page')) || 1,
+    useHybridSearch: searchParams.get('hybrid') === 'true'
+  };
+  
+  const [searchQuery, setSearchQuery] = useState(initialState.searchQuery);
+  const [sortBy, setSortBy] = useState(initialState.sortBy);
+  const [typeFilter, setTypeFilter] = useState(initialState.typeFilter);
+  const [pageSize, setPageSize] = useState(initialState.pageSize);
+  const [currentPage, setCurrentPage] = useState(initialState.currentPage);
+  const [useHybridSearch, setUseHybridSearch] = useState(initialState.useHybridSearch);
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<SearchResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [hoveredItemId, setHoveredItemId] = useState<string | null>(null);
+  const [hasLoadedFromStorage, setHasLoadedFromStorage] = useState(false);
 
   const fetchData = useCallback(async () => {
     setIsLoading(true);
@@ -133,6 +144,43 @@ export default function SourcesSoughtPage() {
     }, 500),
     [searchParams, router]
   );
+
+  // Load search state from sessionStorage on mount if URL params are empty
+  useEffect(() => {
+    if (!hasLoadedFromStorage && typeof window !== 'undefined') {
+      const savedState = sessionStorage.getItem('sourcesSoughtSearchState');
+      if (savedState && !searchParams.toString()) {
+        // Only load from storage if URL has no search params
+        try {
+          const parsed = JSON.parse(savedState);
+          setSearchQuery(parsed.searchQuery || '');
+          setSortBy(parsed.sortBy || 'updated_date');
+          setTypeFilter(parsed.typeFilter || '');
+          setPageSize(parsed.pageSize || 25);
+          setCurrentPage(parsed.currentPage || 1);
+          setUseHybridSearch(parsed.useHybridSearch || false);
+        } catch (e) {
+          console.error('Error loading saved search state:', e);
+        }
+      }
+      setHasLoadedFromStorage(true);
+    }
+  }, [hasLoadedFromStorage, searchParams]);
+
+  // Save search state to sessionStorage whenever it changes
+  useEffect(() => {
+    if (hasLoadedFromStorage && typeof window !== 'undefined') {
+      const searchState = {
+        searchQuery,
+        sortBy,
+        typeFilter,
+        pageSize,
+        currentPage,
+        useHybridSearch
+      };
+      sessionStorage.setItem('sourcesSoughtSearchState', JSON.stringify(searchState));
+    }
+  }, [searchQuery, sortBy, typeFilter, pageSize, currentPage, useHybridSearch, hasLoadedFromStorage]);
 
   useEffect(() => {
     fetchData();
