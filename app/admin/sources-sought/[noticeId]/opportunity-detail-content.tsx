@@ -7,6 +7,7 @@ import { BackToSearchButton } from '@/components/back-to-search-button'
 import { OpportunityAnalysisButton } from '@/components/opportunity-analysis-button'
 import { OpportunityAnalysisSummary } from '@/components/opportunity-analysis-summary'
 import { OpportunityAnalysis } from '@/components/opportunity-analysis'
+import { EmailGenerationModal } from '@/components/email-generation-modal'
 
 interface AnalysisResult {
   success: boolean
@@ -28,6 +29,8 @@ export default function OpportunityDetailContent({ data }: OpportunityDetailCont
   const [error, setError] = useState<string | null>(null)
   const [isLoadingCached, setIsLoadingCached] = useState(true)
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(false)
+  const [showEmailModal, setShowEmailModal] = useState(false)
+  const [isGeneratingEmail, setIsGeneratingEmail] = useState(false)
 
   // Helper function to create a clean copy of opportunity data
   const getCleanOpportunity = () => {
@@ -271,6 +274,15 @@ export default function OpportunityDetailContent({ data }: OpportunityDetailCont
                     hasAnalysis={!!analysisResult}
                     onAnalyze={() => analyzeOpportunity(!!analysisResult)}
                   />
+                  {data.type === 'Sources Sought' && (
+                    <button 
+                      onClick={() => setShowEmailModal(true)}
+                      disabled={isGeneratingEmail}
+                      className="w-full text-sm bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-4 py-2 rounded-md transition-colors"
+                    >
+                      {isGeneratingEmail ? 'Generating...' : 'Generate Response Email'}
+                    </button>
+                  )}
                   <button className="w-full text-sm bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors">
                     Contact Opportunities
                   </button>
@@ -320,6 +332,16 @@ export default function OpportunityDetailContent({ data }: OpportunityDetailCont
           externalIsAnalyzing={isAnalyzing}
           externalError={error}
           onAnalyze={analyzeOpportunity}
+        />
+      )}
+
+      {/* Email Generation Modal */}
+      {showEmailModal && (
+        <EmailGenerationModal
+          opportunity={data}
+          onClose={() => setShowEmailModal(false)}
+          isGenerating={isGeneratingEmail}
+          setIsGenerating={setIsGeneratingEmail}
         />
       )}
     </div>
