@@ -2,6 +2,9 @@ import { NextRequest } from 'next/server';
 import { requireAuth } from '@/lib/auth-utils';
 import { getIndexingJobHistory } from '@/lib/dynamodb';
 
+// Use Node.js runtime for AWS SDK compatibility
+export const runtime = 'nodejs';
+
 export const GET = requireAuth(async (req: NextRequest, user) => {
   try {
     const { searchParams } = new URL(req.url);

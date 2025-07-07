@@ -5,6 +5,9 @@ import { generateUploadUrl } from '@/lib/s3';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 
+// Use Node.js runtime for AWS SDK compatibility
+export const runtime = 'nodejs';
+
 const uploadRequestSchema = z.object({
   fileName: z.string().min(1).max(255),
   fileSize: z.number().min(1).max(25 * 1024 * 1024), // 25MB max

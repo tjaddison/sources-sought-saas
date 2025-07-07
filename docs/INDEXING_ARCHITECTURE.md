@@ -15,9 +15,9 @@ The content indexing system processes user documents and company information to 
 - Implements text truncation to manage token limits
 
 ### 2. Embedding Generation (`lib/embedding-service.ts`)
-- Uses Voyage AI's `voyage-large-2` model (recommended by Anthropic)
+- Uses OpenAI's `text-embedding-ada-002` model
 - Combines company description with document content
-- Generates 1024-dimensional embeddings for semantic search
+- Generates 1536-dimensional embeddings for semantic search
 - Supports batch processing for efficiency
 - Includes mock mode for testing without API credits
 
@@ -64,8 +64,8 @@ Returns the complete indexing job history for a user.
 ## Environment Variables
 
 ```env
-# Voyage AI API Key for embedding generation (recommended by Anthropic)
-VOYAGE_API_KEY=your-voyage-api-key
+# OpenAI API Key for embedding generation
+OPENAI_API_KEY=your-openai-api-key
 
 # DynamoDB table names
 DYNAMODB_USERS_TABLE=onboarding-users

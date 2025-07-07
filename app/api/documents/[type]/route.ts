@@ -2,6 +2,9 @@ import { NextRequest } from 'next/server';
 import { getAuthenticatedUser } from '@/lib/auth-utils';
 import { getDocumentsByType } from '@/lib/dynamodb';
 
+// Use Node.js runtime for AWS SDK compatibility
+export const runtime = 'nodejs';
+
 export async function GET(req: NextRequest, { params }: { params: Promise<{ type: string }> }) {
   try {
     const user = await getAuthenticatedUser(req);

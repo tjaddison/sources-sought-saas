@@ -3,6 +3,9 @@ import { requireAuth } from '@/lib/auth-utils';
 import { createIndexingJob } from '@/lib/dynamodb';
 import { v4 as uuidv4 } from 'uuid';
 
+// Use Node.js runtime for AWS SDK compatibility
+export const runtime = 'nodejs';
+
 export const POST = requireAuth(async (req: NextRequest, user) => {
   try {
     const jobId = uuidv4();

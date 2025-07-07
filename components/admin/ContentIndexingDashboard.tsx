@@ -347,11 +347,11 @@ export default function ContentIndexingDashboard({
               How Content Indexing Works
             </h3>
             <ul className="text-sm text-blue-800 space-y-2">
-              <li>• Extracts text content from your uploaded documents</li>
-              <li>• Generates searchable embeddings using AI technology</li>
-              <li>• Enables better matching with relevant opportunities</li>
-              <li>• Processes documents securely with user data isolation</li>
-              <li>• Updates your profile's searchability and relevance scoring</li>
+              <li>• Uses your company description to create a semantic profile</li>
+              <li>• Generates a vector embedding using OpenAI text-embedding-3-small</li>
+              <li>• Enables AI-powered matching with government opportunities</li>
+              <li>• Documents are stored but not included in the matching vector</li>
+              <li>• Only your company profile text is used for opportunity matching</li>
             </ul>
           </div>
         </div>

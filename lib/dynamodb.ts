@@ -65,6 +65,12 @@ export interface UserProfile {
   onboardingSkipped: boolean;
   createdAt: string;
   updatedAt: string;
+  // Embedding fields (optional, added after indexing)
+  embedding?: number[];
+  embeddingModel?: string;
+  lastIndexedAt?: string;
+  documentsIncluded?: number;
+  tokensUsed?: number;
 }
 
 export async function getUserProfile(userId: string): Promise<UserProfile | null> {

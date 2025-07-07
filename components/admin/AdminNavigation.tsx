@@ -10,7 +10,8 @@ import {
   MagnifyingGlassIcon,
   Bars3Icon,
   XMarkIcon,
-  ArrowRightOnRectangleIcon
+  ArrowRightOnRectangleIcon,
+  DocumentMagnifyingGlassIcon
 } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 
@@ -19,6 +20,7 @@ const navigation = [
   { name: 'Profile', href: '/admin/profile', icon: UserIcon },
   { name: 'Documents', href: '/admin/documents', icon: DocumentIcon },
   { name: 'Content Indexing', href: '/admin/content-indexing', icon: MagnifyingGlassIcon },
+  { name: 'Sources Sought', href: '/admin/sources-sought', icon: DocumentMagnifyingGlassIcon },
 ];
 
 interface AdminNavigationProps {

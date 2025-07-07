@@ -40,7 +40,7 @@ export default async function ContentIndexingPage() {
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Content Indexing</h1>
         <p className="mt-2 text-gray-600">
-          Process your documents to enable better opportunity matching and searchability.
+          Index your company profile to enable semantic opportunity matching. Only your company description is used for matching.
         </p>
       </div>
 
