@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import OpportunityDetailContent from './opportunity-detail-content';
-import { getSourcesSoughtById } from '@/lib/weaviate';
+import { getSourcesSoughtById } from '@/lib/sam-ops-dynamodb';
 
 interface SourcesSoughtDetail {
   _additional: {

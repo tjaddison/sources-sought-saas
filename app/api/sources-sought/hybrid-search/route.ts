@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { hybridSearchWithUserProfile } from '@/lib/weaviate';
-import { getUserProfile } from '@/lib/dynamodb';
+import { searchSourcesSought } from '@/lib/sam-ops-dynamodb';
 import { auth0 } from '@/lib/auth0';
 
 // Use Node.js runtime for AWS SDK compatibility
@@ -22,8 +21,8 @@ export async function GET(request: NextRequest) {
     const query = searchParams.get('q') || '';
     const page = parseInt(searchParams.get('page') || '1', 10);
     const pageSize = parseInt(searchParams.get('pageSize') || '25', 10);
+    const sortBy = searchParams.get('sort') || 'updated_date';
     const type = searchParams.get('type') || '';
-    const alpha = parseFloat(searchParams.get('alpha') || '0.5');
 
     if (page < 1 || pageSize < 1 || pageSize > 100) {
       return NextResponse.json(
@@ -32,54 +31,34 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    if (alpha < 0 || alpha > 1) {
+    const validSortOptions = ['updated_date', 'title_asc', 'title_desc', 'relevance'];
+    if (!validSortOptions.includes(sortBy)) {
       return NextResponse.json(
-        { error: 'Alpha must be between 0 and 1' },
-        { status: 400 }
-      );
-    }
-
-    // Get user profile with embedding
-    const userProfile = await getUserProfile(session.user.sub);
-    
-    if (!userProfile) {
-      return NextResponse.json(
-        { error: 'User profile not found' },
-        { status: 404 }
-      );
-    }
-
-    if (!userProfile.embedding || !Array.isArray(userProfile.embedding)) {
-      return NextResponse.json(
-        { error: 'User profile has not been indexed. Please complete content indexing first.' },
+        { error: 'Invalid sort option' },
         { status: 400 }
       );
     }
 
     const offset = (page - 1) * pageSize;
     
-    // Perform hybrid search with user embedding
-    const { items, total } = await hybridSearchWithUserProfile(
-      userProfile.embedding,
+    // Perform regular search with DynamoDB
+    const { items, total } = await searchSourcesSought(
       query,
       pageSize,
       offset,
-      type,
-      alpha
+      sortBy as 'updated_date' | 'title_asc' | 'title_desc' | 'relevance',
+      type
     );
 
     // Log search metrics
-    console.log('Hybrid search performed:', {
+    console.log('Search performed:', {
       userId: session.user.sub,
       query,
       type,
-      alpha,
+      sortBy,
       totalResults: total,
       pageSize,
       page,
-      embeddingModel: userProfile.embeddingModel,
-      lastIndexedAt: userProfile.lastIndexedAt,
-      documentsIncluded: userProfile.documentsIncluded,
     });
 
     return NextResponse.json({
@@ -87,19 +66,12 @@ export async function GET(request: NextRequest) {
       total,
       page,
       pageSize,
-      searchMode: 'hybrid',
-      alpha,
-      userProfile: {
-        lastIndexedAt: userProfile.lastIndexedAt,
-        documentsIncluded: userProfile.documentsIncluded,
-        embeddingModel: userProfile.embeddingModel,
-        companyDescription: userProfile.companyDescription,
-      },
+      searchMode: 'text',
     });
   } catch (error) {
-    console.error('Error in hybrid search:', error);
+    console.error('Error in search:', error);
     return NextResponse.json(
-      { error: 'Failed to perform hybrid search' },
+      { error: 'Failed to perform search' },
       { status: 500 }
     );
   }

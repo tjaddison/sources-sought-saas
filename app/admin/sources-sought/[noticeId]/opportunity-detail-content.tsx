@@ -195,17 +195,17 @@ export default function OpportunityDetailContent({ data }: OpportunityDetailCont
                   <div className="flex items-center text-sm">
                     <CalendarIcon className="h-4 w-4 mr-2 text-gray-400" />
                     <dt className="text-gray-600">Response Deadline:</dt>
-                    <dd className="ml-2 font-medium text-gray-900">{formatDateTime(data.response_deadline)}</dd>
+                    <dd className="ml-2 font-medium text-gray-900">{formatDateTime(data.responseDeadLine || data.response_deadline)}</dd>
                   </div>
                   <div className="flex items-center text-sm">
                     <CalendarIcon className="h-4 w-4 mr-2 text-gray-400" />
                     <dt className="text-gray-600">Posted Date:</dt>
-                    <dd className="ml-2 font-medium text-gray-900">{formatDate(data.posted_date)}</dd>
+                    <dd className="ml-2 font-medium text-gray-900">{formatDate(data.postedDate || data.posted_date)}</dd>
                   </div>
                   <div className="flex items-center text-sm">
                     <CalendarIcon className="h-4 w-4 mr-2 text-gray-400" />
                     <dt className="text-gray-600">Last Updated:</dt>
-                    <dd className="ml-2 font-medium text-gray-900">{formatDate(data._additional.lastUpdateTimeUnix)}</dd>
+                    <dd className="ml-2 font-medium text-gray-900">{formatDate(data.updated_at || data.postedDate)}</dd>
                   </div>
                 </dl>
               </div>
@@ -217,19 +217,21 @@ export default function OpportunityDetailContent({ data }: OpportunityDetailCont
                     <BuildingOfficeIcon className="h-4 w-4 mr-2 text-gray-400 mt-0.5" />
                     <div>
                       <dt className="text-gray-600">Agency:</dt>
-                      <dd className="font-medium text-gray-900">{data.agency_name}</dd>
-                      {data.fullParentPathName && (
-                        <dd className="text-xs text-gray-500 mt-1">{data.fullParentPathName}</dd>
-                      )}
+                      <dd className="font-medium text-gray-900">{data.fullParentPathName || data.agency_name}</dd>
                     </div>
                   </div>
-                  {(data.agency_city || data.agency_state || data.agency_country) && (
+                  {(data.officeAddress || data.agency_city || data.agency_state || data.agency_country) && (
                     <div className="text-sm ml-6">
                       <dt className="text-gray-600">Location:</dt>
                       <dd className="font-medium text-gray-900">
-                        {[data.agency_city, data.agency_state, data.agency_country]
-                          .filter(Boolean)
-                          .join(', ')}
+                        {data.officeAddress ? 
+                          [data.officeAddress.city, data.officeAddress.state, data.officeAddress.countryCode]
+                            .filter(Boolean)
+                            .join(', ') :
+                          [data.agency_city, data.agency_state, data.agency_country]
+                            .filter(Boolean)
+                            .join(', ')
+                        }
                       </dd>
                     </div>
                   )}
@@ -251,16 +253,16 @@ export default function OpportunityDetailContent({ data }: OpportunityDetailCont
                       <dd className="font-medium text-gray-900">{data.solicitationNumber}</dd>
                     </div>
                   )}
-                  {data.naics_code && (
+                  {(data.naicsCode || data.naics_code) && (
                     <div className="text-sm">
                       <dt className="text-gray-600">NAICS Code:</dt>
-                      <dd className="font-medium text-gray-900">{data.naics_code}</dd>
+                      <dd className="font-medium text-gray-900">{data.naicsCode || data.naics_code}</dd>
                     </div>
                   )}
-                  {data.classification_code && (
+                  {(data.classificationCode || data.classification_code) && (
                     <div className="text-sm">
                       <dt className="text-gray-600">Classification Code:</dt>
-                      <dd className="font-medium text-gray-900">{data.classification_code}</dd>
+                      <dd className="font-medium text-gray-900">{data.classificationCode || data.classification_code}</dd>
                     </div>
                   )}
                 </dl>
@@ -316,7 +318,7 @@ export default function OpportunityDetailContent({ data }: OpportunityDetailCont
             </button>
             {isDescriptionOpen && (
               <div className="mt-4 prose prose-sm max-w-none text-gray-700 max-h-96 overflow-y-auto">
-                <p className="whitespace-pre-wrap">{data.content}</p>
+                <p className="whitespace-pre-wrap">{data.OppDescription || data.content}</p>
               </div>
             )}
           </div>

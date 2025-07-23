@@ -1,11 +1,11 @@
 // Analyze why an opportunity matches a user's profile
 export function analyzeMatch(
   opportunity: {
-    title: string;
-    content: string;
-    naics_code?: string;
-    agency_name: string;
-    type: string;
+    title?: string;
+    OppDescription?: string;
+    naicsCode?: string;
+    fullParentPathName?: string;
+    type?: string;
   },
   userProfile: {
     companyDescription?: string;
@@ -18,7 +18,7 @@ export function analyzeMatch(
   }
   
   const profileLower = userProfile.companyDescription.toLowerCase();
-  const opportunityText = `${opportunity.title} ${opportunity.content}`.toLowerCase();
+  const opportunityText = `${opportunity.title || ''} ${opportunity.OppDescription || ''}`.toLowerCase();
   
   // Key technology terms
   const techTerms = [
@@ -66,22 +66,22 @@ export function analyzeMatch(
   }
   
   // Check NAICS code if available
-  if (opportunity.naics_code && profileLower.includes('naics')) {
+  if (opportunity.naicsCode && profileLower.includes('naics')) {
     const naicsMatch = profileLower.match(/naics[:\s]*(\d+)/);
-    if (naicsMatch && opportunity.naics_code.startsWith(naicsMatch[1])) {
-      reasons.push(`NAICS code match: ${opportunity.naics_code}`);
+    if (naicsMatch && opportunity.naicsCode.startsWith(naicsMatch[1])) {
+      reasons.push(`NAICS code match: ${opportunity.naicsCode}`);
     }
   }
   
   // Check for agency experience
-  if (opportunity.agency_name) {
-    const agencyWords = opportunity.agency_name.toLowerCase().split(/\s+/);
+  if (opportunity.fullParentPathName) {
+    const agencyWords = opportunity.fullParentPathName.toLowerCase().split(/\s+/);
     const hasAgencyExperience = agencyWords.some(word => 
       word.length > 3 && profileLower.includes(word)
     );
     
     if (hasAgencyExperience) {
-      reasons.push(`Agency experience: ${opportunity.agency_name}`);
+      reasons.push(`Agency experience: ${opportunity.fullParentPathName}`);
     }
   }
   

@@ -4,15 +4,12 @@ import os
 from typing import Dict, Any, Optional
 import boto3
 from botocore.exceptions import ClientError
-import weaviate
-from weaviate.auth import AuthApiKey
-import openai
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
-# Configure logging - reduced verbosity for performance
+# Configure logging
 logger = logging.getLogger()
-logger.setLevel(logging.INFO)  # Change to DEBUG to see vector creation logs
+logger.setLevel(logging.INFO)
 
 # Remove duplicate handlers and simplify
 if not logger.handlers:
@@ -22,110 +19,46 @@ if not logger.handlers:
     logger.addHandler(handler)
 
 # Environment variables
-WEAVIATE_URL = os.environ.get('WEAVIATE_URL')
-WEAVIATE_API_KEY = os.environ.get('WEAVIATE_API_KEY')
-OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
-WEAVIATE_INDEX_NAME = os.environ.get('WEAVIATE_INDEX_NAME', 'SamGovOpportunities')
 AWS_REGION = os.environ.get('AWS_REGION', 'us-east-1')
+S3_BUCKET = os.environ.get('S3_BUCKET')
+DYNAMODB_TABLE = os.environ.get('DYNAMODB_TABLE', 'sam_opps')
+S3_FOLDER = os.environ.get('S3_FOLDER', 'sam-opportunities')
+S3_INACTIVE_FOLDER = os.environ.get('S3_INACTIVE_FOLDER', 'sam-opportunities-inactive')
 
-# Global client to reuse connections across invocations
-_weaviate_client = None
-_client_initialized = False
+# Global clients to reuse connections across invocations
+_s3_client = None
+_dynamodb_client = None
+_clients_initialized = False
 
-def get_secret(secret_name: str, region_name: str) -> Dict[str, Any]:
-    """Retrieve secret from AWS Secrets Manager with caching."""
-    logger.info(f"Retrieving secret: {secret_name}")
-    session = boto3.session.Session()
-    client = session.client(
-        service_name='secretsmanager',
-        region_name=region_name
-    )
+def initialize_clients():
+    """Initialize AWS clients."""
+    global _s3_client, _dynamodb_client, _clients_initialized
+    
+    if _clients_initialized:
+        logger.info("Reusing existing AWS clients")
+        return _s3_client, _dynamodb_client
+    
+    logger.info("Initializing AWS clients")
     
     try:
-        response = client.get_secret_value(SecretId=secret_name)
-        secret_dict = json.loads(response['SecretString'])
-        logger.info(f"Successfully retrieved secret with {len(secret_dict)} keys")
-        return secret_dict
-    except ClientError as e:
-        logger.error(f"Error retrieving secret {secret_name}: {e.response['Error']['Code']}")
-        raise
-
-def initialize_weaviate_client():
-    """Initialize Weaviate client with optimized settings."""
-    global _weaviate_client, _client_initialized
-    
-    # Return existing client if available and working
-    if _client_initialized and _weaviate_client:
-        try:
-            # Quick health check
-            if _weaviate_client.is_ready():
-                logger.info("Reusing existing Weaviate client")
-                return _weaviate_client
-        except:
-            logger.info("Existing client failed health check, reinitializing")
-            _client_initialized = False
-            _weaviate_client = None
-    
-    logger.info("Initializing new Weaviate client")
-    start_time = time.time()
-    
-    try:
-        # Get API keys
-        if not WEAVIATE_API_KEY or not OPENAI_API_KEY:
-            logger.info("Retrieving API keys from Secrets Manager")
-            secrets = get_secret('samgov/api-keys', AWS_REGION)
-            weaviate_key = WEAVIATE_API_KEY or secrets.get('WEAVIATE_API_KEY')
-            openai_key = OPENAI_API_KEY or secrets.get('OPENAI_API_KEY')
-        else:
-            weaviate_key = WEAVIATE_API_KEY
-            openai_key = OPENAI_API_KEY
+        _s3_client = boto3.client('s3', region_name=AWS_REGION)
+        _dynamodb_client = boto3.client('dynamodb', region_name=AWS_REGION)
         
         # Validate required configuration
-        if not WEAVIATE_URL or not weaviate_key or not openai_key:
-            raise ValueError("Missing required configuration")
+        if not S3_BUCKET:
+            raise ValueError("S3_BUCKET environment variable is required")
         
-        # Set OpenAI API key
-        openai.api_key = openai_key
+        _clients_initialized = True
+        logger.info("AWS clients initialized successfully")
         
-        # Create Weaviate client with optimized timeouts
-        logger.info(f"Connecting to Weaviate: {WEAVIATE_URL}")
-        
-        # Prepare headers
-        headers = {"X-OpenAI-Api-Key": openai_key}
-        
-        # Create client with shorter timeouts for Lambda
-        client = weaviate.connect_to_weaviate_cloud(
-            cluster_url=WEAVIATE_URL,
-            auth_credentials=weaviate.auth.AuthApiKey(api_key=weaviate_key),
-            headers=headers,
-            additional_config=weaviate.config.AdditionalConfig(
-                timeout=weaviate.config.Timeout(init=10, query=30, insert=60)  # Reduced timeouts
-            )
-        )
-        
-        # Test connection
-        if not client.is_ready():
-            client.close()
-            raise Exception("Weaviate cluster is not ready")
-        
-        # Ensure collection exists (async in background if needed)
-        ensure_class_exists(client)
-        
-        connect_time = time.time() - start_time
-        logger.info(f"Weaviate client initialized successfully in {connect_time:.2f}s")
-        
-        # Cache the client
-        _weaviate_client = client
-        _client_initialized = True
-        
-        return client
+        return _s3_client, _dynamodb_client
         
     except Exception as e:
-        logger.error(f"Failed to initialize Weaviate client: {type(e).__name__}: {e}")
+        logger.error(f"Failed to initialize AWS clients: {type(e).__name__}: {e}")
         raise
 
-def convert_to_rfc3339(date_string: Optional[str]) -> Optional[str]:
-    """Convert various date formats to RFC3339 format for Weaviate."""
+def parse_date(date_string: Optional[str]) -> Optional[str]:
+    """Parse various date formats and return ISO format string."""
     if not date_string or date_string.strip() == '':
         return None
     
@@ -142,17 +75,14 @@ def convert_to_rfc3339(date_string: Optional[str]) -> Optional[str]:
     
     for fmt in date_formats:
         try:
-            # Parse the date
             dt = datetime.strptime(date_string.strip(), fmt)
-            # Convert to RFC3339 format with UTC timezone
-            return dt.strftime('%Y-%m-%dT%H:%M:%SZ')
+            return dt.strftime('%Y-%m-%d')
         except ValueError:
             continue
     
-    # If already in RFC3339 format, return as is
+    # If already in ISO format, return as is
     try:
-        # Check if it's already RFC3339 by parsing it
-        datetime.fromisoformat(date_string.replace('Z', '+00:00'))
+        datetime.fromisoformat(date_string.replace('Z', ''))
         return date_string
     except:
         pass
@@ -160,137 +90,199 @@ def convert_to_rfc3339(date_string: Optional[str]) -> Optional[str]:
     logger.warning(f"Could not parse date: {date_string}")
     return None
 
-def ensure_class_exists(client):
-    """Ensure the Weaviate collection exists with minimal overhead."""
-    try:
-        # Quick check if collection exists
-        collection = client.collections.get(WEAVIATE_INDEX_NAME)
-        logger.info(f"Collection '{WEAVIATE_INDEX_NAME}' exists")
-        return
-    except Exception:
-        # Collection doesn't exist, create it
-        logger.info(f"Creating collection: {WEAVIATE_INDEX_NAME}")
-        
-        from weaviate.classes.config import Configure, Property, DataType
-        
-        properties = [
-            Property(
-                name="content", 
-                data_type=DataType.TEXT,
-                vectorize_property_name=True,
-                tokenization=Configure.Tokenization.word
-            ),
-            Property(name="notice_id", data_type=DataType.TEXT),
-            Property(name="title", data_type=DataType.TEXT),
-            Property(name="posted_date", data_type=DataType.DATE),
-            Property(name="response_deadline", data_type=DataType.DATE),
-            Property(name="naics_code", data_type=DataType.TEXT),
-            Property(name="classification_code", data_type=DataType.TEXT),
-            Property(name="agency_name", data_type=DataType.TEXT),
-            Property(name="agency_city", data_type=DataType.TEXT),
-            Property(name="agency_state", data_type=DataType.TEXT),
-            Property(name="agency_country", data_type=DataType.TEXT),
-            Property(name="type", data_type=DataType.TEXT),
-            Property(name="solicitationNumber", data_type=DataType.TEXT),
-            Property(name="fullParentPathName", data_type=DataType.TEXT),
-            Property(name="archived", data_type=DataType.BOOL),
-            Property(name="cancelled", data_type=DataType.BOOL)
-        ]
-        
-        client.collections.create(
-            name=WEAVIATE_INDEX_NAME,
-            vectorizer_config=Configure.Vectorizer.text2vec_openai(
-                model="text-embedding-3-small",
-                vectorize_collection_name=False
-            ),
-            properties=properties,
-            generative_config=Configure.Generative.openai()
-        )
-        logger.info(f"Created collection: {WEAVIATE_INDEX_NAME}")
+def is_record_inactive(opportunity: Dict[str, Any]) -> bool:
+    """Determine if a record should be marked as inactive."""
+    # Check if active is "No"
+    active = opportunity.get('active', '').lower()
+    if active == 'no':
+        return True
+    
+    # Check if active_status is "inactive"
+    active_status = opportunity.get('active_status', '').lower()
+    if active_status == 'inactive':
+        return True
+    
+    # Check if current date > archiveDate
+    archive_date_str = opportunity.get('archiveDate', '')
+    if archive_date_str:
+        archive_date = parse_date(archive_date_str)
+        if archive_date:
+            try:
+                archive_dt = datetime.strptime(archive_date, '%Y-%m-%d')
+                current_dt = datetime.now()
+                if current_dt > archive_dt:
+                    return True
+            except ValueError:
+                logger.warning(f"Could not compare archive date: {archive_date}")
+    
+    return False
 
-def create_weaviate_object_from_opportunity(opportunity: Dict[str, Any]) -> Dict[str, Any]:
-    """Convert SAM.gov opportunity to Weaviate object."""
-    # Extract key fields
+def should_delete_from_inactive(opportunity: Dict[str, Any]) -> bool:
+    """Determine if a record should be deleted from inactive folder (> 90 days past archive date)."""
+    # Check if archive date is more than 90 days ago
+    archive_date_str = opportunity.get('archiveDate', '')
+    if archive_date_str:
+        archive_date = parse_date(archive_date_str)
+        if archive_date:
+            try:
+                archive_dt = datetime.strptime(archive_date, '%Y-%m-%d')
+                current_dt = datetime.now()
+                days_since_archive = (current_dt - archive_dt).days
+                if days_since_archive >= 90:
+                    return True
+            except ValueError:
+                logger.warning(f"Could not compare archive date: {archive_date}")
+    
+    return False
+
+def prepare_dynamodb_item(opportunity: Dict[str, Any]) -> Dict[str, Any]:
+    """Convert opportunity to DynamoDB item format."""
     notice_id = opportunity.get('noticeId', '')
-    title = opportunity.get('title', '')
-    description = opportunity.get('OppDescription', opportunity.get('description', ''))
-    agency = opportunity.get('officeAddress', {})
     
-    # Create content text
-    content = f"{title}\n\n{description}" if description else title
+    # Determine if record is inactive
+    inactive = is_record_inactive(opportunity)
     
-    # Convert date fields to RFC3339 format
-    posted_date = convert_to_rfc3339(opportunity.get('postedDate', ''))
-    response_deadline = convert_to_rfc3339(opportunity.get('responseDeadLine', ''))
-    
-    # Create Weaviate object
-    weaviate_obj = {
-        'content': content,
-        'notice_id': notice_id,
-        'title': title,
-        'posted_date': posted_date if posted_date else None,
-        'response_deadline': response_deadline if response_deadline else None,
-        'naics_code': opportunity.get('naicsCode', ''),
-        'classification_code': opportunity.get('classificationCode', ''),
-        'agency_name': agency.get('name', ''),
-        'agency_city': agency.get('city', ''),
-        'agency_state': agency.get('state', ''),
-        'agency_country': agency.get('countryCode', ''),
-        'type': opportunity.get('type', ''),
-        'solicitationNumber': opportunity.get('solicitationNumber', ''),
-        'fullParentPathName': opportunity.get('fullParentPathName', ''),
-        'archived': opportunity.get('archived', False),
-        'cancelled': opportunity.get('cancelled', False)
+    # Basic item structure
+    item = {
+        'notice_id': {'S': notice_id},
+        'active_status': {'S': 'inactive' if inactive else 'active'},
+        'updated_at': {'S': datetime.now().isoformat()}
     }
     
-    # Remove None values and empty strings
-    return {k: v for k, v in weaviate_obj.items() if v is not None and v != ''}
+    # Add all opportunity fields as strings (DynamoDB format)
+    for key, value in opportunity.items():
+        if key == 'noticeId':  # Skip since we use notice_id
+            continue
+            
+        if value is not None and value != '':
+            if isinstance(value, bool):
+                item[key] = {'BOOL': value}
+            elif isinstance(value, (int, float)):
+                item[key] = {'N': str(value)}
+            elif isinstance(value, dict):
+                item[key] = {'S': json.dumps(value)}
+            elif isinstance(value, list):
+                item[key] = {'S': json.dumps(value)}
+            else:
+                item[key] = {'S': str(value)}
+    
+    return item
 
-def process_opportunity(opportunity: Dict[str, Any], client) -> bool:
-    """Process a single opportunity and add/update it in Weaviate."""
+def save_to_dynamodb(opportunity: Dict[str, Any], dynamodb_client) -> bool:
+    """Save or update opportunity in DynamoDB."""
+    notice_id = opportunity.get('noticeId', '')
+    
+    try:
+        item = prepare_dynamodb_item(opportunity)
+        
+        # Use PUT operation to insert or update
+        response = dynamodb_client.put_item(
+            TableName=DYNAMODB_TABLE,
+            Item=item
+        )
+        
+        status = item['active_status']['S']
+        logger.info(f"DynamoDB operation successful for {notice_id} (status: {status})")
+        return True
+        
+    except Exception as e:
+        logger.error(f"Error saving to DynamoDB {notice_id}: {type(e).__name__}: {e}")
+        return False
+
+def save_to_s3(opportunity: Dict[str, Any], s3_client) -> bool:
+    """Save opportunity to S3, move to inactive folder if inactive, or delete from inactive if > 90 days past archive."""
+    notice_id = opportunity.get('noticeId', '')
+    active_s3_key = f"{S3_FOLDER}/{notice_id}.json"
+    inactive_s3_key = f"{S3_INACTIVE_FOLDER}/{notice_id}.json"
+    
+    try:
+        inactive = is_record_inactive(opportunity)
+        should_delete = should_delete_from_inactive(opportunity)
+        
+        if inactive:
+            if should_delete:
+                # Delete from inactive folder if it's been 90+ days past archive date
+                try:
+                    s3_client.delete_object(Bucket=S3_BUCKET, Key=inactive_s3_key)
+                    logger.info(f"Deleted S3 object from inactive folder (90+ days past archive): {notice_id}")
+                except ClientError as e:
+                    if e.response['Error']['Code'] != 'NoSuchKey':
+                        logger.warning(f"Error deleting from inactive folder: {e}")
+                
+                # Also delete from active folder if it exists
+                try:
+                    s3_client.delete_object(Bucket=S3_BUCKET, Key=active_s3_key)
+                    logger.info(f"Deleted S3 object from active folder (90+ days past archive): {notice_id}")
+                except ClientError as e:
+                    if e.response['Error']['Code'] != 'NoSuchKey':
+                        logger.warning(f"Error deleting from active folder: {e}")
+            else:
+                # Save to inactive folder (inactive but not yet 90+ days past archive)
+                s3_client.put_object(
+                    Bucket=S3_BUCKET,
+                    Key=inactive_s3_key,
+                    Body=json.dumps(opportunity, indent=2),
+                    ContentType='application/json'
+                )
+                logger.info(f"Saved S3 object to inactive folder: {notice_id}")
+                
+                # Delete from active folder if it exists
+                try:
+                    s3_client.delete_object(Bucket=S3_BUCKET, Key=active_s3_key)
+                    logger.info(f"Moved S3 object from active to inactive folder: {notice_id}")
+                except ClientError as e:
+                    if e.response['Error']['Code'] == 'NoSuchKey':
+                        logger.info(f"S3 object was already not in active folder: {notice_id}")
+                    else:
+                        raise
+        else:
+            # Active record - save to active folder
+            s3_client.put_object(
+                Bucket=S3_BUCKET,
+                Key=active_s3_key,
+                Body=json.dumps(opportunity, indent=2),
+                ContentType='application/json'
+            )
+            logger.info(f"Saved S3 object to active folder: {notice_id}")
+            
+            # Delete from inactive folder if it exists (in case it was previously inactive)
+            try:
+                s3_client.delete_object(Bucket=S3_BUCKET, Key=inactive_s3_key)
+                logger.info(f"Removed S3 object from inactive folder (now active): {notice_id}")
+            except ClientError as e:
+                if e.response['Error']['Code'] != 'NoSuchKey':
+                    logger.warning(f"Error removing from inactive folder: {e}")
+        
+        return True
+        
+    except Exception as e:
+        logger.error(f"Error with S3 operation for {notice_id}: {type(e).__name__}: {e}")
+        return False
+
+def process_opportunity(opportunity: Dict[str, Any], s3_client, dynamodb_client) -> bool:
+    """Process a single opportunity and save to S3 and DynamoDB."""
     notice_id = opportunity.get('noticeId', 'unknown')
     
     try:
-        # Get collection
-        collection = client.collections.get(WEAVIATE_INDEX_NAME)
+        # Save to DynamoDB
+        dynamodb_success = save_to_dynamodb(opportunity, dynamodb_client)
         
-        # Convert opportunity to Weaviate object
-        weaviate_obj = create_weaviate_object_from_opportunity(opportunity)
+        # Save to S3
+        s3_success = save_to_s3(opportunity, s3_client)
         
-        # Check if object exists and use appropriate method
-        if collection.data.exists(notice_id):
-            # Update existing object
-            result = collection.data.update(
-                uuid=notice_id,
-                properties=weaviate_obj
-            )
-            logger.info(f"Updated opportunity: {notice_id}")
-            
-            # Verify vector was updated
-            updated_obj = collection.query.fetch_object_by_id(notice_id, include_vector=True)
-            if updated_obj and hasattr(updated_obj, 'vector') and updated_obj.vector:
-                logger.debug(f"Vector updated for {notice_id}, dimension: {len(updated_obj.vector)}")
+        if dynamodb_success and s3_success:
+            logger.info(f"Successfully processed opportunity: {notice_id}")
+            return True
         else:
-            # Insert new object
-            result = collection.data.insert(
-                properties=weaviate_obj,
-                uuid=notice_id
-            )
-            logger.info(f"Inserted new opportunity: {notice_id}")
-            
-            # Verify vector was created
-            inserted_obj = collection.query.fetch_object_by_id(notice_id, include_vector=True)
-            if inserted_obj and hasattr(inserted_obj, 'vector') and inserted_obj.vector:
-                logger.debug(f"Vector created for {notice_id}, dimension: {len(inserted_obj.vector)}")
-        
-        return True
+            logger.error(f"Partial failure processing {notice_id} - DynamoDB: {dynamodb_success}, S3: {s3_success}")
+            return False
         
     except Exception as e:
         logger.error(f"Error processing {notice_id}: {type(e).__name__}: {e}")
         return False
 
 def lambda_handler(event, context):
-    """Optimized Lambda handler for processing opportunities."""
+    """Lambda handler for processing SAM.gov opportunities."""
     # Get remaining time to manage timeouts
     remaining_time = context.get_remaining_time_in_millis() if context else 300000
     start_time = time.time()
@@ -311,14 +303,9 @@ def lambda_handler(event, context):
             'body': json.dumps({'message': 'No records to process', 'processed': 0})
         }
     
-    # Initialize client with timeout consideration
+    # Initialize AWS clients
     try:
-        # Reserve time for processing
-        init_timeout = min(remaining_time * 0.3, 15000)  # Max 15s for init
-        
-        logger.info(f"Initializing client (timeout: {init_timeout/1000:.1f}s)")
-        weaviate_client = initialize_weaviate_client()
-        
+        s3_client, dynamodb_client = initialize_clients()
     except Exception as e:
         logger.error(f"Client initialization failed: {e}")
         return {
@@ -348,7 +335,7 @@ def lambda_handler(event, context):
                     message_body = record
                 
                 # Process opportunity
-                if process_opportunity(message_body, weaviate_client):
+                if process_opportunity(message_body, s3_client, dynamodb_client):
                     successful += 1
                 else:
                     failed += 1

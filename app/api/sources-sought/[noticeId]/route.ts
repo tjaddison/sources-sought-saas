@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSourcesSoughtById } from '@/lib/weaviate';
+import { getSourcesSoughtById } from '@/lib/sam-ops-dynamodb';
 
 export async function GET(
   request: NextRequest,

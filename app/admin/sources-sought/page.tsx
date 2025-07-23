@@ -9,30 +9,29 @@ import debounce from 'lodash/debounce';
 import { analyzeMatch } from '@/lib/match-analyzer';
 
 interface SourcesSoughtItem {
-  _additional: {
-    id: string;
-    creationTimeUnix: string;
-    lastUpdateTimeUnix: string;
-    distance?: number;
-    score?: number;
-  };
-  content: string;
   notice_id: string;
-  title: string;
-  posted_date: string;
-  response_deadline: string;
-  naics_code?: string;
-  classification_code?: string;
-  agency_name: string;
-  agency_city?: string;
-  agency_state?: string;
-  agency_country?: string;
-  type: string;
-  solicitationNumber?: string;
+  title?: string;
+  postedDate?: string;
+  responseDeadLine?: string;
+  response_deadline?: string; // Legacy field name
+  naicsCode?: string;
+  classificationCode?: string;
   fullParentPathName?: string;
-  archived?: boolean;
-  cancelled?: boolean;
+  type?: string;
+  solicitationNumber?: string;
+  active?: string;
+  active_status?: string;
+  OppDescription?: string;
+  description?: string;
+  archiveDate?: string;
+  uiLink?: string;
+  officeAddress?: any;
+  placeOfPerformance?: any;
+  pointOfContact?: any;
+  resourceLinks?: any;
+  updated_at?: string;
   matchPercentage?: number;
+  [key: string]: any;
 }
 
 interface SearchResponse {
@@ -416,9 +415,9 @@ export default function SourcesSoughtPage() {
                     
                   return (
                     <div 
-                      key={item._additional.id} 
+                      key={item.notice_id} 
                       className="border rounded-lg p-6 hover:shadow-md transition-shadow relative"
-                      onMouseEnter={() => setHoveredItemId(item._additional.id)}
+                      onMouseEnter={() => setHoveredItemId(item.notice_id)}
                       onMouseLeave={() => setHoveredItemId(null)}
                     >
                       <div className="flex justify-between items-start">
@@ -464,20 +463,24 @@ export default function SourcesSoughtPage() {
                           <span className="font-medium">Notice ID:</span> {item.notice_id}
                         </p>
                         
-                        <p className="mt-2 text-sm text-gray-700 line-clamp-2">{item.content}</p>
+                        <p className="mt-2 text-sm text-gray-700 line-clamp-2">{item.OppDescription}</p>
                         
                         <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                           <div>
                             <p className="text-gray-500">Department/Ind.Agency</p>
-                            <p className="font-medium text-gray-900">{item.agency_name}</p>
+                            <p className="font-medium text-gray-900">
+                              {item.fullParentPathName ? 
+                                item.fullParentPathName.split('.')[0] || 'N/A' 
+                                : 'N/A'}
+                            </p>
                           </div>
                           
                           <div>
                             <p className="text-gray-500">Office</p>
                             <p className="font-medium text-gray-900">
-                              {item.agency_city && item.agency_state 
-                                ? `${item.agency_city}, ${item.agency_state}`
-                                : item.fullParentPathName || 'N/A'}
+                              {item.fullParentPathName && item.fullParentPathName.includes('.') ? 
+                                item.fullParentPathName.substring(item.fullParentPathName.indexOf('.') + 1) || 'N/A'
+                                : 'N/A'}
                             </p>
                           </div>
                           
@@ -495,13 +498,13 @@ export default function SourcesSoughtPage() {
                         
                         <div className="text-sm text-gray-600">
                           <p className="font-medium">Response Date</p>
-                          <p>{formatResponseDate(item.response_deadline)}</p>
+                          <p>{formatResponseDate(item.responseDeadLine || item.response_deadline || '')}</p>
                         </div>
                         
                         <div className="text-sm text-gray-600">
-                          <p>Published {formatDate(item.posted_date)}</p>
-                          {item._additional?.lastUpdateTimeUnix && (
-                            <p>Updated {formatDate(item._additional.lastUpdateTimeUnix)}</p>
+                          <p>Published {formatDate(item.postedDate || '')}</p>
+                          {item.updated_at && (
+                            <p>Updated {formatDate(item.updated_at)}</p>
                           )}
                         </div>
                       </div>
