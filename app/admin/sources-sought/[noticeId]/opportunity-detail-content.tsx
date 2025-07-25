@@ -217,10 +217,23 @@ export default function OpportunityDetailContent({ data }: OpportunityDetailCont
                     <BuildingOfficeIcon className="h-4 w-4 mr-2 text-gray-400 mt-0.5" />
                     <div>
                       <dt className="text-gray-600">Agency:</dt>
-                      <dd className="font-medium text-gray-900">{data.fullParentPathName || data.agency_name}</dd>
+                      <dd className="font-medium text-gray-900">
+                        {data.fullParentPathName ? 
+                          data.fullParentPathName.split('.')[0] : 
+                          data.agency_name
+                        }
+                      </dd>
                     </div>
                   </div>
-                  {(data.officeAddress || data.agency_city || data.agency_state || data.agency_country) && (
+                  {data.fullParentPathName && data.fullParentPathName.includes('.') && (
+                    <div className="text-sm ml-6">
+                      <dt className="text-gray-600">Location:</dt>
+                      <dd className="font-medium text-gray-900">
+                        {data.fullParentPathName.split('.').slice(1).join('.')}
+                      </dd>
+                    </div>
+                  )}
+                  {(!data.fullParentPathName || !data.fullParentPathName.includes('.')) && (data.officeAddress || data.agency_city || data.agency_state || data.agency_country) && (
                     <div className="text-sm ml-6">
                       <dt className="text-gray-600">Location:</dt>
                       <dd className="font-medium text-gray-900">
